@@ -10,11 +10,6 @@ import {
 } from 'react-native';
 import { showMessage } from 'react-native-flash-message';
 import { Button } from 'react-native-material-ui';
-import Axios from 'axios';
-
-// import api constants
-import { API_URL, API_SIGN_IN } from '../constants/api';
-import Loading from '../components/Loading';
 
 class SignIn extends Component {
     static navigationOptions = {
@@ -31,42 +26,34 @@ class SignIn extends Component {
         };
     }
 
-    setResponse = (response) => {
-        return responseData = {
-            status: response.status ? response.status : false,
-            message: response.message ? response.message : null,
-            data: response.data ? response.data : null
-        };
+    componentDidMount() {
+        this._isMounted = true;
     }
 
-    requestSignIn = async () => {
-        try {
-            const response = await Axios.post(API_URL + API_SIGN_IN, {
-                email: this.state.email,
-                pass: this.state.pass
-            });
-            return this.setResponse(response.data);
-        } catch (err) {
-            return this.setResponse({ status: false, message: err.message });
-        }
+    componentWillUnmount(){
+        this._isMounted = false;
     }
 
     onClickSignIn = () => {
         this.setState({ loading: true });
 
-        this.requestSignIn().then((response) => {
-            if(response.status === true) {
-                this.props.userActions.loginUser(response.data).then(() => {
-                    this.props.navigation.navigate('Home');
-                });
+        const requestData = {
+            email: this.state.email,
+            pass: this.state.pass
+        }
+        this.props.userActions.signIn(requestData).then((response) => {
+            if(response.status) {
+                this.props.navigation.navigate('Home');
             } else {
                 showMessage({
                     message: response.message,
-                    type: response.status === true ? 'success' : 'danger'
+                    type: response.status ? 'success' : 'danger'
                 });
             }
 
-            this.setState({ loading: false });
+            if(this._isMounted) {
+                this.setState({ loading: false });
+            }
         });
     }
 
@@ -92,9 +79,9 @@ class SignIn extends Component {
                             <TextInput
                                 style={styles.input}
                                 underlineColorAndroid="#474747"
-                                keyboardType="visible-password"
                                 placeholder="Пароль"
                                 autoCapitalize="none"
+                                secureTextEntry={true}
                                 onChangeText={(pass) => this.setState({ pass })}
                             />
                             <TouchableHighlight onPress={this.onClickForgot} underlayColor="transparent">

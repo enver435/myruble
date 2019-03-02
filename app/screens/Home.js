@@ -22,8 +22,12 @@ class Home extends Component {
             user: props.userState
         }
 
-        // get user
-        this.props.userActions.getUser().then(() => {
+        // get user data
+        const getUser = this.props.userActions.get();
+        // get game default data
+        const getGameDefault = this.props.gameActions.getDefault();
+        // all operation async
+        Promise.all([getUser, getGameDefault]).then(() => {
             this.setState({ loading: false });
         });
     }
@@ -41,8 +45,7 @@ class Home extends Component {
             <View style={styles.container}>
                 <Header 
                     userState={this.state.user} 
-                    userActions={this.props.userActions}
-                />
+                    userActions={this.props.userActions}/>
                 <Tabs/>
             </View>
         );

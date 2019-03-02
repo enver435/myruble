@@ -9,8 +9,8 @@ class Referal extends Component {
 
     render() {
         return (
-            <View>
-                <Text> Referal Screen </Text>
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <Text style={{ textAlign: 'center' }}>Coming Soon!</Text>
             </View>
         );
     }

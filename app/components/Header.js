@@ -13,7 +13,7 @@ class Header extends Component {
     }
 
     onClickLogout = () => {
-        this.props.userActions.logoutUser();
+        this.props.userActions.logout();
     }
 
     render() {

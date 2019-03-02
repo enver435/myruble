@@ -1,14 +1,19 @@
 import React, { Component } from 'react';
 import { View, TextInput, TouchableHighlight, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import store from '../../store';
 
 class Enter extends Component {
     constructor(props) {
         super(props);
+        // init state
+        this.state = {
+            input: ''
+        };
     }
 
-    onClickSend = (e) => {}
+    onClickSend = () => {
+        // console.warn(this.state.input);
+    }
 
     render() {
         return (
@@ -17,6 +22,11 @@ class Enter extends Component {
                     style={styles.textInput}
                     underlineColorAndroid="#474747"
                     keyboardType="numeric"
+                    returnKeyType="send"
+                    value={this.state.input}
+                    onChangeText={(val) => this.setState({ input: val })}
+                    onSubmitEditing={this.onClickSend}
+                    blurOnSubmit={false}
                 />
                 <TouchableHighlight
                     onPress={this.onClickSend}
