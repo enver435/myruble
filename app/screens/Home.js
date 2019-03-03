@@ -38,8 +38,12 @@ class Home extends Component {
         // get game default data
         const getGameDefault = this.props.gameActions.getDefault();
         // all operation async
-        Promise.all([getUser, getGameDefault]).then(() => {
-            this.setState({ loading: false });
+        Promise.all([getUser, getGameDefault]).then((response) => {
+            if(response[0].status && response[1].status) {
+                this.setState({ loading: false });
+            } else {
+                console.warn(response[0].message, response[1].message);
+            }
         });
     }
 

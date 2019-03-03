@@ -11,7 +11,10 @@ import {
 } from '../../constants/actions/game';
 
 // import api constants
-import { API_URL, API_GAME_DEFAULT } from '../../constants/api';
+import { 
+    API_URL,
+    API_GAME_DEFAULT
+} from '../../constants/api';
 
 // set response
 const setResponse = (response) => {
@@ -51,6 +54,10 @@ export const nextGame = (correct) => async dispatch => {
         type: GAME_NEXT,
         payload: { correct }
     });
+}
+
+export const resultsGame = () => async dispatch => {
+    dispatch({ type: GAME_RESULTS });
 }
 
 export const setCurrentTime = (currentTime) => async dispatch => {

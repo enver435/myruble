@@ -34,14 +34,14 @@ export default function gameReducer(state = INITIAL_STATE, action) {
     switch (action.type) {
         case GAME_DEFAULT:
             return {
-                defaultData: action.payload,
-                data: state.data
+                ...state,
+                defaultData: action.payload
             };
         case GAME_START:
             return {
-                defaultData: state.defaultData,
+                ...state,
                 data: {
-                    ...state.data,
+                    ...INITIAL_STATE.data,
                     status: true,
                     firstNumber,
                     secondNumber,
@@ -50,16 +50,16 @@ export default function gameReducer(state = INITIAL_STATE, action) {
             };
         case GAME_STOP:
             return {
-                defaultData: state.defaultData,
+                ...state,
                 data: INITIAL_STATE.data
             };
         case GAME_NEXT:
             return {
-                defaultData: state.defaultData,
+                ...state,
                 data: {
                     ...state.data,
-                    taskSuccess: action.payload.correct ? state.taskSuccess + 1 : state.taskSuccess,
-                    taskFail: !action.payload.correct ? state.taskFail + 1 : state.taskFail,
+                    taskSuccess: action.payload.correct ? state.data.taskSuccess + 1 : state.data.taskSuccess,
+                    taskFail: !action.payload.correct ? state.data.taskFail + 1 : state.data.taskFail,
                     firstNumber,
                     secondNumber,
                     correctAnswer: firstNumber + secondNumber
@@ -67,13 +67,21 @@ export default function gameReducer(state = INITIAL_STATE, action) {
             };
         case GAME_CURRENT_TIME:
             return {
-                defaultData: state.defaultData,
+                ...state,
                 data: {
                     ...state.data,
                     currentTime: action.payload
                 }
             };
         case GAME_RESULTS:
+            return {
+                ...state,
+                data: {
+                    ...state.data,
+                    status: false,
+                    currentTime: 0
+                }
+            }
         default:
             return state;
     }

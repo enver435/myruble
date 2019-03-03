@@ -4,6 +4,7 @@ import {
     USER_SIGN_IN,
     USER_SIGN_UP,
     USER_LOGOUT,
+    USER_UPDATE
 } from '../../constants/actions/user';
 
 // init state
@@ -20,6 +21,14 @@ export default function userReducer(state = INITIAL_STATE, action) {
             return {
                 isAuth: !action.payload ? false : true,
                 data: action.payload
+            };
+        case USER_UPDATE:
+            return {
+                ...state,
+                data: {
+                    ...state.data,
+                    ...action.payload
+                }
             };
         case USER_LOGOUT:
             return { ...INITIAL_STATE };

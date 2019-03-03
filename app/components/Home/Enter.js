@@ -8,13 +8,21 @@ class Enter extends Component {
         super(props);
         // init state
         this.state = {
-            input: null
+            input: ''
         };
     }
 
     onClickSend = (correctAnswer) => {
-        if(correctAnswer === this.state.input) {
-            
+        if(this.state.input.length > 0) {
+            let correct = false;
+            // check correct answer
+            if(correctAnswer == this.state.input) {
+                correct = true;
+            }
+            // send answer
+            this.props.sendAnswer(correct);
+            // clear input
+            this.setState({ input: '' });
         }
     }
 
@@ -25,14 +33,18 @@ class Enter extends Component {
                     style={styles.textInput}
                     underlineColorAndroid="#474747"
                     keyboardType="numeric"
-                    returnKeyType="none"
+                    returnKeyType="next"
                     value={this.state.input}
                     onChangeText={(val) => this.setState({ input: val })}
-                    onSubmitEditing={this.onClickSend(this.props.correctAnswer)}
+                    onSubmitEditing={() => { 
+                        this.onClickSend(this.props.correctAnswer);
+                    }}
                     blurOnSubmit={false}
                 />
                 <TouchableHighlight
-                    onPress={this.onClickSend(this.props.correctAnswer)}
+                    onPress={() => {
+                        this.onClickSend(this.props.correctAnswer)
+                    }}
                     underlayColor="transparent">
                     <Icon name="send" size={35} color="#474747" style={styles.btnSend} />
                 </TouchableHighlight>

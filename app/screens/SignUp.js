@@ -23,6 +23,7 @@ class SignUp extends Component {
             pass: '',
             loading: false
         };
+        this.inputs = {};
     }
 
     componentDidMount() {
@@ -70,17 +71,22 @@ class SignUp extends Component {
                                 keyboardType="email-address"
                                 placeholder="E-mail"
                                 autoCapitalize="none"
+                                returnKeyType="next"
                                 onChangeText={(email) => this.setState({ email })}
+                                onSubmitEditing={() => { this.inputs['username'].focus(); }}
                             />
                             <TextInput
+                                ref={input => { this.inputs['username'] = input }}
                                 style={styles.input}
                                 underlineColorAndroid="#474747"
-                                keyboardType="email-address"
                                 placeholder="Имя пользователя"
                                 autoCapitalize="none"
+                                returnKeyType="next"
                                 onChangeText={(username) => this.setState({ username })}
+                                onSubmitEditing={() => { this.inputs['pass'].focus(); }}
                             />
                             <TextInput
+                                ref={input => { this.inputs['pass'] = input }}
                                 style={styles.input}
                                 underlineColorAndroid="#474747"
                                 placeholder="Пароль"

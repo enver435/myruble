@@ -24,6 +24,7 @@ class SignIn extends Component {
             pass: '',
             loading: false
         };
+        this.inputs = {};
     }
 
     componentDidMount() {
@@ -72,11 +73,14 @@ class SignIn extends Component {
                                 style={styles.input}
                                 underlineColorAndroid="#474747"
                                 keyboardType="email-address"
+                                returnKeyType="next"
                                 placeholder="E-mail"
                                 autoCapitalize="none"
                                 onChangeText={(email) => this.setState({ email })}
+                                onSubmitEditing={() => { this.inputs['pass'].focus(); }}
                             />
                             <TextInput
+                                ref={input => { this.inputs['pass'] = input }}
                                 style={styles.input}
                                 underlineColorAndroid="#474747"
                                 placeholder="Пароль"

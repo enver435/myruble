@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-class Calc extends Component {
+class Main extends Component {
     constructor(props) {
         super(props);
     }
@@ -13,23 +13,28 @@ class Calc extends Component {
     }
 
     render() {
-        const { status, firstNumber, secondNumber, currentTime } = this.props.gameState.data;
-        const { time } = this.props.gameState.defaultData;
+        const { status, firstNumber, secondNumber, taskSuccess, taskFail, currentTime } = this.props.gameState.data;
+        const { task, time } = this.props.gameState.defaultData;
         const { heart } = this.props.userState.data;
 
         return (
             <View style={styles.container}>
-                <View style={styles.header}>
-                    <View style={styles.heart}>
+                <View style={styles.headerContainer}>
+                    <View style={styles.heartContainer}>
                         <Text style={styles.heartText}>{heart}</Text>
                         <Icon name="favorite-border" size={25} color="#474747" style={styles.heartIcon} />
                     </View>
-                    <View style={styles.timer}>
+                    <View style={styles.taskContainer}>
+                        {status ? (
+                            <Text style={styles.taskText}>{taskSuccess} / {task}</Text>
+                        ) : null}
+                    </View>
+                    <View style={styles.timerContainer}>
                         <Icon name="timer" size={25} color="#474747" style={styles.timerIcon} />
                         <Text style={styles.timerText}>{this.fmtMSS(time - currentTime)}</Text>
                     </View>
                 </View>
-                <View style={styles.content}>
+                <View style={styles.contentContainer}>
                     <Text style={styles.contentText}>{status ? firstNumber + ' + ' + secondNumber : 'Tap to Play'}</Text>
                 </View>
             </View>
@@ -52,19 +57,20 @@ const styles = StyleSheet.create({
         padding: 10,
         height: 125
     },
-    content: {
-        flex: 1
+    contentContainer: {
+        flex: 1,
+        justifyContent: 'center'
     },
     contentText: {
-        fontSize: 40,
+        fontSize: 32,
         textAlign: 'center',
         color: '#474747'
     },
-    header: {
+    headerContainer: {
         flexDirection: 'row',
         alignContent: 'space-between'
     },
-    heart: {
+    heartContainer: {
         flex: 1,
         flexDirection: 'row',
         justifyContent: 'flex-start'
@@ -76,7 +82,7 @@ const styles = StyleSheet.create({
     heartIcon: {
         marginLeft: 5
     },
-    timer: {
+    timerContainer: {
         flex: 1,
         flexDirection: 'row',
         justifyContent: 'flex-end'
@@ -87,13 +93,19 @@ const styles = StyleSheet.create({
     },
     timerIcon: {
         marginRight: 5
+    },
+    taskContainer: {
+        flex: 1
+    },
+    taskText: {
+        textAlign: 'center'
     }
 });
 
 // component prop types
-Calc.propTypes = {
+Main.propTypes = {
     userState: PropTypes.object.isRequired,
     gameState: PropTypes.object.isRequired
 };
 
-export default Calc;
+export default Main;

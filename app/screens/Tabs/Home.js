@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { View, Text, ScrollView, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, Keyboard } from 'react-native';
 
 // import components
 import Loading from '../../components/Loading';
 import Balance from '../../components/Home/Balance';
 import Enter from '../../components/Home/Enter';
-import Calc from '../../components/Home/Calc';
+import Main from '../../components/Home/Main';
 import Control from '../../components/Home/Control';
 
 class Home extends Component {
@@ -36,8 +36,12 @@ class Home extends Component {
         const gameData = prevProps.gameState.data;
         const gameDefaultData = prevProps.gameState.defaultData;
         if(gameData.status && (gameData.currentTime+1) >= gameDefaultData.time) {
-            console.warn('the end');
-            this.stopTimer();
+            // get result game
+            this.props.gameActions.resultsGame();
+            // keyboard dismiss
+            Keyboard.dismiss();
+            // clear timer
+            clearInterval(this.timerInterval);
         }
     }
 
@@ -55,12 +59,14 @@ class Home extends Component {
     stopGame = () => {
         // dispatch action stop game
         this.props.gameActions.stopGame();
+        // keyboard dismiss
+        Keyboard.dismiss();
         // clear timer
         clearInterval(this.timerInterval);
     }
 
     sendAnswer = (correct) => {
-
+        this.props.gameActions.nextGame(correct);
     }
 
     render() {
@@ -71,10 +77,10 @@ class Home extends Component {
                 <View>
                     <ScrollView>
                         <Balance userState={this.state.user}/>
-                        <Calc
+                        <Main
                             userState={this.state.user}
                             gameState={this.state.game}/>
-                        <Enter 
+                        <Enter
                             correctAnswer={this.state.game.data.correctAnswer}
                             sendAnswer={this.sendAnswer}/>
                         <Control
