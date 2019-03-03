@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, ScrollView, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, ScrollView, StyleSheet } from 'react-native';
 
 // import components
 import Loading from '../../components/Loading';
@@ -19,12 +19,48 @@ class Home extends Component {
         };
     }
 
-    componentWillReceiveProps(nextProps) {
-        if(this.state.user != nextProps.userState) {
-            this.setState({ user: nextProps.userState });
-        } else if(this.state.game != nextProps.gameState) {
-            this.setState({ game: nextProps.gameState });
+    static getDerivedStateFromProps(nextProps, prevState) {
+        if (prevState.user !== nextProps.userState) {
+            return {
+                user: nextProps.userState
+            };
+        } else if(prevState.game !== nextProps.gameState) {
+            return {
+                game: nextProps.gameState
+            };
         }
+        return null;
+    }
+
+    componentDidUpdate(prevProps) {
+        const gameData = prevProps.gameState.data;
+        const gameDefaultData = prevProps.gameState.defaultData;
+        if(gameData.status && (gameData.currentTime+1) >= gameDefaultData.time) {
+            console.warn('the end');
+            this.stopTimer();
+        }
+    }
+
+    startGame = () => {
+        // dispatch action start game
+        this.props.gameActions.startGame();
+        // start timer
+        let currentTime = 0;
+        this.timerInterval = setInterval(() => {
+            currentTime++;
+            this.props.gameActions.setCurrentTime(currentTime);
+        }, 1000);
+    }
+
+    stopGame = () => {
+        // dispatch action stop game
+        this.props.gameActions.stopGame();
+        // clear timer
+        clearInterval(this.timerInterval);
+    }
+
+    sendAnswer = (correct) => {
+
     }
 
     render() {
@@ -34,24 +70,35 @@ class Home extends Component {
             this.state.user.isAuth === true ? (
                 <View>
                     <ScrollView>
-                        <Balance balance={this.state.user.data.balance}/>
+                        <Balance userState={this.state.user}/>
                         <Calc
-                            gameState={this.state.game}
-                            heart={this.state.user.data.heart}/>
-                        <Enter/>
+                            userState={this.state.user}
+                            gameState={this.state.game}/>
+                        <Enter 
+                            correctAnswer={this.state.game.data.correctAnswer}
+                            sendAnswer={this.sendAnswer}/>
                         <Control
-                            gameActions={this.props.gameActions}
-                            gameStatus={this.state.game.data.status}
-                        />
+                            status={this.state.game.data.status}
+                            startGame={this.startGame}
+                            stopGame={this.stopGame}/>
                     </ScrollView>
                 </View>
             ) : (
-                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <View style={styles.screenCenter}>
                     <Text style={{ textAlign: 'center' }}>Пожалуйста, войдите, чтобы просмотреть эту страницу.</Text>
                 </View>
             )
         );
     }
 }
+
+// component styles
+const styles = StyleSheet.create({
+    screenCenter: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+    }
+});
 
 export default Home;

@@ -5,7 +5,9 @@ import {
     GAME_DEFAULT,
     GAME_START,
     GAME_STOP,
-    GAME_NEXT
+    GAME_NEXT,
+    GAME_CURRENT_TIME,
+    GAME_RESULTS
 } from '../../constants/actions/game';
 
 // import api constants
@@ -42,4 +44,15 @@ export const startGame = () => async dispatch => {
 
 export const stopGame = () => async dispatch => {
     dispatch({ type: GAME_STOP });
+}
+
+export const nextGame = (correct) => async dispatch => {
+    dispatch({
+        type: GAME_NEXT,
+        payload: { correct }
+    });
+}
+
+export const setCurrentTime = (currentTime) => async dispatch => {
+    dispatch({ type: GAME_CURRENT_TIME, payload: currentTime });
 }

@@ -1,46 +1,32 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 class Calc extends Component {
     constructor(props) {
         super(props);
-        // init state
-        this.state = {
-            time: props.gameState.defaultData.time
-        };
     }
 
     fmtMSS = (s) => {
-        return(s-(s%=60))/60+(9<s?':':':0')+s
-    }
-
-    startTimer = () => {
-        this.timerInterval = null;
-        if(this.props.gameState.data.status) {
-            this.timerInterval = setInterval(() => {
-                this.setState({ time: this.state.time - 1 });
-            }, 1000);
-        }
-    }
-
-    stopTimer = () => {
-        clearInterval(this.timerInterval);
-        this.timerInterval = null;
+        return (s - (s %= 60)) / 60 + ( 9 < s ? ':' : ':0') + s;
     }
 
     render() {
-        const { status, firstNumber, secondNumber } = this.props.gameState.data;
+        const { status, firstNumber, secondNumber, currentTime } = this.props.gameState.data;
+        const { time } = this.props.gameState.defaultData;
+        const { heart } = this.props.userState.data;
+
         return (
             <View style={styles.container}>
                 <View style={styles.header}>
                     <View style={styles.heart}>
-                        <Text style={styles.heartText}>{this.props.heart}</Text>
+                        <Text style={styles.heartText}>{heart}</Text>
                         <Icon name="favorite-border" size={25} color="#474747" style={styles.heartIcon} />
                     </View>
                     <View style={styles.timer}>
                         <Icon name="timer" size={25} color="#474747" style={styles.timerIcon} />
-                        <Text style={styles.timerText}></Text>
+                        <Text style={styles.timerText}>{this.fmtMSS(time - currentTime)}</Text>
                     </View>
                 </View>
                 <View style={styles.content}>
@@ -103,5 +89,11 @@ const styles = StyleSheet.create({
         marginRight: 5
     }
 });
+
+// component prop types
+Calc.propTypes = {
+    userState: PropTypes.object.isRequired,
+    gameState: PropTypes.object.isRequired
+};
 
 export default Calc;

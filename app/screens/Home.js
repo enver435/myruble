@@ -9,19 +9,30 @@ import Loading from '../components/Loading';
 import Tabs from '../Tabs';
 
 class Home extends Component {
+    constructor(props) {
+        super(props);
+        // init state
+        this.state = {
+            loading: true,
+            user: props.userState,
+            game: props.gameState
+        };
+    }
+
     static navigationOptions = {
         header: null
     }
 
-    constructor(props) {
-        super(props);
-
-        // init state
-        this.state = {
-            loading: true,
-            user: props.userState
+    static getDerivedStateFromProps(nextProps, prevState) {
+        if (prevState.user !== nextProps.userState) {
+            return {
+                user: nextProps.userState
+            };
         }
+        return null;
+    }
 
+    componentDidMount() {
         // get user data
         const getUser = this.props.userActions.get();
         // get game default data
@@ -30,12 +41,6 @@ class Home extends Component {
         Promise.all([getUser, getGameDefault]).then(() => {
             this.setState({ loading: false });
         });
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if(this.state.user != nextProps.userState) {
-            this.setState({ user: nextProps.userState });
-        }
     }
 
     render() {

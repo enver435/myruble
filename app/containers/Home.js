@@ -11,7 +11,8 @@ import * as gameActions from '../store/actions/game';
 // map state to props
 const mapStateToProps = (state, ownProps) => {
     return {
-        userState: state.user
+        userState: state.user,
+        gameState: state.game
     }
 }
 

@@ -17,12 +17,12 @@ export default function userReducer(state = INITIAL_STATE, action) {
         case USER_GET:
         case USER_SIGN_IN:
         case USER_SIGN_UP:
-            return Object.assign({}, state, {
+            return {
                 isAuth: !action.payload ? false : true,
                 data: action.payload
-            });
+            };
         case USER_LOGOUT:
-            return Object.assign({}, state, INITIAL_STATE);
+            return { ...INITIAL_STATE };
         default:
             return state;
     }

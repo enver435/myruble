@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "prop-types": "^15.7.2",
     "react": "16.6.3",
     "react-native": "^0.58.5",
     "react-native-flash-message": "^0.1.10",

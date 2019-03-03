@@ -1,23 +1,18 @@
 import React, { Component } from 'react';
-import { View, Text, Image, StyleSheet, TouchableHighlight } from 'react-native';
+import { View, StyleSheet, TouchableHighlight } from 'react-native';
+import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 class Control extends Component {
 	constructor(props) {
         super(props);
-        // init state
-        this.state = {
-            control: props.gameStatus ? 'stop' : 'play'
-        };
     }
-    
-    onPressControl = () => {
-        if(this.state.control == 'play') {
-            this.props.gameActions.startGame();
-            this.setState({ control: 'stop' });
+
+    onPressControl = (status) => {
+        if(!status) {
+            this.props.startGame()
         } else {
-            // this.props.gameActions.stopGame();
-            this.setState({ control: 'play' });
+            this.props.stopGame()
         }
     }
 
@@ -26,8 +21,8 @@ class Control extends Component {
 			<View style={styles.container}>
                 <TouchableHighlight 
                     underlayColor="transparent"
-                    onPress={() => this.onPressControl()}>       
-                        <Icon name={this.state.control + '-circle-outline'} size={60} color="#474747" />
+                    onPress={() => this.onPressControl(this.props.status)}>       
+                        <Icon name={(!this.props.status ? 'play' : 'stop') + '-circle-outline'} size={60} color="#474747" />
                 </TouchableHighlight>
 			</View>
 		);
@@ -43,5 +38,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     }
 });
+
+// component prop types
+Control.propTypes = {
+    status: PropTypes.bool.isRequired,
+    startGame: PropTypes.func.isRequired,
+    stopGame: PropTypes.func.isRequired
+};
 
 export default Control;

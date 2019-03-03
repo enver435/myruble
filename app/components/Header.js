@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, TouchableHighlight, StyleSheet } from 'react-native';
+import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { withNavigation } from 'react-navigation';
 
@@ -64,5 +65,11 @@ const styles = StyleSheet.create({
         color: '#545454'
     }
 });
+
+// component prop types
+Header.propTypes = {
+    userState: PropTypes.object.isRequired,
+    userActions: PropTypes.object.isRequired
+};
 
 export default withNavigation(Header);
