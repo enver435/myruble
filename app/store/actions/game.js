@@ -7,7 +7,8 @@ import {
     GAME_STOP,
     GAME_NEXT,
     GAME_CURRENT_TIME,
-    GAME_RESULTS
+    GAME_RESULTS,
+    GAME_RESET
 } from '../../constants/actions/game';
 
 // import api constants
@@ -47,6 +48,10 @@ export const startGame = () => async dispatch => {
 
 export const stopGame = () => async dispatch => {
     dispatch({ type: GAME_STOP });
+}
+
+export const resetGame = () => async dispatch => {
+    dispatch({ type: GAME_RESET });
 }
 
 export const nextGame = (correct) => async dispatch => {

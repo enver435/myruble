@@ -30,26 +30,32 @@ const setResponse = (response) => {
 
 export const get = () => async dispatch => {
     try {
-        // get phone storage user data
-        let data = JSON.parse(await AsyncStorage.getItem('userData'));
+        // default response
+        let response = {
+            status: true,
+            data: JSON.parse(await AsyncStorage.getItem('userData')), // get phone storage user data
+            message: null
+        };
 
         // if updated application, update user data
         if(await checkUpdatedApp()) {
-            const response = await Axios.post(API_URL + API_USER_INFO, {
-                id: data.id
+            // post request and get user data
+            response = await Axios.post(API_URL + API_USER_INFO, {
+                id: response.data.id
             });
-            if(response.data.status) {
+            response = response.data;
+
+            // if status true
+            if(response.status) {
                 // set phone storage user data
-                await AsyncStorage.setItem('userData', JSON.stringify(response.data.data));
-                // get phone storage user data
-                data = JSON.parse(await AsyncStorage.getItem('userData'));
+                await AsyncStorage.setItem('userData', JSON.stringify(response.data));
             }
         }
         
         // dispatch action
-        dispatch({ type: USER_GET, payload: data });
+        dispatch({ type: USER_GET, payload: response.data });
         // return response
-        return setResponse({ status: true, data });
+        return setResponse(response);
     }
     catch (err) {
         // return response
@@ -110,7 +116,10 @@ export const logout = () => async dispatch => {
 
 export const update = (data) => async dispatch => {
     try {
-        const response = await Axios.post(API_URL + API_USER_UPDATE, data);
+        const response = await Axios.post(API_URL + API_USER_UPDATE, {
+            id: data.id,
+            data
+        });
         if(response.data.status) {
             // set phone storage user data
             await AsyncStorage.setItem('userData', JSON.stringify(response.data.data));

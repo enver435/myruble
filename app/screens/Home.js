@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { View, StyleSheet } from 'react-native';
+import { showMessage } from 'react-native-flash-message';
 
 // import components
 import Header from '../components/Header';
@@ -14,8 +15,8 @@ class Home extends Component {
         // init state
         this.state = {
             loading: true,
-            user: props.userState,
-            game: props.gameState
+            user: {},
+            game: {}
         };
     }
 
@@ -24,12 +25,14 @@ class Home extends Component {
     }
 
     static getDerivedStateFromProps(nextProps, prevState) {
+        let obj = {};
         if (prevState.user !== nextProps.userState) {
-            return {
-                user: nextProps.userState
-            };
+            obj.user = nextProps.userState;
         }
-        return null;
+        if (prevState.game !== nextProps.gameState) {
+            obj.game = nextProps.gameState;
+        }
+        return Object.keys(obj).length > 0 ? obj : null;
     }
 
     componentDidMount() {
@@ -39,11 +42,19 @@ class Home extends Component {
         const getGameDefault = this.props.gameActions.getDefault();
         // all operation async
         Promise.all([getUser, getGameDefault]).then((response) => {
-            if(response[0].status && response[1].status) {
-                this.setState({ loading: false });
-            } else {
-                console.warn(response[0].message, response[1].message);
+            if(!response[0].status) {
+                showMessage({
+                    message: response[0].message,
+                    type: 'danger'
+                });
             }
+            if(!response[1].status) {
+                showMessage({
+                    message: response[1].message,
+                    type: 'danger'
+                });
+            }
+            this.setState({ loading: false });
         });
     }
 

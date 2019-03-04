@@ -1,10 +1,13 @@
-import { AsyncStorage } from 'react-native';
+import {
+    AsyncStorage,
+    ToastAndroid
+} from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 
 export const checkUpdatedApp = async () => {
     try {
         const appVersion = await AsyncStorage.getItem('appVersion');
-        if(appVersion != DeviceInfo.getVersion()) {
+        if (appVersion != DeviceInfo.getVersion()) {
             return true;
         }
         return false;
@@ -13,3 +16,12 @@ export const checkUpdatedApp = async () => {
     }
 }
 
+export const showToast = (message) => {
+    ToastAndroid.showWithGravityAndOffset(
+        message,
+        ToastAndroid.LONG,
+        ToastAndroid.BOTTOM,
+        0,
+        50,
+    );
+}

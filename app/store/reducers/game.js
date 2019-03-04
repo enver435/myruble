@@ -4,7 +4,8 @@ import {
     GAME_STOP,
     GAME_NEXT,
     GAME_CURRENT_TIME,
-    GAME_RESULTS
+    GAME_RESULTS,
+    GAME_RESET
 } from '../../constants/actions/game';
 
 // init state
@@ -48,6 +49,7 @@ export default function gameReducer(state = INITIAL_STATE, action) {
                     correctAnswer: firstNumber + secondNumber
                 }
             };
+        case GAME_RESET:
         case GAME_STOP:
             return {
                 ...state,

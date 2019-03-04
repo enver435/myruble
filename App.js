@@ -11,6 +11,7 @@ import {
 import FlashMessage from 'react-native-flash-message';
 import DeviceInfo from 'react-native-device-info';
 
+// import app navigation
 import AppNavigator from './app/AppNavigator';
 
 // import store

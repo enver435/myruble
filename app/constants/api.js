@@ -15,3 +15,4 @@ export const API_USER_INFO = "/user/info";
  * GAME URL's
  */
 export const API_GAME_DEFAULT = "/game/default";
+export const API_INSERT_GAME  = "/game/insert";
