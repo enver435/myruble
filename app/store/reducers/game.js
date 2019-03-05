@@ -1,11 +1,11 @@
+// import action type constants
 import {
     GAME_DEFAULT,
     GAME_START,
-    GAME_STOP,
-    GAME_NEXT,
+    GAME_NEXT_QUESTION,
+    GAME_CHECK_ANSWER,
     GAME_CURRENT_TIME,
-    GAME_RESULTS,
-    GAME_RESET
+    GAME_RESULTS
 } from '../../constants/actions/game';
 
 // init state
@@ -29,7 +29,7 @@ function getRandomInt(min, max) {
 }
 
 export default function gameReducer(state = INITIAL_STATE, action) {
-    const firstNumber = getRandomInt(0, 100);
+    const firstNumber  = getRandomInt(0, 100);
     const secondNumber = getRandomInt(0, 100);
 
     switch (action.type) {
@@ -49,19 +49,24 @@ export default function gameReducer(state = INITIAL_STATE, action) {
                     correctAnswer: firstNumber + secondNumber
                 }
             };
-        case GAME_RESET:
-        case GAME_STOP:
-            return {
-                ...state,
-                data: INITIAL_STATE.data
-            };
-        case GAME_NEXT:
+        case GAME_CHECK_ANSWER:
+            const correct     = action.payload.answer == state.data.correctAnswer ? true : false;
+            const taskSuccess = correct ? state.data.taskSuccess + 1 : state.data.taskSuccess;
+            const taskFail    = !correct ? state.data.taskFail + 1 : state.data.taskFail;
+
             return {
                 ...state,
                 data: {
                     ...state.data,
-                    taskSuccess: action.payload.correct ? state.data.taskSuccess + 1 : state.data.taskSuccess,
-                    taskFail: !action.payload.correct ? state.data.taskFail + 1 : state.data.taskFail,
+                    taskSuccess,
+                    taskFail
+                }
+            };
+        case GAME_NEXT_QUESTION:
+            return {
+                ...state,
+                data: {
+                    ...state.data,
                     firstNumber,
                     secondNumber,
                     correctAnswer: firstNumber + secondNumber
@@ -72,7 +77,7 @@ export default function gameReducer(state = INITIAL_STATE, action) {
                 ...state,
                 data: {
                     ...state.data,
-                    currentTime: action.payload
+                    currentTime: state.data.currentTime+1
                 }
             };
         case GAME_RESULTS:

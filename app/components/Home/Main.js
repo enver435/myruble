@@ -13,7 +13,7 @@ class Main extends Component {
     }
 
     render() {
-        const { status, firstNumber, secondNumber, taskSuccess, taskFail, currentTime } = this.props.gameState.data;
+        const { status, firstNumber, secondNumber, taskSuccess, currentTime } = this.props.gameState.data;
         const { task, time } = this.props.gameState.defaultData;
         const { heart } = this.props.userState.data;
 

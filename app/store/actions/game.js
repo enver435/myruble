@@ -4,11 +4,10 @@ import Axios from 'axios';
 import {
     GAME_DEFAULT,
     GAME_START,
-    GAME_STOP,
-    GAME_NEXT,
+    GAME_NEXT_QUESTION,
+    GAME_CHECK_ANSWER,
     GAME_CURRENT_TIME,
-    GAME_RESULTS,
-    GAME_RESET
+    GAME_RESULTS
 } from '../../constants/actions/game';
 
 // import api constants
@@ -46,18 +45,14 @@ export const startGame = () => async dispatch => {
     dispatch({ type: GAME_START });
 }
 
-export const stopGame = () => async dispatch => {
-    dispatch({ type: GAME_STOP });
+export const nextQuestion = () => async dispatch => {
+    dispatch({ type: GAME_NEXT_QUESTION });
 }
 
-export const resetGame = () => async dispatch => {
-    dispatch({ type: GAME_RESET });
-}
-
-export const nextGame = (correct) => async dispatch => {
+export const checkAnswer = (answer) => async dispatch => {
     dispatch({
-        type: GAME_NEXT,
-        payload: { correct }
+        type: GAME_CHECK_ANSWER,
+        payload: { answer }
     });
 }
 
@@ -65,6 +60,6 @@ export const resultsGame = () => async dispatch => {
     dispatch({ type: GAME_RESULTS });
 }
 
-export const setCurrentTime = (currentTime) => async dispatch => {
-    dispatch({ type: GAME_CURRENT_TIME, payload: currentTime });
+export const setCurrentTime = () => async dispatch => {
+    dispatch({ type: GAME_CURRENT_TIME });
 }

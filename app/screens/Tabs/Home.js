@@ -44,7 +44,7 @@ class Home extends Component {
         const gameDefaultData = prevProps.gameState.defaultData;
         if(
             gameData.status && 
-            (gameData.currentTime+1) == gameDefaultData.time ||
+            gameData.currentTime == gameDefaultData.time ||
             gameData.taskSuccess == gameDefaultData.task
         ) {
             // end game
@@ -82,26 +82,25 @@ class Home extends Component {
         // dispatch action start game
         this.props.gameActions.startGame();
         // start timer
-        let currentTime = 0;
         this.timerInterval = setInterval(() => {
-            currentTime++;
-            this.props.gameActions.setCurrentTime(currentTime);
+            this.props.gameActions.setCurrentTime();
         }, 1000);
     }
 
     stopGame = () => {
         // end game
         this.endGame();
-        // dispatch action stop game
-        this.props.gameActions.stopGame();
         // keyboard dismiss
         Keyboard.dismiss();
         // clear timer
         clearInterval(this.timerInterval);
     }
 
-    sendAnswer = (correct) => {
-        this.props.gameActions.nextGame(correct);
+    sendAnswer = (answer) => {
+        // dispatch action check answer correct
+        this.props.gameActions.checkAnswer(answer);
+        // dispatch action next question
+        this.props.gameActions.nextQuestion();
     }
 
     render() {
@@ -116,7 +115,6 @@ class Home extends Component {
                             userState={this.state.user}
                             gameState={this.state.game}/>
                         <Enter
-                            correctAnswer={this.state.game.data.correctAnswer}
                             sendAnswer={this.sendAnswer}/>
                         <Control
                             status={this.state.game.data.status}

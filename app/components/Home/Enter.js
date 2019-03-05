@@ -12,15 +12,10 @@ class Enter extends Component {
         };
     }
 
-    onClickSend = (correctAnswer) => {
+    onClickSend = () => {
         if(this.state.input.length > 0) {
-            let correct = false;
-            // check correct answer
-            if(correctAnswer == this.state.input) {
-                correct = true;
-            }
             // send answer
-            this.props.sendAnswer(correct);
+            this.props.sendAnswer(this.state.input);
             // clear input
             this.setState({ input: '' });
         }
@@ -37,13 +32,13 @@ class Enter extends Component {
                     value={this.state.input}
                     onChangeText={(val) => this.setState({ input: val })}
                     onSubmitEditing={() => { 
-                        this.onClickSend(this.props.correctAnswer);
+                        this.onClickSend();
                     }}
                     blurOnSubmit={false}
                 />
                 <TouchableHighlight
                     onPress={() => {
-                        this.onClickSend(this.props.correctAnswer)
+                        this.onClickSend()
                     }}
                     underlayColor="transparent">
                     <Icon name="send" size={35} color="#474747" style={styles.btnSend} />
@@ -70,7 +65,6 @@ const styles = StyleSheet.create({
 
 // component prop types
 Enter.propTypes = {
-    correctAnswer: PropTypes.number.isRequired,
     sendAnswer: PropTypes.func.isRequired
 };
 
