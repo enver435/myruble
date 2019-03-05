@@ -36,6 +36,9 @@ class Home extends Component {
     }
 
     componentDidMount() {
+        // set mount
+        this._isMounted = true;
+
         // get user data
         const getUser = this.props.userActions.get();
         // get game default data
@@ -54,8 +57,16 @@ class Home extends Component {
                     type: 'danger'
                 });
             }
-            this.setState({ loading: false });
+
+            if(this._isMounted) {
+                this.setState({ loading: false });
+            }
         });
+    }
+
+    componentWillUnmount() {
+        // set mount
+        this._isMounted = false;
     }
 
     render() {

@@ -28,10 +28,12 @@ class SignIn extends Component {
     }
 
     componentDidMount() {
+        // set mount
         this._isMounted = true;
     }
 
-    componentWillUnmount(){
+    componentWillUnmount() {
+        // set mount
         this._isMounted = false;
     }
 

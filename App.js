@@ -30,13 +30,24 @@ class App extends Component {
     }
 
     componentDidMount() {
+        // set mount
+        this._isMounted = true;
+        // check network
         this.checkNetwork();
+        // update app version
         this.updateAppVersion();
+    }
+
+    componentWillUnmount() {
+        // set mount
+        this._isMounted = false;
     }
 
     checkNetwork = () => {
         NetInfo.isConnected.fetch().then(isConnected => {
-            this.setState({ isConnected });
+            if(this._isMounted) {
+                this.setState({ isConnected });
+            }
         });
     }
 
