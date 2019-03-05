@@ -10,7 +10,7 @@ import PropTypes from 'prop-types';
 import Overlay from 'react-native-modal-overlay';
 import { Button } from 'react-native-material-ui';
 
-class GameResults extends Component {
+class ResultModal extends Component {
     constructor(props) {
         super(props);
     }
@@ -108,10 +108,10 @@ const styles = StyleSheet.create({
 });
 
 // component prop types
-GameResults.propTypes = {
+ResultModal.propTypes = {
     gameState: PropTypes.object.isRequired,
     hideVisible: PropTypes.func.isRequired,
     visible: PropTypes.bool.isRequired
 };
 
-export default GameResults;
+export default ResultModal;
