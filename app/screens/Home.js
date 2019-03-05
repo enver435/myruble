@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { View, StyleSheet } from 'react-native';
-import { showMessage } from 'react-native-flash-message';
+
+// import helpers
+import { showToast } from '../Helpers';
 
 // import components
 import Header from '../components/Header';
@@ -46,16 +48,10 @@ class Home extends Component {
         // all operation async
         Promise.all([getUser, getGameDefault]).then((response) => {
             if(!response[0].status) {
-                showMessage({
-                    message: response[0].message,
-                    type: 'danger'
-                });
+                showToast(response[0].message);
             }
             if(!response[1].status) {
-                showMessage({
-                    message: response[1].message,
-                    type: 'danger'
-                });
+                showToast(response[1].message);
             }
 
             if(this._isMounted) {

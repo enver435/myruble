@@ -11,6 +11,7 @@ import Enter from '../../components/Home/Enter';
 import Main from '../../components/Home/Main';
 import Control from '../../components/Home/Control';
 import ResultModal from '../../components/Home/ResultModal';
+import HeartModal from '../../components/Home/HeartModal';
 
 class Home extends Component {
     constructor(props) {
@@ -19,6 +20,7 @@ class Home extends Component {
         this.state = {
             loading: false,
             resultModalVisible: false,
+            heartModalVisible: false,
             user: {},
             game: {}
         };
@@ -86,11 +88,15 @@ class Home extends Component {
         }
 
         // set visible result modal
-        this.setVisibleModal(true);
+        this.setVisibleResultModal(true);
     }
 
-    setVisibleModal = (visible) => {
+    setVisibleResultModal = (visible) => {
         this.setState({ resultModalVisible: visible });
+    }
+
+    setVisibleHeartModal = (visible) => {
+        this.setState({ heartModalVisible: visible });
     }
 
     startGame = async () => {
@@ -113,8 +119,8 @@ class Home extends Component {
                 this.props.gameActions.setCurrentTime();
             }, 1000);
         } else {
-            // show heart modal
-
+            // set visible heart modal
+            this.setVisibleHeartModal(true);
         }
     }
 
@@ -156,10 +162,14 @@ class Home extends Component {
                             startGame={this.startGame}
                             stopGame={this.stopGame}/>
                     </ScrollView>
+
                     <ResultModal
                         gameState={this.state.game}
                         visible={this.state.resultModalVisible}
-                        hideVisible={() => { this.setVisibleModal(false) }}/>
+                        hideVisible={() => { this.setVisibleResultModal(false) }}/>
+                    <HeartModal
+                        visible={this.state.heartModalVisible}
+                        hideVisible={() => { this.setVisibleHeartModal(false) }}/>
                 </View>
             ) : (
                 <View style={styles.screenCenter}>

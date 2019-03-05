@@ -29,26 +29,30 @@ export const get = () => async dispatch => {
     try {
         // set phone storage user data
         const userData = await getStorage('userData');
-
-        // post request and get user data
-        const response = await POST(API_URL + API_USER_INFO, {
-            id: userData.id
-        });
-
-        // if status true
-        if (response.status) {
-            // set phone storage user data
-            await setStorage('userData', response.data.data);
-
-            // dispatch action
-            dispatch({
-                type: USER_GET,
-                payload: response.data.data
+        if(userData) {
+            // post request and get user data
+            const response = await POST(API_URL + API_USER_INFO, {
+                id: userData.id
             });
+    
+            // if status true
+            if (response.status) {
+                // set phone storage user data
+                await setStorage('userData', response.data.data);
+    
+                // dispatch action
+                dispatch({
+                    type: USER_GET,
+                    payload: response.data.data
+                });
+            }
+            // return response
+            return setResponse(response.data);
         }
-
         // return response
-        return setResponse(response);
+        return setResponse({
+            status: true
+        });
     } catch (err) {
         // return response
         return setResponse({
@@ -84,7 +88,7 @@ export const signIn = (data) => async dispatch => {
 
 export const signUp = (data) => async dispatch => {
     try {
-        const response = await POST_REQUEST(API_URL + API_SIGN_UP, data);
+        const response = await POST(API_URL + API_SIGN_UP, data);
         if (response.data.status) {
             // set phone storage user data
             await setStorage('userData', response.data.data);

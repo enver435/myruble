@@ -8,8 +8,10 @@ import {
     StyleSheet,
     TouchableHighlight
 } from 'react-native';
-import { showMessage } from 'react-native-flash-message';
-import { Button } from 'react-native-material-ui';
+import { Button } from 'react-native-elements';
+
+// import helpers
+import { showToast } from '../Helpers';
 
 class SignIn extends Component {
     static navigationOptions = {
@@ -48,10 +50,7 @@ class SignIn extends Component {
             if(response.status) {
                 this.props.navigation.navigate('Home');
             } else {
-                showMessage({
-                    message: response.message,
-                    type: response.status ? 'success' : 'danger'
-                });
+                showToast(response.message);
             }
 
             if(this._isMounted) {
@@ -95,32 +94,17 @@ class SignIn extends Component {
                             </TouchableHighlight>
                             <Button
                                 onPress={this.onClickSignIn}
-                                text={this.state.loading === true ? '...' : 'Вход'}
+                                title="Вход"
+                                loading={this.state.loading}
                                 raised
-                                style={{ 
-                                    container: {
-                                        backgroundColor: '#474747',
-                                    },
-                                    text: {
-                                        color: '#fff'
-                                    }
-                                }}
                             />
                         </View>
                         <View>
                             <Text style={styles.signUpText}>У вас нет учетной записи?</Text>
                             <Button
                                 onPress={this.onClickSignUp}
-                                text="Регистрация"
+                                title="Регистрация"
                                 raised
-                                style={{ 
-                                    container: {
-                                        backgroundColor: '#474747',
-                                    },
-                                    text: {
-                                        color: '#fff'
-                                    }
-                                }}
                             />
                         </View>
                     </View>

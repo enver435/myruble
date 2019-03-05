@@ -6,8 +6,10 @@ import {
     Dimensions, 
     StyleSheet
 } from 'react-native';
-import { showMessage } from 'react-native-flash-message';
-import { Button } from 'react-native-material-ui';
+import { Button } from 'react-native-elements';
+
+// import helpers
+import { showToast } from '../Helpers';
 
 class SignUp extends Component {
     static navigationOptions = {
@@ -48,10 +50,7 @@ class SignUp extends Component {
             if(response.status) {
                 this.props.navigation.navigate('Home');
             } else {
-                showMessage({
-                    message: response.message,
-                    type: response.status ? 'success' : 'danger'
-                });
+                showToast(response.message);
             }
 
             if(this._isMounted) {
@@ -98,16 +97,9 @@ class SignUp extends Component {
                             />
                             <Button
                                 onPress={this.onClickSignUp}
-                                text={this.state.loading === true ? '...' : 'Регистрация'}
+                                title="Регистрация"
+                                loading={this.state.loading}
                                 raised
-                                style={{
-                                    container: {
-                                        backgroundColor: '#474747',
-                                    },
-                                    text: {
-                                        color: '#fff'
-                                    }
-                                }}
                             />
                         </View>
                     </View>

@@ -1,8 +1,14 @@
 import React, { Component } from 'react';
 import { NetInfo } from 'react-native';
 import { Provider } from 'react-redux';
-import FlashMessage from 'react-native-flash-message';
 import DeviceInfo from 'react-native-device-info';
+import { ThemeProvider } from 'react-native-elements';
+
+// import store
+import store from './app/store';
+
+// import app navigation
+import AppNavigator from './app/AppNavigator';
 
 // import helpers
 import {
@@ -11,14 +17,11 @@ import {
     showToast
 } from './app/Helpers';
 
-// import app navigation
-import AppNavigator from './app/AppNavigator';
-
-// import store
-import store from './app/store';
-
 // import components
 import Offline from './app/components/Offline';
+
+// import global theme
+import Theme from './app/Theme';
 
 class App extends Component {
     constructor(props) {
@@ -65,12 +68,13 @@ class App extends Component {
 
     render() {
         return(
-            this.state.isConnected ? (
-                <Provider store={store}>
-                    <AppNavigator/>
-                    <FlashMessage position="bottom"/>
-                </Provider>
-            ) : <Offline checkNetwork={this.checkNetwork}/>
+            <ThemeProvider theme={Theme}>
+                {this.state.isConnected ? (
+                    <Provider store={store}>
+                        <AppNavigator/>
+                    </Provider>
+                ) : <Offline checkNetwork={this.checkNetwork}/>}
+            </ThemeProvider>
         )
     }
 }

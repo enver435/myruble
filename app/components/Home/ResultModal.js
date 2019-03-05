@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import PropTypes from 'prop-types';
 import Overlay from 'react-native-modal-overlay';
-import { Button } from 'react-native-material-ui';
+import { Button } from 'react-native-elements';
 
 class ResultModal extends Component {
     constructor(props) {
@@ -42,17 +42,8 @@ class ResultModal extends Component {
                     </View>
                     <Button
                         onPress={this.props.hideVisible}
-                        text="OK"
+                        title="OK"
                         raised
-                        style={{ 
-                            container: {
-                                backgroundColor: '#474747',
-                                marginTop: 15
-                            },
-                            text: {
-                                color: '#fff'
-                            }
-                        }}
                     />
             </Overlay>
         );
