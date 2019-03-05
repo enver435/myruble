@@ -17,7 +17,7 @@ class Balance extends Component {
 			<View style={styles.container}>
 				<View style={styles.balanceContainer}>
 					<View style={styles.balance}>
-						<Text style={styles.balanceText}>{balance}</Text>
+						<Text style={styles.balanceText}>{balance.toFixed(2)}</Text>
 					</View>
 					<View style={styles.currency}>
 						<Image style={styles.currencyImg} source={require('../../assets/ruble.png')}/>

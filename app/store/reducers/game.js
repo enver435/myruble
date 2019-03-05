@@ -1,3 +1,6 @@
+// import helpers
+import { getRandomInt } from '../../Helpers';
+
 // import action type constants
 import {
     GAME_DEFAULT,
@@ -22,15 +25,9 @@ const INITIAL_STATE = {
     }
 };
 
-function getRandomInt(min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min)) + min;
-}
-
 export default function gameReducer(state = INITIAL_STATE, action) {
-    const firstNumber  = getRandomInt(0, 100);
-    const secondNumber = getRandomInt(0, 100);
+    const firstNumber  = getRandomInt(0, 99);
+    const secondNumber = getRandomInt(0, 99);
 
     switch (action.type) {
         case GAME_DEFAULT:

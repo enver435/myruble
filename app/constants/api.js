@@ -9,7 +9,8 @@ export const API_SIGN_UP = "/auth/signup";
 /**
  * USER URL's
  */
-export const API_USER_INFO = "/user/info";
+export const API_USER_INFO   = "/user/info";
+export const API_USER_UPDATE = "/user/update";
 
 /**
  * GAME URL's

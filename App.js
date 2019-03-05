@@ -1,15 +1,15 @@
-import React, {
-    Component
-} from 'react';
-import {
-    AsyncStorage,
-    NetInfo
-} from 'react-native';
-import {
-    Provider
-} from 'react-redux';
+import React, { Component } from 'react';
+import { NetInfo } from 'react-native';
+import { Provider } from 'react-redux';
 import FlashMessage from 'react-native-flash-message';
 import DeviceInfo from 'react-native-device-info';
+
+// import helpers
+import {
+    getStorage,
+    setStorage,
+    showToast
+} from './app/Helpers';
 
 // import app navigation
 import AppNavigator from './app/AppNavigator';
@@ -54,12 +54,12 @@ class App extends Component {
     updateAppVersion = async () => {
         const appVersion = DeviceInfo.getVersion();
         try {
-            const storageAppVersion = await AsyncStorage.getItem('appVersion');
+            const storageAppVersion = await getStorage('appVersion');
             if (storageAppVersion != appVersion) {
-                await AsyncStorage.setItem('appVersion', appVersion);
+                await setStorage('appVersion', appVersion);
             }
         } catch (err) {
-            console.warn(err.message);
+            showToast(err.message);
         }
     }
 
