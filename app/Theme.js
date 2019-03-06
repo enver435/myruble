@@ -5,7 +5,11 @@ const Theme = {
         },
         containerStyle: {
             marginTop: 10
-        }
+        },
+        titleStyle: {
+            fontSize: 14
+        },
+        raised: true
     }
 };
 

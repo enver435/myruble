@@ -1,0 +1,43 @@
+{
+  "project_info": {
+    "project_number": "169885970901",
+    "firebase_url": "https://myruble-dfbba.firebaseio.com",
+    "project_id": "myruble-dfbba",
+    "storage_bucket": "myruble-dfbba.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:169885970901:android:ef53e6a9a50a69f5",
+        "android_client_info": {
+          "package_name": "com.myruble"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "169885970901-v9c7iies6vjehheb7qm40nd1q2theo15.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDq8LrzC32fDCpsnL3eQpt0YciTiVDvV8o"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      },
+      "admob_app_id": "ca-app-pub-4602055361552926~9718601757"
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, ScrollView, StyleSheet, Keyboard } from 'react-native';
 
 // import helpers
-import { showToast } from '../../Helpers';
+import { showToast, setStorage, getStorage } from '../../Helpers';
 
 // import components
 import Loading from '../../components/Loading';
@@ -38,21 +38,21 @@ class Home extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        const gameData = prevProps.gameState.data;
+        const gameData        = prevProps.gameState.data;
         const gameDefaultData = prevProps.gameState.defaultData;
         if(
             gameData.status && 
-            gameData.currentTime == gameDefaultData.time ||
+            (gameData.currentTime+1) == gameDefaultData.time ||
             gameData.taskSuccess == gameDefaultData.task
         ) {
+            // clear timer
+            clearInterval(this.timerInterval);
+
             // end game
             this.endGame();
 
             // keyboard dismiss
             Keyboard.dismiss();
-
-            // clear timer
-            clearInterval(this.timerInterval);
         }
     }
 
@@ -101,15 +101,8 @@ class Home extends Component {
 
     startGame = async () => {
         if(this.state.user.data.heart > 0) {
-            // dispatch action update user
-            const updateData = {
-                heart: this.state.user.data.heart - 1
-            };
-            this.props.userActions.update(updateData).then((response) => {
-                if(!response.status) {
-                    showToast(response.message);
-                }
-            });
+            // update user heart
+            this.updateHeart(this.state.user.data.heart - 1);
 
             // dispatch action start game
             this.props.gameActions.startGame();
@@ -119,20 +112,26 @@ class Home extends Component {
                 this.props.gameActions.setCurrentTime();
             }, 1000);
         } else {
+            // set time open heart modal
+            if(!await getStorage('heartModalOpenTime')) {
+                const nowTime = Math.round(new Date().getTime() / 1000).toString();
+                await setStorage('heartModalOpenTime', nowTime);
+            }
+
             // set visible heart modal
             this.setVisibleHeartModal(true);
         }
     }
 
     stopGame = () => {
+        // clear timer
+        clearInterval(this.timerInterval);
+
         // end game
         this.endGame();
 
         // keyboard dismiss
         Keyboard.dismiss();
-
-        // clear timer
-        clearInterval(this.timerInterval);
     }
 
     sendAnswer = (answer) => {
@@ -141,6 +140,16 @@ class Home extends Component {
 
         // dispatch action next question
         this.props.gameActions.nextQuestion();
+    }
+
+    updateHeart = (heartCount) => {
+        // dispatch action update user
+        const updateData = { heart: heartCount };
+        this.props.userActions.update(updateData).then((response) => {
+            if(!response.status) {
+                showToast(response.message);
+            }
+        });
     }
 
     render() {
@@ -163,13 +172,15 @@ class Home extends Component {
                             stopGame={this.stopGame}/>
                     </ScrollView>
 
-                    <ResultModal
-                        gameState={this.state.game}
-                        visible={this.state.resultModalVisible}
-                        hideVisible={() => { this.setVisibleResultModal(false) }}/>
-                    <HeartModal
-                        visible={this.state.heartModalVisible}
-                        hideVisible={() => { this.setVisibleHeartModal(false) }}/>
+                    {this.state.resultModalVisible ?
+                        <ResultModal
+                            gameState={this.state.game}
+                            hideVisible={() => { this.setVisibleResultModal(false) }}/> : null}
+
+                    {this.state.heartModalVisible ?
+                        <HeartModal
+                            hideVisible={() => { this.setVisibleHeartModal(false) }}
+                            updateHeart={() => { this.updateHeart(this.state.user.data.heart + 1) }}/> : null}
                 </View>
             ) : (
                 <View style={styles.screenCenter}>

@@ -4,7 +4,8 @@ import React, {
 import {
     NetInfo,
     Alert,
-    Linking
+    Linking,
+    AppState
 } from 'react-native';
 import {
     Provider
@@ -38,10 +39,13 @@ import Theme from './app/Theme';
 class App extends Component {
     constructor(props) {
         super(props);
+
         // init state
         this.state = {
-            isConnected: true
+            isConnected: true,
+            appState: AppState.currentState
         };
+        
         // app url
         this.appUrl = 'https://play.google.com/store/apps/details?id=com.myruble';
     }
@@ -49,6 +53,7 @@ class App extends Component {
     componentDidMount() {
         // set mount
         this._isMounted = true;
+
         // check network
         this.checkNetwork().then(() => {
             if(this.state.isConnected) {
@@ -63,14 +68,17 @@ class App extends Component {
         this._isMounted = false;
     }
 
-    checkNetwork = () => {
-        NetInfo.isConnected.fetch().then(isConnected => {
+    checkNetwork = async () => {
+        try {
+            const isConnected = await NetInfo.isConnected.fetch();
             if (this._isMounted) {
                 this.setState({
                     isConnected
                 });
             }
-        });
+        } catch (err) {
+            showToast(err.message);
+        }
     }
 
     appNewVersionCheck = async () => {

@@ -10,7 +10,6 @@ const Offline = ({ checkNetwork }) => (
         <Button
             onPress={checkNetwork}
             title="Повторное Подключение"
-            raised
         />
     </View>
 );

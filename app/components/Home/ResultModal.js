@@ -43,7 +43,6 @@ class ResultModal extends Component {
                     <Button
                         onPress={this.props.hideVisible}
                         title="OK"
-                        raised
                     />
             </Overlay>
         );
@@ -102,7 +101,12 @@ const styles = StyleSheet.create({
 ResultModal.propTypes = {
     gameState: PropTypes.object.isRequired,
     hideVisible: PropTypes.func.isRequired,
-    visible: PropTypes.bool.isRequired
+    visible: PropTypes.bool
+};
+
+// component default props
+ResultModal.defaultProps = {
+    visible: true
 };
 
 export default ResultModal;

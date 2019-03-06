@@ -96,7 +96,6 @@ class SignIn extends Component {
                                 onPress={this.onClickSignIn}
                                 title="Вход"
                                 loading={this.state.loading}
-                                raised
                             />
                         </View>
                         <View>

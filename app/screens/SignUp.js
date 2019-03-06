@@ -99,7 +99,6 @@ class SignUp extends Component {
                                 onPress={this.onClickSignUp}
                                 title="Регистрация"
                                 loading={this.state.loading}
-                                raised
                             />
                         </View>
                     </View>
