@@ -16,7 +16,7 @@ class Tabs extends Component {
 			index: 1,
 			routes: [
 				{ key: 'referal', title: 'Реферал' },
-				{ key: 'home', title: 'Пиши' },
+				{ key: 'home', title: 'Играть' },
 				{ key: 'withdraw', title: 'Выплаты' }
 			]
 		};
