@@ -3,7 +3,6 @@ import {
     ToastAndroid
 } from 'react-native';
 import Axios from 'axios';
-import DeviceInfo from 'react-native-device-info';
 
 export const IsJsonString = (str) => {
     try {
@@ -41,18 +40,6 @@ export const setStorage = async (key, value) => {
 export const removeStorage = async (key) => {
     try {
         await AsyncStorage.removeItem(key);
-    } catch (err) {
-        showToast(err.message);
-    }
-}
-
-export const checkUpdatedApp = async () => {
-    try {
-        const appVersion = await getStorage('appVersion');
-        if (appVersion != DeviceInfo.getVersion()) {
-            return true;
-        }
-        return false;
     } catch (err) {
         showToast(err.message);
     }
