@@ -57,7 +57,7 @@ class Home extends Component {
     }
 
     endGame = async () => {
-        const gameData = this.state.game.data;
+        const gameData        = this.state.game.data;
         const gameDefaultData = this.state.game.defaultData;
 
         // dispatch action game results
@@ -172,15 +172,15 @@ class Home extends Component {
                             stopGame={this.stopGame}/>
                     </ScrollView>
 
-                    {this.state.resultModalVisible ?
-                        <ResultModal
-                            gameState={this.state.game}
-                            hideVisible={() => { this.setVisibleResultModal(false) }}/> : null}
+                    <ResultModal
+                        hideVisible={() => { this.setVisibleResultModal(false) }}
+                        visible={this.state.resultModalVisible}
+                        gameState={this.state.game}/>
 
-                    {this.state.heartModalVisible ?
-                        <HeartModal
-                            hideVisible={() => { this.setVisibleHeartModal(false) }}
-                            updateHeart={() => { this.updateHeart(this.state.user.data.heart + 1) }}/> : null}
+                    <HeartModal
+                        hideVisible={() => { this.setVisibleHeartModal(false) }}
+                        visible={this.state.heartModalVisible}
+                        updateHeart={() => { this.updateHeart(this.state.user.data.heart + 1) }}/>
                 </View>
             ) : (
                 <View style={styles.screenCenter}>

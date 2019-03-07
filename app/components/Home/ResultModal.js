@@ -22,6 +22,7 @@ class ResultModal extends Component {
         return (
             <Overlay
                 style={styles.container}
+                onClose={this.props.hideVisible}
                 visible={this.props.visible}
                 animationType="zoomIn"
                 containerStyle={styles.containerStyle}
@@ -43,6 +44,7 @@ class ResultModal extends Component {
                     <Button
                         onPress={this.props.hideVisible}
                         title="OK"
+                        style={{ width: '100%', flex: 1 }}
                     />
             </Overlay>
         );
@@ -106,7 +108,7 @@ ResultModal.propTypes = {
 
 // component default props
 ResultModal.defaultProps = {
-    visible: true
+    visible: false
 };
 
 export default ResultModal;

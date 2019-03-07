@@ -32,6 +32,7 @@ import { API_URL } from './app/constants/api';
 
 // import components
 import Offline from './app/components/Offline';
+import AdMobBanner from './app/components/AdMobBanner';
 
 // import global theme
 import Theme from './app/Theme';
@@ -121,6 +122,7 @@ class App extends Component {
                 {this.state.isConnected ? (
                     <Provider store={store}>
                         <AppNavigator/>
+                        <AdMobBanner/>
                     </Provider>
                 ) : <Offline checkNetwork={this.checkNetwork}/>}
             </ThemeProvider>

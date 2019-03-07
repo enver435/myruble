@@ -12,7 +12,7 @@
     "axios": "^0.18.0",
     "prop-types": "^15.7.2",
     "react": "16.6.3",
-    "react-native": "^0.58.5",
+    "react-native": "^0.58.6",
     "react-native-device-info": "^0.26.4",
     "react-native-elements": "^1.1.0",
     "react-native-firebase": "^5.2.3",

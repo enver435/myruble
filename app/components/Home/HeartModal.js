@@ -21,70 +21,106 @@ class HeartModal extends Component {
         // init state
         this.state = {
             time: 0,
-            btnDisabled: true
+            btnGetHeartDisabled: true,
+            btnShowAdDisabled: true
         };
     }
 
     componentDidMount() {
-        this.getOpenTime();
-        this.setTime();
-        this.initAds();
+        // init admob rewarded
+        this.initAdMob();
+
+        // set timer
+        this.setTimer();
     }
 
-    componentDidUpdate(prevProps, prevState) {
-        if(this.state.time == 0) {
-            clearInterval(this.timerInterval);
+    async componentDidUpdate(prevProps, prevState) {
+        // visible not equal
+        if(this.props.visible != prevProps.visible) {
+            // set timer
+            this.setTimer();
 
-            if(this.state.btnDisabled != false) {
-                this.setState({ btnDisabled: false });
-            }
+            // init admob
+            this.initAdMob();
         }
     }
 
-    getOpenTime = async () => {
-        this.getOpenTime = parseInt(await getStorage('heartModalOpenTime'));
+    calcTime = async () => {
+        const getOpenTime = parseInt(await getStorage('heartModalOpenTime'));
+        return (getOpenTime + 60) - Math.round(new Date().getTime() / 1000);
     }
 
-    setTime = () => {
+    setTimer = () => {
+        // set timer
         this.timerInterval = setInterval(() => {
-            const time = (this.getOpenTime + 6) - Math.round(new Date().getTime() / 1000);
-            this.setState({ time });
+            this.calcTime().then((calcTime) => {
+                if(calcTime >= 0) {
+                    this.setState({ time: calcTime, btnGetHeartDisabled: true });
+                } else {
+                    if(this.state.btnGetHeartDisabled) {
+                        this.setState({ btnGetHeartDisabled: false });
+                    }
+                    // clear timer
+                    clearInterval(this.timerInterval);
+                }
+            });
         }, 1000);
     }
 
     fmtMSS = (s) => {
-        return (s - (s %= 60)) / 60 + ( 9 < s ? ':' : ':0') + s;
+        return (s - (s %= 60)) / 60 + (9 < s ? ':' : ':0') + s;
     }
 
     onClickGetHeart = async () => {
+        // update heart +1
         this.props.updateHeart();
+
+        // hide modal
         this.props.hideVisible();
+
+        // open time modal remove from storage
         await removeStorage('heartModalOpenTime');
+
+        // disable button
+        this.setState({ btnGetHeartDisabled: true });
     }
 
-    initAds = () => {
+    initAdMob = () => {
+        // Init admob rewarded
         this.advert = firebase.admob().rewarded('ca-app-pub-4602055361552926/1723905120');
-
         const AdRequest = firebase.admob.AdRequest;
         const request = new AdRequest();
-        request.addKeyword('foo').addKeyword('bar');
 
         // Load the advert with our AdRequest
         this.advert.loadAd(request.build());
 
+        // onAdLoaded
         this.advert.on('onAdLoaded', () => {
-            console.warn('Advert ready to show.');
+            this.setState({ btnShowAdDisabled: false });
         });
 
-        this.advert.on('onRewarded', (event) => {
-            console.warn('The user watched the entire video and will now be rewarded!', event);
+        // onRewarded
+        this.advert.on('onRewarded', async () => {
+            // update heart +1
+            this.props.updateHeart();
+
+            // hide modal
+            this.props.hideVisible();
+
+            // open time modal remove from storage
+            await removeStorage('heartModalOpenTime');
         });
+
+        // onAdClosed
+        // this.advert.on('onAdClosed', () => {
+        //     this.props.hideVisible();
+        // });
     }
 
     onClickShowAds = () => {
         if (this.advert.isLoaded()) {
+            // show rewarded video
             this.advert.show();
-        } else {
         }
     }
 
@@ -92,6 +128,7 @@ class HeartModal extends Component {
         return (
             <Overlay
                 style={styles.container}
+                onClose={this.props.hideVisible}
                 visible={this.props.visible}
                 animationType="zoomIn"
                 containerStyle={styles.containerStyle}
@@ -109,13 +146,14 @@ class HeartModal extends Component {
                                 onPress={this.onClickShowAds}
                                 title="Смотреть"
                                 titleStyle={{ color: '#fbbc05' }}
+                                disabled={this.state.btnShowAdDisabled}
                             />
                         </View>
                         <View style={[styles.button, { paddingLeft: 10 }]}>
                             <Button
                                 onPress={this.onClickGetHeart}
-                                title={this.state.btnDisabled ? this.fmtMSS(this.state.time) : 'Возьми'}
-                                disabled={this.state.btnDisabled}
+                                title={this.state.btnGetHeartDisabled ? this.fmtMSS(this.state.time) : 'Возьми'}
+                                disabled={this.state.btnGetHeartDisabled}
                             />
                         </View>
                     </View>
@@ -153,12 +191,12 @@ const styles = StyleSheet.create({
 // component prop types
 HeartModal.propTypes = {
     hideVisible: PropTypes.func.isRequired,
-    visible: PropTypes.bool.isRequired
+    visible: PropTypes.bool
 };
 
 // component default props
 HeartModal.defaultProps = {
-    visible: true
+    visible: false
 };
 
 export default HeartModal;
