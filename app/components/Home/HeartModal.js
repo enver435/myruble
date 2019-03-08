@@ -81,6 +81,9 @@ class HeartModal extends Component {
         // open time modal remove from storage
         await removeStorage('heartModalOpenTime');
 
+        // remove push notification
+        await removeStorage('NotifyTask');
+
         // disable button
         this.setState({ btnGetHeartDisabled: true });
     }

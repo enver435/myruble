@@ -4,8 +4,7 @@ import React, {
 import {
     NetInfo,
     Alert,
-    Linking,
-    AppState
+    Linking
 } from 'react-native';
 import {
     Provider
@@ -14,6 +13,7 @@ import DeviceInfo from 'react-native-device-info';
 import {
     ThemeProvider
 } from 'react-native-elements';
+import BackgroundJob from 'react-native-background-job';
 
 // import store
 import store from './app/store';
@@ -37,18 +37,23 @@ import AdMobBanner from './app/components/AdMobBanner';
 // import global theme
 import Theme from './app/Theme';
 
+// import tasks
+import NotifyTask from './app/NotifyTask';
+
 class App extends Component {
     constructor(props) {
         super(props);
 
         // init state
         this.state = {
-            isConnected: true,
-            appState: AppState.currentState
+            isConnected: true
         };
         
         // app url
         this.appUrl = 'https://play.google.com/store/apps/details?id=com.myruble';
+
+        // register background notify task
+        this.registerNotifyTask();
     }
 
     componentDidMount() {
@@ -114,6 +119,30 @@ class App extends Component {
         } catch (err) {
             showToast(err.message);
         }
+    }
+
+    registerNotifyTask = async () => {
+        // register task
+        BackgroundJob.register({
+            jobKey: "NotifyTask",
+            job: NotifyTask
+        });
+        
+        // schedule task
+        BackgroundJob.schedule({
+            jobKey: "NotifyTask",
+            job: NotifyTask,
+            // period: 100,
+            // timeout: 10000,
+            exact: true,
+            allowExecutionInForeground: true
+        });
+    }
+
+    cancelNotifyTask = () => {
+        BackgroundJob.cancel({
+            jobKey: 'NotifyTask'
+        });
     }
 
     render() {
