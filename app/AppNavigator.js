@@ -1,4 +1,7 @@
-import { createStackNavigator, createAppContainer } from 'react-navigation';
+import {
+    createStackNavigator,
+    createAppContainer
+} from 'react-navigation';
 
 // import containers
 import Home from './containers/Home';
@@ -9,6 +12,10 @@ const AppNavigator = createStackNavigator({
     Home,
     SignIn,
     SignUp
+}, {
+    transitionConfig: () => ({
+        screenInterpolator: () => null
+    }),
 });
 
 export default createAppContainer(AppNavigator);
