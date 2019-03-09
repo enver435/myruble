@@ -79,7 +79,6 @@ class App extends Component {
                 .android.setChannelId('myruble_channel')
                 .android.setSmallIcon('ic_launcher')
                 .android.setPriority(firebase.notifications.Android.Priority.Max)
-                .android.setVibrate([1000, 1000, 1000, 1000, 1000])
             
             firebase.notifications().displayNotification(notification);
         });

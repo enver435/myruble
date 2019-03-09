@@ -9,7 +9,11 @@ import {
 import { Button } from 'react-native-elements';
 
 // import helpers
-import { showToast, getFirebaseToken } from '../Helpers';
+import {
+    getStorage,
+    getFirebaseToken,
+    showToast
+} from '../Helpers';
 
 class SignUp extends Component {
     static navigationOptions = {
@@ -33,9 +37,18 @@ class SignUp extends Component {
         this._isMounted = true;
     }
 
-    componentWillUnmount() {
+    async componentWillUnmount() {
         // set mount
         this._isMounted = false;
+
+        // update firebase token
+        const userData      = await getStorage('userData');
+        const firebaseToken = await getFirebaseToken();
+        if(userData && userData.firebase_token != firebaseToken) {
+            await this.props.userActions.update({
+                firebase_token: firebaseToken
+            });
+        }
     }
 
     onClickSignUp = async () => {
