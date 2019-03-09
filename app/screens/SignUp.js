@@ -6,7 +6,7 @@ import {
     Dimensions, 
     StyleSheet
 } from 'react-native';
-import { Button } from 'react-native-elements';
+import { Button, CheckBox } from 'react-native-elements';
 
 // import helpers
 import {
@@ -27,7 +27,9 @@ class SignUp extends Component {
             email: '',
             username: '',
             pass: '',
-            loading: false
+            loading: false,
+            checked: false,
+            disabled: true
         };
         this.inputs = {};
     }
@@ -110,10 +112,16 @@ class SignUp extends Component {
                                 secureTextEntry={true}
                                 onChangeText={(pass) => this.setState({ pass })}
                             />
+                            <CheckBox
+                                title='Продолжая вы принимаете Условия Обслуживания и Политика Конфиденциальности'
+                                checked={this.state.checked}
+                                onPress={() => this.setState({ checked: !this.state.checked, disabled: !this.state.disabled })}
+                            />
                             <Button
                                 onPress={this.onClickSignUp}
                                 title="Регистрация"
                                 loading={this.state.loading}
+                                disabled={this.state.disabled}
                             />
                         </View>
                     </View>
