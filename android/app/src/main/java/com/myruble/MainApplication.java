@@ -3,7 +3,6 @@ package com.myruble;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
-import com.pilloxa.backgroundjob.BackgroundJobPackage;
 
 import io.invertase.firebase.RNFirebasePackage;
 import io.invertase.firebase.admob.RNFirebaseAdMobPackage;
@@ -32,7 +31,6 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new BackgroundJobPackage(),
             new RNFirebasePackage(),
             new RNFirebaseAdMobPackage(),
             new RNFirebaseMessagingPackage(),

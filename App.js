@@ -13,7 +13,7 @@ import DeviceInfo from 'react-native-device-info';
 import {
     ThemeProvider
 } from 'react-native-elements';
-import BackgroundJob from 'react-native-background-job';
+import firebase from 'react-native-firebase';
 
 // import store
 import store from './app/store';
@@ -24,7 +24,8 @@ import AppNavigator from './app/AppNavigator';
 // import helpers
 import {
     POST,
-    showToast
+    showToast,
+    firebaseMessagingPermission
 } from './app/Helpers';
 
 // import api constants
@@ -37,9 +38,6 @@ import AdMobBanner from './app/components/AdMobBanner';
 // import global theme
 import Theme from './app/Theme';
 
-// import tasks
-import NotifyTask from './app/NotifyTask';
-
 class App extends Component {
     constructor(props) {
         super(props);
@@ -51,12 +49,9 @@ class App extends Component {
         
         // app url
         this.appUrl = 'https://play.google.com/store/apps/details?id=com.myruble';
-
-        // register background notify task
-        this.registerNotifyTask();
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         // set mount
         this._isMounted = true;
 
@@ -67,11 +62,35 @@ class App extends Component {
                 this.appNewVersionCheck();
             }
         });
+
+        // firebaseMessagingPermission
+        const hasPermission = await firebase.messaging().hasPermission();
+        if (!hasPermission) {
+            try {
+                await firebase.messaging().requestPermission();
+            } catch (err) {
+                showToast(err.message);
+            }
+        }
+
+        // notificationListener
+        this.notificationListener = firebase.notifications().onNotification((notification) => {
+            notification.setSound('default')
+                .android.setChannelId('myruble_channel')
+                .android.setSmallIcon('ic_launcher')
+                .android.setPriority(firebase.notifications.Android.Priority.Max)
+                .android.setVibrate([1000, 1000, 1000, 1000, 1000])
+            
+            firebase.notifications().displayNotification(notification);
+        });
     }
 
     componentWillUnmount() {
         // set mount
         this._isMounted = false;
+
+        // notificationListener
+        this.notificationListener();
     }
 
     checkNetwork = async () => {
@@ -89,8 +108,9 @@ class App extends Component {
 
     appNewVersionCheck = async () => {
         try {
-            const response = await POST(API_URL);
+            const response         = await POST(API_URL);
             const appDeviceVersion = DeviceInfo.getVersion();
+
             if (response.data.appVersion != appDeviceVersion) {
                 Alert.alert(
                     'Новая версия: ' + response.data.appVersion,
@@ -119,30 +139,6 @@ class App extends Component {
         } catch (err) {
             showToast(err.message);
         }
-    }
-
-    registerNotifyTask = async () => {
-        // register task
-        BackgroundJob.register({
-            jobKey: "NotifyTask",
-            job: NotifyTask
-        });
-        
-        // schedule task
-        BackgroundJob.schedule({
-            jobKey: "NotifyTask",
-            job: NotifyTask,
-            // period: 100,
-            // timeout: 10000,
-            exact: true,
-            allowExecutionInForeground: true
-        });
-    }
-
-    cancelNotifyTask = () => {
-        BackgroundJob.cancel({
-            jobKey: 'NotifyTask'
-        });
     }
 
     render() {

@@ -34,7 +34,7 @@ class HeartModal extends Component {
         this.setTimer();
     }
 
-    async componentDidUpdate(prevProps, prevState) {
+    componentDidUpdate(prevProps, prevState) {
         // visible not equal
         if(this.props.visible != prevProps.visible) {
             // set timer
@@ -82,7 +82,7 @@ class HeartModal extends Component {
         await removeStorage('heartModalOpenTime');
 
         // remove push notification
-        await removeStorage('NotifyTask');
+        // await removeStorage('NotifyTask');
 
         // disable button
         this.setState({ btnGetHeartDisabled: true });
@@ -90,9 +90,9 @@ class HeartModal extends Component {
 
     initAdMob = () => {
         // Init admob rewarded
-        this.advert = firebase.admob().rewarded('ca-app-pub-4602055361552926/1723905120');
+        this.advert     = firebase.admob().rewarded('ca-app-pub-4602055361552926/1723905120');
         const AdRequest = firebase.admob.AdRequest;
-        const request = new AdRequest();
+        const request   = new AdRequest();
 
         // Load the advert with our AdRequest
         this.advert.loadAd(request.build());
@@ -113,11 +113,6 @@ class HeartModal extends Component {
             // open time modal remove from storage
             await removeStorage('heartModalOpenTime');
         });
-
-        // onAdClosed
-        // this.advert.on('onAdClosed', () => {
-        //     this.props.hideVisible();
-        // });
     }
 
     onClickShowAds = () => {
@@ -194,7 +189,8 @@ const styles = StyleSheet.create({
 // component prop types
 HeartModal.propTypes = {
     hideVisible: PropTypes.func.isRequired,
-    visible: PropTypes.bool
+    updateHeart: PropTypes.func.isRequired,
+    visible: PropTypes.bool,
 };
 
 // component default props

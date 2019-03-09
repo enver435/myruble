@@ -77,26 +77,13 @@ class Home extends Component {
 
         // dispatch action update user
         if(gameData.taskSuccess == gameDefaultData.task) {
-            const updateData = {
+            this.updateUser({
                 balance: this.state.user.data.balance + gameDefaultData.price
-            };
-            this.props.userActions.update(updateData).then((response) => {
-                if(!response.status) {
-                    showToast(response.message);
-                }
             });
         }
 
         // set visible result modal
         this.setVisibleResultModal(true);
-    }
-
-    setVisibleResultModal = (visible) => {
-        this.setState({ resultModalVisible: visible });
-    }
-
-    setVisibleHeartModal = (visible) => {
-        this.setState({ heartModalVisible: visible });
     }
 
     startGame = async () => {
@@ -114,8 +101,16 @@ class Home extends Component {
         } else {
             // set time open heart modal
             if(!await getStorage('heartModalOpenTime')) {
+                // get now time
                 const nowTime = Math.round(new Date().getTime() / 1000).toString();
+
+                // set storage
                 await setStorage('heartModalOpenTime', nowTime);
+
+                // update user
+                this.updateUser({
+                    start_notify_heart: nowTime
+                });
             }
 
             // set visible heart modal
@@ -142,14 +137,21 @@ class Home extends Component {
         this.props.gameActions.nextQuestion();
     }
 
-    updateHeart = (heartCount) => {
+    updateUser = (data) => {
         // dispatch action update user
-        const updateData = { heart: heartCount };
-        this.props.userActions.update(updateData).then((response) => {
+        this.props.userActions.update(data).then((response) => {
             if(!response.status) {
                 showToast(response.message);
             }
         });
+    }
+
+    setVisibleResultModal = (visible) => {
+        this.setState({ resultModalVisible: visible });
+    }
+
+    setVisibleHeartModal = (visible) => {
+        this.setState({ heartModalVisible: visible });
     }
 
     render() {
@@ -180,7 +182,11 @@ class Home extends Component {
                     <HeartModal
                         hideVisible={() => { this.setVisibleHeartModal(false) }}
                         visible={this.state.heartModalVisible}
-                        updateHeart={() => { this.updateHeart(this.state.user.data.heart + 1) }}/>
+                        updateHeart={() => {
+                            this.updateUser({
+                                heart: this.state.user.data.heart + 1
+                            })
+                        }}/>
                 </View>
             ) : (
                 <View style={styles.screenCenter}>

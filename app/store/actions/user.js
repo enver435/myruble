@@ -4,7 +4,8 @@ import {
     setStorage,
     getStorage,
     removeStorage,
-    setResponse
+    setResponse,
+    getFirebaseToken
 } from '../../Helpers';
 
 // import action type constants
@@ -29,6 +30,7 @@ export const get = () => async dispatch => {
     try {
         // set phone storage user data
         const userData = await getStorage('userData');
+
         if(userData) {
             // post request and get user data
             const response = await POST(API_URL + API_USER_INFO, {
@@ -46,9 +48,11 @@ export const get = () => async dispatch => {
                     payload: response.data.data
                 });
             }
+
             // return response
             return setResponse(response.data);
         }
+        
         // return response
         return setResponse({
             status: true
@@ -65,6 +69,7 @@ export const get = () => async dispatch => {
 export const signIn = (data) => async dispatch => {
     try {
         const response = await POST(API_URL + API_SIGN_IN, data);
+
         if (response.data.status) {
             // set phone storage user data
             await setStorage('userData', response.data.data);
@@ -75,6 +80,7 @@ export const signIn = (data) => async dispatch => {
                 payload: response.data.data
             });
         }
+
         // return response
         return setResponse(response.data);
     } catch (err) {
@@ -89,6 +95,7 @@ export const signIn = (data) => async dispatch => {
 export const signUp = (data) => async dispatch => {
     try {
         const response = await POST(API_URL + API_SIGN_UP, data);
+
         if (response.data.status) {
             // set phone storage user data
             await setStorage('userData', response.data.data);
@@ -99,6 +106,7 @@ export const signUp = (data) => async dispatch => {
                 payload: response.data.data
             });
         }
+
         // return response
         return setResponse(response.data);
     } catch (err) {
@@ -138,24 +146,30 @@ export const update = (data) => async dispatch => {
         // set phone storage user data
         const userData = await getStorage('userData');
 
-        // post request update user data
-        const response = await POST(API_URL + API_USER_UPDATE, {
-            id: userData.id,
-            data: { ...data }
-        });
-        if (response.data.status) {
-            // set phone storage user data
-            await setStorage('userData', response.data.data);
-
-            // dispatch action
-            dispatch({
-                type: USER_UPDATE,
-                payload: response.data.data
+        if(userData) {
+            // post request update user data
+            const response = await POST(API_URL + API_USER_UPDATE, {
+                id: userData.id,
+                data: { ...data }
             });
+
+            if (response.data.status) {
+                // set phone storage user data
+                await setStorage('userData', response.data.data);
+    
+                // dispatch action
+                dispatch({
+                    type: USER_UPDATE,
+                    payload: response.data.data
+                });
+            }
+
+            // return response
+            return setResponse(response.data);
         }
 
-        // return response
-        return setResponse(response.data);
+        // set error
+        throw new Error('Update error! Not auth');
     } catch (err) {
         // return response
         return setResponse({

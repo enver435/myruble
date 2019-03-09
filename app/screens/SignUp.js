@@ -9,7 +9,7 @@ import {
 import { Button } from 'react-native-elements';
 
 // import helpers
-import { showToast } from '../Helpers';
+import { showToast, getFirebaseToken } from '../Helpers';
 
 class SignUp extends Component {
     static navigationOptions = {
@@ -38,15 +38,17 @@ class SignUp extends Component {
         this._isMounted = false;
     }
 
-    onClickSignUp = () => {
+    onClickSignUp = async () => {
         this.setState({ loading: true });
 
-        const requestData = {
+        const insertData = {
             email: this.state.email,
             username: this.state.username,
-            pass: this.state.pass
-        }
-        this.props.userActions.signUp(requestData).then((response) => {
+            pass: this.state.pass,
+            firebase_token: await getFirebaseToken()
+        };
+
+        this.props.userActions.signUp(insertData).then((response) => {
             if(response.status) {
                 this.props.navigation.navigate('Home');
             } else {

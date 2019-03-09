@@ -3,6 +3,7 @@ import {
     ToastAndroid
 } from 'react-native';
 import Axios from 'axios';
+import firebase from 'react-native-firebase';
 
 export const IsJsonString = (str) => {
     try {
@@ -45,22 +46,6 @@ export const removeStorage = async (key) => {
     }
 }
 
-export const showToast = (message) => {
-    ToastAndroid.showWithGravityAndOffset(
-        message,
-        ToastAndroid.LONG,
-        ToastAndroid.BOTTOM,
-        0,
-        50,
-    );
-}
-
-export const getRandomInt = (min, max) => {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min)) + min;
-}
-
 export const POST = async (url, data = {}) => {
     try {
         return await Axios.post(url, data);
@@ -75,6 +60,30 @@ export const GET = async (url) => {
     } catch (err) {
         showToast(err.message);
     }
+}
+
+export const getFirebaseToken = async () => {
+    const fcmToken = await firebase.messaging().getToken();
+    if (fcmToken) {
+        return fcmToken;
+    }
+    return false;
+}
+
+export const showToast = (message) => {
+    ToastAndroid.showWithGravityAndOffset(
+        message,
+        ToastAndroid.LONG,
+        ToastAndroid.BOTTOM,
+        0,
+        50,
+    );
+}
+
+export const getRandomInt = (min, max) => {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min)) + min;
 }
 
 export const setResponse = (response) => {

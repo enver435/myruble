@@ -45,7 +45,8 @@ class SignIn extends Component {
         const requestData = {
             email: this.state.email,
             pass: this.state.pass
-        }
+        };
+        
         this.props.userActions.signIn(requestData).then((response) => {
             if(response.status) {
                 this.props.navigation.navigate('Home');

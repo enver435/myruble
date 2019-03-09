@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { View, StyleSheet } from 'react-native';
+import firebase from 'react-native-firebase';
 
 // import helpers
-import { showToast } from '../Helpers';
+import { showToast, getStorage, getFirebaseToken } from '../Helpers';
 
 // import components
 import Header from '../components/Header';
@@ -37,23 +38,44 @@ class Home extends Component {
         return Object.keys(obj).length > 0 ? obj : null;
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         // set mount
         this._isMounted = true;
 
         // get user data
         const getUser = this.props.userActions.get();
+        
         // get game default data
         const getGameDefault = this.props.gameActions.getDefault();
+
         // all operation async
-        Promise.all([getUser, getGameDefault]).then((response) => {
+        Promise.all([getUser, getGameDefault]).then(async (response) => {
+            
+            /**
+             * Get User
+             */
             if(!response[0].status) {
+                // show error message
                 showToast(response[0].message);
+            } else {
+                const userData      = await getStorage('userData');
+                const firebaseToken = await getFirebaseToken();
+                if(userData && userData.firebase_token != firebaseToken) {
+                    await this.props.userActions.update({
+                        firebase_token: firebaseToken
+                    });
+                }
             }
+
+            /**
+             * Get Default Game Information
+             */
             if(!response[1].status) {
+                // show error message
                 showToast(response[1].message);
             }
 
+            // hide loading
             if(this._isMounted) {
                 this.setState({ loading: false });
             }
