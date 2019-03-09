@@ -24,8 +24,7 @@ import AppNavigator from './app/AppNavigator';
 // import helpers
 import {
     POST,
-    showToast,
-    firebaseMessagingPermission
+    showToast
 } from './app/Helpers';
 
 // import api constants
