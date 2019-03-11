@@ -1,5 +1,5 @@
 const API_URL_DEV  = "http://192.168.0.102/myruble/api";
-const API_URL_PROD = "http://api.myruble.com";
+const API_URL_PROD = "http://myruble.com/api";
 
 /**
  * API Url
