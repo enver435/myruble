@@ -89,7 +89,9 @@ class Home extends Component {
     startGame = async () => {
         if(this.state.user.data.heart > 0) {
             // update user heart
-            this.updateHeart(this.state.user.data.heart - 1);
+            this.updateUser({
+                heart: this.state.user.data.heart - 1
+            });
 
             // dispatch action start game
             this.props.gameActions.startGame();
