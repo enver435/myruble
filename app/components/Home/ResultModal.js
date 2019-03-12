@@ -4,6 +4,7 @@ import React, {
 import {
     Text,
     View,
+    Image,
     StyleSheet
 } from 'react-native';
 import PropTypes from 'prop-types';
@@ -40,11 +41,12 @@ class ResultModal extends Component {
                     <View style={styles.block}>
                         <Text style={styles.blockTitle}>Заработанные Деньги</Text>
                         <Text style={styles.earnPrice}>{taskSuccess == task ? price.toFixed(2) : 0}</Text>
+                        <Image source={require('../../assets/ruble.png')} resizeMode="contain" style={{ width: 15, height: 15, marginTop: 5, marginLeft: 5 }}/>
                     </View>
                     <Button
                         onPress={this.props.hideVisible}
                         title="OK"
-                        style={{ width: '100%', flex: 1 }}
+                        containerStyle={{ marginTop: 20, width: '50%' }}
                     />
             </Overlay>
         );

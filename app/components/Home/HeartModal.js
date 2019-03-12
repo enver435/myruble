@@ -13,7 +13,10 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import firebase from 'react-native-firebase';
 
 // import helpers
-import { getStorage, removeStorage } from '../../Helpers';
+import {
+    getStorage,
+    removeStorage
+} from '../../Helpers';
 
 class HeartModal extends Component {
     constructor(props) {
@@ -37,31 +40,33 @@ class HeartModal extends Component {
     componentDidUpdate(prevProps, prevState) {
         // visible not equal
         if(this.props.visible != prevProps.visible) {
+            // init admob rewarded
+            this.initAdMob();
+
             // set timer
             this.setTimer();
-
-            // init admob
-            this.initAdMob();
         }
     }
 
-    calcTime = async () => {
+    calcEndTime = async () => {
         const getOpenTime = parseInt(await getStorage('heartModalOpenTime'));
-        return (getOpenTime + 60) - Math.round(new Date().getTime() / 1000);
+        return getOpenTime - Math.round(new Date().getTime() / 1000);
     }
 
     setTimer = () => {
         // set timer
         this.timerInterval = setInterval(() => {
-            this.calcTime().then((calcTime) => {
-                if(calcTime >= 0) {
-                    this.setState({ time: calcTime, btnGetHeartDisabled: true });
-                } else {
-                    if(this.state.btnGetHeartDisabled) {
-                        this.setState({ btnGetHeartDisabled: false });
-                    }
+            this.calcEndTime().then((time) => {
+                if(time <= 0) {
+                    setTimeout(() => {
+                        if(this.state.btnGetHeartDisabled) {
+                            this.setState({ btnGetHeartDisabled: false });
+                        }
+                    }, 100);
                     // clear timer
                     clearInterval(this.timerInterval);
+                } else {
+                    this.setState({ time, btnGetHeartDisabled: true });
                 }
             });
         }, 1000);
@@ -187,7 +192,7 @@ const styles = StyleSheet.create({
 HeartModal.propTypes = {
     hideVisible: PropTypes.func.isRequired,
     updateHeart: PropTypes.func.isRequired,
-    visible: PropTypes.bool,
+    visible: PropTypes.bool
 };
 
 // component default props

@@ -37,12 +37,12 @@ class Home extends Component {
         return Object.keys(obj).length > 0 ? obj : null;
     }
 
-    componentDidUpdate(prevProps) {
-        const gameData        = prevProps.gameState.data;
-        const gameDefaultData = prevProps.gameState.defaultData;
+    checkEndGame = () => {
+        const gameData        = this.state.game.data;
+        const gameDefaultData = this.state.game.defaultData;
         if(
             gameData.status && 
-            (gameData.currentTime+1) == gameDefaultData.time ||
+            gameData.currentTime == gameDefaultData.time || 
             gameData.taskSuccess == gameDefaultData.task
         ) {
             // clear timer
@@ -69,13 +69,15 @@ class Home extends Component {
             status: gameData.taskSuccess == gameDefaultData.task ? 1 : 0,
             time: Math.round(new Date().getTime() / 1000)
         };
+
+        // dispatch action result game
         this.props.gameActions.resultsGame(resultData).then((response) => {
             if(!response.status) {
                 showToast(response.message);
             }
         });
 
-        // dispatch action update user
+        // update user
         if(gameData.taskSuccess == gameDefaultData.task) {
             this.updateUser({
                 balance: this.state.user.data.balance + gameDefaultData.price
@@ -98,20 +100,24 @@ class Home extends Component {
 
             // start timer
             this.timerInterval = setInterval(() => {
+                // dispatch action current time
                 this.props.gameActions.setCurrentTime();
+
+                // check end game
+                this.checkEndGame();
             }, 1000);
         } else {
             // set time open heart modal
             if(!await getStorage('heartModalOpenTime')) {
-                // get now time
-                const nowTime = Math.round(new Date().getTime() / 1000).toString();
+                // get open time
+                const openTime = Math.round((new Date().getTime() / 1000) + this.state.game.defaultData.heart_time).toString();
 
                 // set storage
-                await setStorage('heartModalOpenTime', nowTime);
+                await setStorage('heartModalOpenTime', openTime);
 
                 // update user
                 this.updateUser({
-                    start_notify_heart: nowTime
+                    notify_heart_time: openTime
                 });
             }
 
@@ -137,6 +143,9 @@ class Home extends Component {
 
         // dispatch action next question
         this.props.gameActions.nextQuestion();
+
+        // check end game
+        this.checkEndGame();
     }
 
     updateUser = (data) => {
@@ -183,12 +192,12 @@ class Home extends Component {
 
                     <HeartModal
                         hideVisible={() => { this.setVisibleHeartModal(false) }}
-                        visible={this.state.heartModalVisible}
                         updateHeart={() => {
                             this.updateUser({
                                 heart: this.state.user.data.heart + 1
                             })
-                        }}/>
+                        }}
+                        visible={this.state.heartModalVisible}/>
                 </View>
             ) : (
                 <View style={styles.screenCenter}>
