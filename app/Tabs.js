@@ -4,7 +4,7 @@ import { TabView, TabBar } from 'react-native-tab-view';
 
 // import containers
 import Referal from './containers/Tabs/Referal';
-import Home from './containers/Tabs/Home';
+import Play from './containers/Tabs/Play';
 import Withdraw from './containers/Tabs/Withdraw';
 
 class Tabs extends Component {
@@ -16,7 +16,7 @@ class Tabs extends Component {
 			index: 1,
 			routes: [
 				{ key: 'referal', title: 'Реферал' },
-				{ key: 'home', title: 'Играть' },
+				{ key: 'play', title: 'Играть' },
 				{ key: 'withdraw', title: 'Выплаты' }
 			]
 		};
@@ -37,8 +37,8 @@ class Tabs extends Component {
 		switch (route.key) {
 			case 'referal':
 				return <Referal/>;
-			case 'home':
-				return <Home/>;
+			case 'play':
+				return <Play/>;
 			case 'withdraw':
 				return <Withdraw/>;
 			default:

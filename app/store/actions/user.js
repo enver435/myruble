@@ -1,11 +1,11 @@
 // import helpers
 import {
     POST,
+    GET,
     setStorage,
     getStorage,
     removeStorage,
-    setResponse,
-    getFirebaseToken
+    setResponse
 } from '../../Helpers';
 
 // import action type constants
@@ -28,17 +28,17 @@ import {
 
 export const get = () => async dispatch => {
     try {
-        // set phone storage user data
+        // get phone storage user data
         const userData = await getStorage('userData');
 
         if(userData) {
-            // post request and get user data
-            const response = await POST(API_URL + API_USER_INFO, {
+            // request and get user data
+            const response = await GET(API_URL + API_USER_INFO, {
                 id: userData.id
             });
     
             // if status true
-            if (response.status) {
+            if (response.data.status) {
                 // set phone storage user data
                 await setStorage('userData', response.data.data);
     
@@ -53,10 +53,8 @@ export const get = () => async dispatch => {
             return setResponse(response.data);
         }
         
-        // return response
-        return setResponse({
-            status: true
-        });
+        // set error
+        throw new Error('Error: Not auth!');
     } catch (err) {
         // return response
         return setResponse({
@@ -143,7 +141,7 @@ export const logout = () => async dispatch => {
 
 export const update = (data) => async dispatch => {
     try {
-        // set phone storage user data
+        // get phone storage user data
         const userData = await getStorage('userData');
 
         if(userData) {
@@ -169,7 +167,7 @@ export const update = (data) => async dispatch => {
         }
 
         // set error
-        throw new Error('Update error! Not auth');
+        throw new Error('Error: Not auth!');
     } catch (err) {
         // return response
         return setResponse({

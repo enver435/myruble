@@ -4,7 +4,8 @@ import React, {
 import {
     NetInfo,
     Alert,
-    Linking
+    Linking,
+    View
 } from 'react-native';
 import {
     Provider
@@ -43,7 +44,8 @@ class App extends Component {
 
         // init state
         this.state = {
-            isConnected: true
+            isConnected: true,
+            showApp: true
         };
         
         // app url
@@ -110,16 +112,24 @@ class App extends Component {
             const appDeviceVersion = DeviceInfo.getVersion();
 
             if (response.data.appVersion != appDeviceVersion) {
+                // hide app
+                this.setState({ showApp: false });
+
+                // show alert
                 Alert.alert(
                     'Новая версия: ' + response.data.appVersion,
                     'Если вы не обновите приложение, оно может работать неправильно. Хотите обновить?',
                     [{
                             text: 'Позже',
-                            onPress: () => console.log('Позже')
+                            onPress: () => {
+                                // show app
+                                this.setState({ showApp: true });
+                            }
                         },
                         {
                             text: 'Обновить',
                             onPress: () => {
+                                // configration play market URL
                                 Linking.canOpenURL(this.appUrl).then(supported => {
                                     if (supported) {
                                         Linking.openURL(this.appUrl);
@@ -127,12 +137,18 @@ class App extends Component {
                                         showToast("Don't know how to open URI: " + this.appUrl);
                                     }
                                 });
+                                
+                                // show app
+                                this.setState({ showApp: true });
                             }
                         },
                     ], {
                         cancelable: false
                     },
                 );
+            } else {
+                // show app
+                this.setState({ showApp: true });
             }
         } catch (err) {
             showToast(err.message);
@@ -143,10 +159,12 @@ class App extends Component {
         return(
             <ThemeProvider theme={Theme}>
                 {this.state.isConnected ? (
-                    <Provider store={store}>
-                        <AppNavigator/>
-                        <AdMobBanner/>
-                    </Provider>
+                    this.state.showApp ? (
+                        <Provider store={store}>
+                            <AppNavigator/>
+                            <AdMobBanner/>
+                        </Provider>
+                    ) : <View/>
                 ) : <Offline checkNetwork={this.checkNetwork}/>}
             </ThemeProvider>
         )

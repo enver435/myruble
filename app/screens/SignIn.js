@@ -62,7 +62,7 @@ class SignIn extends Component {
         
         this.props.userActions.signIn(requestData).then((response) => {
             if(response.status) {
-                this.props.navigation.navigate('Home');
+                this.props.navigation.navigate('Main');
             } else {
                 showToast(response.message);
             }

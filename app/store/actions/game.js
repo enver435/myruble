@@ -1,6 +1,7 @@
 // import helpers
 import {
     POST,
+    GET,
     setResponse
 } from '../../Helpers';
 
@@ -23,7 +24,7 @@ import {
 
 export const getDefault = () => async dispatch => {
     try {
-        const response = await POST(API_URL + API_GAME_DEFAULT);
+        const response = await GET(API_URL + API_GAME_DEFAULT);
         if (response.data.status) {
             // dispatch action
             dispatch({

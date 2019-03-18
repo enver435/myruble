@@ -16,7 +16,7 @@ import firebase from 'react-native-firebase';
 import {
     getStorage,
     removeStorage
-} from '../../Helpers';
+} from '../../../Helpers';
 
 class HeartModal extends Component {
     constructor(props) {

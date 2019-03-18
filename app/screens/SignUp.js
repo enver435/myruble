@@ -65,7 +65,7 @@ class SignUp extends Component {
 
         this.props.userActions.signUp(insertData).then((response) => {
             if(response.status) {
-                this.props.navigation.navigate('Home');
+                this.props.navigation.navigate('Main');
             } else {
                 showToast(response.message);
             }

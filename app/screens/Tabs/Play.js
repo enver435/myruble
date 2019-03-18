@@ -10,10 +10,10 @@ import Balance from '../../components/Home/Balance';
 import Enter from '../../components/Home/Enter';
 import Main from '../../components/Home/Main';
 import Control from '../../components/Home/Control';
-import ResultModal from '../../components/Home/ResultModal';
-import HeartModal from '../../components/Home/HeartModal';
+import ResultModal from '../../components/Home/Modals/ResultModal';
+import HeartModal from '../../components/Home/Modals/HeartModal';
 
-class Home extends Component {
+class Play extends Component {
     constructor(props) {
         super(props);
         // init state
@@ -217,4 +217,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default Home;
+export default Play;

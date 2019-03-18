@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { View, StyleSheet } from 'react-native';
-import firebase from 'react-native-firebase';
 
 // import helpers
 import { showToast, getStorage, getFirebaseToken } from '../Helpers';
@@ -17,25 +16,12 @@ class Home extends Component {
         super(props);
         // init state
         this.state = {
-            loading: true,
-            user: {},
-            game: {}
+            loading: true
         };
     }
 
     static navigationOptions = {
         header: null
-    }
-
-    static getDerivedStateFromProps(nextProps, prevState) {
-        let obj = {};
-        if (prevState.user !== nextProps.userState) {
-            obj.user = nextProps.userState;
-        }
-        if (prevState.game !== nextProps.gameState) {
-            obj.game = nextProps.gameState;
-        }
-        return Object.keys(obj).length > 0 ? obj : null;
     }
 
     async componentDidMount() {
@@ -93,7 +79,7 @@ class Home extends Component {
         ) : (
             <View style={styles.container}>
                 <Header 
-                    userState={this.state.user} 
+                    userState={this.props.userState} 
                     userActions={this.props.userActions}/>
                 <Tabs/>
             </View>

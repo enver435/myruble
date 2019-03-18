@@ -4,14 +4,16 @@ import {
 } from 'react-navigation';
 
 // import containers
-import Home from './containers/Home';
+import Main from './containers/Main';
 import SignIn from './containers/SignIn';
 import SignUp from './containers/SignUp';
+import Withdraw from './containers/Withdraw';
 
 const AppNavigator = createStackNavigator({
-    Home,
+    Main,
     SignIn,
-    SignUp
+    SignUp,
+    Withdraw
 }, {
     transitionConfig: () => ({
         screenInterpolator: () => null

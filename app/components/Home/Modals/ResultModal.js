@@ -4,12 +4,12 @@ import React, {
 import {
     Text,
     View,
-    Image,
     StyleSheet
 } from 'react-native';
 import PropTypes from 'prop-types';
 import Overlay from 'react-native-modal-overlay';
 import { Button } from 'react-native-elements';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 class ResultModal extends Component {
     constructor(props) {
@@ -40,8 +40,7 @@ class ResultModal extends Component {
                     </View>
                     <View style={styles.block}>
                         <Text style={styles.blockTitle}>Заработанные Деньги</Text>
-                        <Text style={styles.earnPrice}>{taskSuccess == task ? price.toFixed(2) : 0}</Text>
-                        <Image source={require('../../assets/ruble.png')} resizeMode="contain" style={{ width: 15, height: 15, marginTop: 5, marginLeft: 5 }}/>
+                        <Text style={styles.earnPrice}>{taskSuccess == task ? price.toFixed(2) : 0} <Icon size={15} name="currency-rub" color="#474747"/></Text>
                     </View>
                     <Button
                         onPress={this.props.hideVisible}

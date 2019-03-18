@@ -1,4 +1,4 @@
-const API_URL_DEV  = "http://192.168.0.102/myruble/api";
+const API_URL_DEV  = "http://192.168.1.101/myruble/api";
 const API_URL_PROD = "http://myruble.com/api";
 
 /**
@@ -21,5 +21,16 @@ export const API_USER_UPDATE = "/user/update";
 /**
  * GAME URL's
  */
-export const API_GAME_DEFAULT = "/game/default";
+export const API_GAME_DEFAULT = "/game";
 export const API_INSERT_GAME  = "/game/insert";
+
+/**
+ * PAYMENT METHODS URL's
+ */
+export const API_GET_PAYMENT_METHODS = "/withdraw/payment-methods";
+
+/**
+ * WITHDRAW URL's
+ */
+export const API_GET_WITHDRAW    = "/withdraw";
+export const API_INSERT_WITHDRAW = "/withdraw/insert"

@@ -54,9 +54,11 @@ export const POST = async (url, data = {}) => {
     }
 }
 
-export const GET = async (url) => {
+export const GET = async (url, params = {}) => {
     try {
-        return await Axios.get(url);
+        return await Axios.get(url, {
+            params
+        });
     } catch (err) {
         showToast(err.message);
     }

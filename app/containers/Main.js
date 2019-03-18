@@ -2,17 +2,16 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 // import screen
-import Home from '../../screens/Tabs/Home';
+import Main from '../screens/Main';
 
 // import actions
-import * as userActions from '../../store/actions/user';
-import * as gameActions from '../../store/actions/game';
+import * as userActions from '../store/actions/user';
+import * as gameActions from '../store/actions/game';
 
 // map state to props
 const mapStateToProps = (state, ownProps) => {
     return {
-        userState: state.user,
-        gameState: state.game
+        userState: state.user
     }
 }
 
@@ -24,4 +23,4 @@ function mapDispatchToProps(dispatch, ownProps) {
     };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Home);
+export default connect(mapStateToProps, mapDispatchToProps)(Main);

@@ -7,6 +7,18 @@ import { withNavigation } from 'react-navigation';
 class Header extends Component {
     constructor(props) {
         super(props);
+        // init state
+        this.state = {
+            user: {}
+        };
+    }
+
+    static getDerivedStateFromProps(nextProps, prevState) {
+        let obj = {};
+        if (prevState.user !== nextProps.userState) {
+            obj.user = nextProps.userState;
+        }
+        return Object.keys(obj).length > 0 ? obj : null;
     }
 
     onClickLogin = () => {
@@ -24,7 +36,7 @@ class Header extends Component {
                     <Text style={styles.headerLogoText}>myRuble</Text>
                 </View>
                 <View>
-                    {this.props.userState.isAuth ? (
+                    {this.state.user.isAuth ? (
                         <TouchableHighlight onPress={this.onClickLogout} underlayColor="transparent">
                             <View style={styles.headerRight}>
                                 <Icon name="power-settings-new" size={20} color="#474747" style={{ marginRight: 3 }} />
