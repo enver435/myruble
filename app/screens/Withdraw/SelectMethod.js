@@ -10,81 +10,136 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
+// import helpers
+import {
+    GET,
+    setResponse
+} from '../../Helpers';
+
+// import api constants
+import {
+    API_URL,
+    API_GET_PAYMENT_METHODS
+} from '../../constants/api';
+
+// import components
+import Loading from '../../components/Loading';
+
 class SelectMethod extends Component {
     constructor(props) {
         super(props);
         // init state
         this.state = {
-            loading: false,
-            user: {}
+            loading: true,
+            data: {}
         };
     }
 
-    static getDerivedStateFromProps(nextProps, prevState) {
-        let obj = {};
-        if (prevState.user !== nextProps.userState) {
-            obj.user = nextProps.userState;
+    async componentDidMount() {
+        // fetch data
+        const response = await this._fetchData();
+
+        // state object
+        let setStateData = {
+            loading: false
+        };
+
+        if(response.status) {
+            setStateData.data = response.data;
+        } else {
+            showToast(response.message);
         }
-        return Object.keys(obj).length > 0 ? obj : null;
+
+        // set state data
+        this.setState(setStateData);
     }
 
-    componentDidMount() {
-        
+    _fetchData = async () => {
+        try {
+            // request
+            const response = await GET(API_URL + API_GET_PAYMENT_METHODS);
+            // return response
+            return setResponse(response.data);
+        } catch (err) {
+            return setResponse({
+                status: false,
+                message: err.message
+            });
+        }
     }
 
-    onClickMethod = (method) => {
-        this.props.onSetPaymentMethod(method, () => {
+    onClickMethod = (method, commission, min_withdraw) => {
+        const data = {
+            method,
+            min_withdraw,
+            commission
+        };
+        this.props.onSetPaymentMethod(data, () => {
             this.props.onChangeScreen(2);
         });
     }
 
     render() {
-        return (
+        return this.state.loading ? (
+            <Loading/>
+        ) : (
             <View style={styles.container}>
                 <View style={{ marginBottom: 20 }}>
                     <Text style={styles.title}>Выберите метод оплаты</Text>
                 </View>
-                <TouchableHighlight onPress={() => this.onClickMethod(1)} underlayColor="transparent">
+                <TouchableHighlight
+                    onPress={() => {
+                        this.onClickMethod(1, this.state.data.yandex_commission, this.state.data.yandex_min_withdraw)}
+                    }
+                    underlayColor="transparent">
                     <View style={styles.itemContainer}>
                         <View style={[ styles.item, { flex: 1 } ]}>
                             <Image source={require('../../assets/yandex.png')} resizeMode="contain" style={styles.itemImg}/>
                         </View>
                         <View style={[ styles.item, { flex: 1 } ]}>
-                            <Text style={styles.itemText}>0.5%</Text>
+                            <Text style={styles.itemText}>{parseFloat(this.state.data.yandex_commission).toFixed(2)}%</Text>
                         </View>
                         <View style={[ styles.item, { flex: 1 } ]}>
-                            <Text style={styles.itemText}>5.00 <Icon size={15} name="currency-rub" color="#474747"/></Text>
+                            <Text style={styles.itemText}>{parseFloat(this.state.data.yandex_min_withdraw).toFixed(2)} <Icon size={15} name="currency-rub" color="#474747"/></Text>
                         </View>
                     </View>
                 </TouchableHighlight>
-                <TouchableHighlight onPress={() => this.onClickMethod(2)} underlayColor="transparent">                
+                <TouchableHighlight
+                    onPress={() => {
+                        this.onClickMethod(2, this.state.data.payeer_commission, this.state.data.payeer_min_withdraw)}
+                    }
+                    underlayColor="transparent">
                     <View style={styles.itemContainer}>
                         <View style={[ styles.item, { flex: 1 } ]}>
                             <Image source={require('../../assets/payeer.png')} resizeMode="contain" style={styles.itemImg}/>
                         </View>
                         <View style={[ styles.item, { flex: 1 } ]}>
-                            <Text style={styles.itemText}>0.95%</Text>
+                            <Text style={styles.itemText}>{parseFloat(this.state.data.payeer_commission).toFixed(2)}%</Text>
                         </View>
                         <View style={[ styles.item, { flex: 1 } ]}>
-                            <Text style={styles.itemText}>5.00 <Icon size={15} name="currency-rub" color="#474747"/></Text>
+                            <Text style={styles.itemText}>{parseFloat(this.state.data.payeer_min_withdraw).toFixed(2)} <Icon size={15} name="currency-rub" color="#474747"/></Text>
                         </View>
                     </View>
                 </TouchableHighlight>
-                <TouchableHighlight onPress={() => this.onClickMethod(3)} underlayColor="transparent">                
+                <TouchableHighlight 
+                    onPress={() => {
+                        this.onClickMethod(3, this.state.data.webmoney_commission, this.state.data.webmoney_min_withdraw)}
+                    }
+                    underlayColor="transparent">             
                     <View style={styles.itemContainer}>
                         <View style={[ styles.item, { flex: 1 } ]}>
                             <Image source={require('../../assets/webmoney.png')} resizeMode="contain" style={styles.itemImg}/>
                         </View>
                         <View style={[ styles.item, { flex: 1 } ]}>
-                            <Text style={styles.itemText}>0.8%</Text>
+                            <Text style={styles.itemText}>{parseFloat(this.state.data.webmoney_commission).toFixed(2)}%</Text>
                         </View>
                         <View style={[ styles.item, { flex: 1 } ]}>
-                            <Text style={styles.itemText}>5.00 <Icon size={15} name="currency-rub" color="#474747"/></Text>
+                            <Text style={styles.itemText}>{parseFloat(this.state.data.webmoney_min_withdraw).toFixed(2)} <Icon size={15} name="currency-rub" color="#474747"/></Text>
                         </View>
                     </View>
                 </TouchableHighlight>
             </View>
-        );
+        )
     }
 }
 

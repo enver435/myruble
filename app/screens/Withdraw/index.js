@@ -16,7 +16,11 @@ class Withdraw extends Component {
         // init state
         this.state = {
             screenIndex: 0,
-            payment_method: null
+            payment: {
+                method: null,
+                min_withdraw: null,
+                commission: null
+            }
         };
     }
 
@@ -56,16 +60,23 @@ class Withdraw extends Component {
             });
         } else if (screenIndex == 2) {
             this.props.navigation.setParams({
-                title: this.state.payment_method == 1 ? 'Яндекс.деньги' :
-                (this.state.payment_method == 2 ? 'Payeer' :
-                (this.state.payment_method == 3 ? 'Webmoney' : 'Unknown'))
+                title: this.state.payment.method == 1 ? 'Яндекс.деньги' : (this.state.payment.method == 2 ? 'Payeer' :
+                    (this.state.payment.method == 3 ? 'Webmoney' : 'Unknown'))
             });
         }
-        this.setState({ screenIndex });
+        this.setState({
+            screenIndex
+        });
     }
 
-    _onSetPaymentMethod = (payment_method, callback) => {
-        this.setState({ payment_method }, callback);
+    _onSetPaymentMethod = (data, callback) => {
+        this.setState({
+            payment: {
+                method: data.method,
+                min_withdraw: data.min_withdraw,
+                commission: data.commission
+            }
+        }, callback);
     }
 
     _renderScreen = () => {
@@ -77,15 +88,14 @@ class Withdraw extends Component {
         } else if(this.state.screenIndex == 1) {
             return <SelectMethod
                         onChangeScreen={this._onChangeScreen}
-                        onSetPaymentMethod={this._onSetPaymentMethod}
-                        userState={this.props.userState}/>
+                        onSetPaymentMethod={this._onSetPaymentMethod}/>
         } else if(this.state.screenIndex == 2) {
             return <Payment
                         onChangeScreen={this._onChangeScreen}
                         userState={this.props.userState}/>
         }
     }
-    
+
     render() {
         return this._renderScreen();
     }
