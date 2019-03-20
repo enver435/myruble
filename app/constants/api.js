@@ -4,7 +4,7 @@ const API_URL_PROD = "http://myruble.com/api";
 /**
  * API Url
  */
-export const API_URL = API_URL_PROD;
+export const API_URL = API_URL_DEV;
 
 /**
  * AUTH URL's
