@@ -146,9 +146,6 @@ class App extends Component {
                         cancelable: false
                     },
                 );
-            } else {
-                // show app
-                this.setState({ showApp: true });
             }
         } catch (err) {
             showToast(err.message);
