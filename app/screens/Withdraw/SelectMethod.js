@@ -8,6 +8,7 @@ import {
     StyleSheet,
     TouchableHighlight
 } from 'react-native';
+import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 // import helpers
@@ -97,10 +98,10 @@ class SelectMethod extends Component {
                             <Image source={require('../../assets/yandex.png')} resizeMode="contain" style={styles.itemImg}/>
                         </View>
                         <View style={[ styles.item, { flex: 1 } ]}>
-                            <Text style={styles.itemText}>{parseFloat(this.state.data.yandex_commission).toFixed(2)}%</Text>
+                            <Text style={styles.itemText}>{this.state.data.yandex_commission.toFixed(2)}%</Text>
                         </View>
                         <View style={[ styles.item, { flex: 1 } ]}>
-                            <Text style={styles.itemText}>{parseFloat(this.state.data.yandex_min_withdraw).toFixed(2)} <Icon size={15} name="currency-rub" color="#474747"/></Text>
+                            <Text style={styles.itemText}>{this.state.data.yandex_min_withdraw.toFixed(2)} <Icon size={15} name="currency-rub" color="#474747"/></Text>
                         </View>
                     </View>
                 </TouchableHighlight>
@@ -114,10 +115,10 @@ class SelectMethod extends Component {
                             <Image source={require('../../assets/payeer.png')} resizeMode="contain" style={styles.itemImg}/>
                         </View>
                         <View style={[ styles.item, { flex: 1 } ]}>
-                            <Text style={styles.itemText}>{parseFloat(this.state.data.payeer_commission).toFixed(2)}%</Text>
+                            <Text style={styles.itemText}>{this.state.data.payeer_commission.toFixed(2)}%</Text>
                         </View>
                         <View style={[ styles.item, { flex: 1 } ]}>
-                            <Text style={styles.itemText}>{parseFloat(this.state.data.payeer_min_withdraw).toFixed(2)} <Icon size={15} name="currency-rub" color="#474747"/></Text>
+                            <Text style={styles.itemText}>{this.state.data.payeer_min_withdraw.toFixed(2)} <Icon size={15} name="currency-rub" color="#474747"/></Text>
                         </View>
                     </View>
                 </TouchableHighlight>
@@ -131,10 +132,10 @@ class SelectMethod extends Component {
                             <Image source={require('../../assets/webmoney.png')} resizeMode="contain" style={styles.itemImg}/>
                         </View>
                         <View style={[ styles.item, { flex: 1 } ]}>
-                            <Text style={styles.itemText}>{parseFloat(this.state.data.webmoney_commission).toFixed(2)}%</Text>
+                            <Text style={styles.itemText}>{this.state.data.webmoney_commission.toFixed(2)}%</Text>
                         </View>
                         <View style={[ styles.item, { flex: 1 } ]}>
-                            <Text style={styles.itemText}>{parseFloat(this.state.data.webmoney_min_withdraw).toFixed(2)} <Icon size={15} name="currency-rub" color="#474747"/></Text>
+                            <Text style={styles.itemText}>{this.state.data.webmoney_min_withdraw.toFixed(2)} <Icon size={15} name="currency-rub" color="#474747"/></Text>
                         </View>
                     </View>
                 </TouchableHighlight>
@@ -142,6 +143,12 @@ class SelectMethod extends Component {
         )
     }
 }
+
+// component prop types
+SelectMethod.propTypes = {
+    onChangeScreen: PropTypes.func.isRequired,
+    onSetPaymentMethod: PropTypes.func.isRequired
+};
 
 // component styles
 const styles = StyleSheet.create({

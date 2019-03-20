@@ -83,8 +83,7 @@ class Withdraw extends Component {
         if(this.state.screenIndex == 0) {
             return <Main
                         onChangeScreen={this._onChangeScreen}
-                        userState={this.props.userState}
-                        withdrawActions={this.props.withdrawActions}/>
+                        userState={this.props.userState}/>
         } else if(this.state.screenIndex == 1) {
             return <SelectMethod
                         onChangeScreen={this._onChangeScreen}
@@ -92,6 +91,7 @@ class Withdraw extends Component {
         } else if(this.state.screenIndex == 2) {
             return <Payment
                         onChangeScreen={this._onChangeScreen}
+                        withdrawState={this.state}
                         userState={this.props.userState}/>
         }
     }

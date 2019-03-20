@@ -17,21 +17,11 @@ class Main extends Component {
     constructor(props) {
         super(props);
         // init state
-        this.state = {
-            user: {}
-        };
-    }
-
-    static getDerivedStateFromProps(nextProps, prevState) {
-        let obj = {};
-        if (prevState.user !== nextProps.userState) {
-            obj.user = nextProps.userState;
-        }
-        return Object.keys(obj).length > 0 ? obj : null;
+        this.state = {};
     }
 
     render() {
-        const { balance } = this.state.user.data;
+        const { balance } = this.props.userState.data;
         return (
             <View style={styles.container}>
                 <View style={styles.headerContainer}>
