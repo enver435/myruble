@@ -11,7 +11,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Button } from 'react-native-elements';
 
 // import components
-import WithdrawList from '../../components/WithdrawList';
+import UserWithdrawList from '../../components/UserWithdrawList';
 
 class Main extends Component {
     constructor(props) {
@@ -50,7 +50,7 @@ class Main extends Component {
                     <View>
                         <Text style={styles.withdrawText}>История платежей</Text>
                     </View>
-                    <WithdrawList user={true} actions={this.props.withdrawActions}/>
+                    <UserWithdrawList/>
                 </View>
             </View>
         )

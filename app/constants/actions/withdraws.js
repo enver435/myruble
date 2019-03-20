@@ -1,3 +1,0 @@
-export const GET_ALL_WITHDRAW  = "GET_ALL_WITHDRAW";
-export const GET_USER_WITHDRAW = "GET_USER_WITHDRAW";
-export const RESET_WITHDRAW    = "RESET_WITHDRAW";

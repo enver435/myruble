@@ -15,7 +15,8 @@ class Withdraw extends Component {
         super(props);
         // init state
         this.state = {
-            screenIndex: 0
+            screenIndex: 0,
+            payment_method: null
         };
     }
 
@@ -39,7 +40,7 @@ class Withdraw extends Component {
         let screenIndex = this.state.screenIndex;
         if (screenIndex > 0) {
             screenIndex--;
-            this.onChangeScreen(screenIndex);
+            this._onChangeScreen(screenIndex);
             return true;
         }
     }
@@ -55,12 +56,16 @@ class Withdraw extends Component {
             });
         } else if (screenIndex == 2) {
             this.props.navigation.setParams({
-                title: 'Payment'
+                title: this.state.payment_method == 1 ? 'Яндекс.деньги' :
+                (this.state.payment_method == 2 ? 'Payeer' :
+                (this.state.payment_method == 3 ? 'Webmoney' : 'Unknown'))
             });
         }
-        this.setState({
-            screenIndex
-        });
+        this.setState({ screenIndex });
+    }
+
+    _onSetPaymentMethod = (payment_method, callback) => {
+        this.setState({ payment_method }, callback);
     }
 
     _renderScreen = () => {
@@ -72,6 +77,7 @@ class Withdraw extends Component {
         } else if(this.state.screenIndex == 1) {
             return <SelectMethod
                         onChangeScreen={this._onChangeScreen}
+                        onSetPaymentMethod={this._onSetPaymentMethod}
                         userState={this.props.userState}/>
         } else if(this.state.screenIndex == 2) {
             return <Payment

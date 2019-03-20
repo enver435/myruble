@@ -162,7 +162,7 @@ class App extends Component {
                     this.state.showApp ? (
                         <Provider store={store}>
                             <AppNavigator/>
-                            {/* <AdMobBanner/> */}
+                            <AdMobBanner/>
                         </Provider>
                     ) : <View/>
                 ) : <Offline checkNetwork={this.checkNetwork}/>}

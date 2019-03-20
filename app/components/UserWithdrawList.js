@@ -8,13 +8,25 @@ import {
     FlatList,
     ActivityIndicator
 } from 'react-native';
-import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-// import components
-import Loading from '../components/Loading';
+// import helpers
+import {
+    GET,
+    setResponse,
+    getStorage
+} from '../Helpers';
 
-class WithdrawList extends Component {
+// import api constants
+import {
+    API_URL,
+    API_GET_WITHDRAW
+} from '../constants/api';
+
+// import components
+import Loading from './Loading';
+
+class UserWithdrawList extends Component {
     constructor(props) {
         super(props);
         // init state
@@ -23,40 +35,59 @@ class WithdrawList extends Component {
             page: 0,
             loading: true,
             loadingMore: false,
-            refreshing: false,
-            error: null
+            refreshing: false
         };
         // set limit render data
         this.limit = 10;
     }
 
     async componentDidMount() {
-        // reset data
-        await this.props.actions.reset();
-
         // fetch data
         const response = await this._fetchData();
 
+        // state object
+        let setStateData = {
+            loading: false
+        };
+
         if(response.status) {
-            this.setState({
-                data: response.data,
-                loading: false
-            });
+            setStateData.data = response.data;
         } else {
-            this.setState({
-                error: response.message,
-                loading: false
-            });
+            showToast(response.message);
         }
+
+        // set state data
+        this.setState(setStateData);
     }
 
     _fetchData = async () => {
-        const offset = this.state.page * this.limit;
-        // fetch data
-        if(this.props.user) {
-            return await this.props.actions.getUserWithdraws(offset, this.limit);
+        const limit  = this.limit;
+        const offset = this.state.page * limit;
+        
+        try {
+            // get phone storage user data
+            const userData = await getStorage('userData');
+    
+            if(userData) {
+                // request and get user withdraws
+                const response = await GET(API_URL + API_GET_WITHDRAW, {
+                    user_id: userData.id,
+                    offset,
+                    limit
+                });    
+                // return response
+                return setResponse(response.data);
+            }
+    
+            // set error
+            throw new Error('Error: Not auth!');
+        } catch (err) {
+            // return response
+            return setResponse({
+                status: false,
+                message: err.message
+            });
         }
-        return await this.props.actions.getAllWithdraws(offset, this.limit);
     }
 
     _handleLoadMore = () => {
@@ -74,12 +105,12 @@ class WithdrawList extends Component {
                     setStateData.data = [ ...this.state.data, ...response.data ];
                 }
             } else {
-                setStateData.error = response.message;
+                showToast(response.message);
             }
 
             // set state data
             this.setState(setStateData);
-        })
+        });
     }
 
     _handleRefresh = () => {
@@ -95,10 +126,8 @@ class WithdrawList extends Component {
 
             if(response.status) {
                 setStateData.data = response.data;
-                // reset data
-                this.props.actions.reset();
             } else {
-                setStateData.error = response.message;
+                showToast(response.message);
             }
 
             // set state data
@@ -170,17 +199,6 @@ class WithdrawList extends Component {
     }
 }
 
-// component prop types
-WithdrawList.propTypes = {
-    actions: PropTypes.object.isRequired,
-    user: PropTypes.bool
-};
-
-// component default props
-WithdrawList.defaultProps = {
-    user: false
-};
-
 // component styles
 const styles = StyleSheet.create({
     contentContainerStyle: {
@@ -211,4 +229,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default WithdrawList;
+export default UserWithdrawList;
