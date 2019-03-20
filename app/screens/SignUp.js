@@ -57,8 +57,8 @@ class SignUp extends Component {
         this.setState({ loading: true });
 
         const insertData = {
-            email: this.state.email,
-            username: this.state.username,
+            email: this.state.email.toLowerCase(),
+            username: this.state.username.toLowerCase(),
             pass: this.state.pass,
             firebase_token: await getFirebaseToken()
         };

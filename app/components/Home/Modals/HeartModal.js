@@ -30,11 +30,19 @@ class HeartModal extends Component {
     }
 
     componentDidMount() {
+        // set mount
+        this._isMounted = true;
+
         // init admob rewarded
         this.initAdMob();
 
         // set timer
         this.setTimer();
+    }
+
+    componentWillUnmount() {
+        // set mount
+        this._isMounted = false;
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -59,14 +67,16 @@ class HeartModal extends Component {
             this.calcEndTime().then((time) => {
                 if(time <= 0) {
                     setTimeout(() => {
-                        if(this.state.btnGetHeartDisabled) {
+                        if(this.state.btnGetHeartDisabled && this._isMounted) {
                             this.setState({ btnGetHeartDisabled: false });
                         }
                     }, 100);
                     // clear timer
                     clearInterval(this.timerInterval);
                 } else {
-                    this.setState({ time, btnGetHeartDisabled: true });
+                    if(this._isMounted) {
+                        this.setState({ time, btnGetHeartDisabled: true });
+                    }
                 }
             });
         }, 1000);
@@ -87,7 +97,9 @@ class HeartModal extends Component {
         await removeStorage('heartModalOpenTime');
 
         // disable button
-        this.setState({ btnGetHeartDisabled: true });
+        if(this._isMounted) {
+            this.setState({ btnGetHeartDisabled: true });
+        }
     }
 
     initAdMob = () => {
@@ -101,7 +113,9 @@ class HeartModal extends Component {
 
         // onAdLoaded
         this.advert.on('onAdLoaded', () => {
-            this.setState({ btnShowAdDisabled: false });
+            if(this._isMounted) {
+                this.setState({ btnShowAdDisabled: false });
+            }
         });
 
         // onRewarded
