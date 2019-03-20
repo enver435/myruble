@@ -1,4 +1,4 @@
-const API_URL_DEV  = "http://192.168.1.101/myruble/api";
+const API_URL_DEV  = "http://192.168.1.104/myruble/api";
 const API_URL_PROD = "http://myruble.com/api";
 
 /**

@@ -2,8 +2,6 @@ import React, {
     Component
 } from 'react';
 import {
-    View,
-    Text,
     BackHandler
 } from 'react-native';
 
@@ -15,6 +13,7 @@ import SelectMethod from './SelectMethod';
 class Withdraw extends Component {
     constructor(props) {
         super(props);
+        // init state
         this.state = {
             screenIndex: 0
         };
@@ -45,7 +44,7 @@ class Withdraw extends Component {
         }
     }
 
-    onChangeScreen = (screenIndex) => {
+    _onChangeScreen = (screenIndex) => {
         if (screenIndex == 0) {
             this.props.navigation.setParams({
                 title: 'Получить деньги'
@@ -64,26 +63,25 @@ class Withdraw extends Component {
         });
     }
 
-    renderScreen = () => {
+    _renderScreen = () => {
         if(this.state.screenIndex == 0) {
             return <Main
-                        onChangeScreen={this.onChangeScreen}
+                        onChangeScreen={this._onChangeScreen}
                         userState={this.props.userState}
-                        withdrawsState={this.props.withdrawsState}
                         withdrawActions={this.props.withdrawActions}/>
         } else if(this.state.screenIndex == 1) {
             return <SelectMethod
-                        onChangeScreen={this.onChangeScreen}
+                        onChangeScreen={this._onChangeScreen}
                         userState={this.props.userState}/>
         } else if(this.state.screenIndex == 2) {
             return <Payment
-                        onChangeScreen={this.onChangeScreen}
+                        onChangeScreen={this._onChangeScreen}
                         userState={this.props.userState}/>
         }
     }
     
     render() {
-        return this.renderScreen()
+        return this._renderScreen();
     }
 }
 

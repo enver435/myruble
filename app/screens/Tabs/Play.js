@@ -77,7 +77,7 @@ class Play extends Component {
             }
         });
 
-        // update user
+        // if task completed update user balance
         if(gameData.taskSuccess == gameDefaultData.task) {
             this.updateUser({
                 balance: this.state.user.data.balance + gameDefaultData.price
@@ -138,14 +138,17 @@ class Play extends Component {
     }
 
     sendAnswer = (answer) => {
-        // dispatch action check answer correct
-        this.props.gameActions.checkAnswer(answer);
-
-        // dispatch action next question
-        this.props.gameActions.nextQuestion();
-
-        // check end game
-        this.checkEndGame();
+        const gameData = this.state.game.data;
+        if(gameData.status) {
+            // dispatch action check answer correct
+            this.props.gameActions.checkAnswer(answer);
+    
+            // dispatch action next question
+            this.props.gameActions.nextQuestion();
+    
+            // check end game
+            this.checkEndGame();
+        }
     }
 
     updateUser = (data) => {

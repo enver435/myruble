@@ -4,32 +4,22 @@ import React, {
 import {
     View,
     Text,
-    Image,
     StyleSheet
 } from 'react-native';
 import PropTypes from 'prop-types';
-import { Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { Button } from 'react-native-elements';
 
 // import components
-import WithdrawItem from '../../components/WithdrawItem';
-import Loading from '../../components/Loading';
+import WithdrawList from '../../components/WithdrawList';
 
 class Main extends Component {
     constructor(props) {
         super(props);
         // init state
         this.state = {
-            loading: true,
-            user: {},
-            withdraws: []
+            user: {}
         };
-    }
-
-    componentDidMount() {
-        this.props.withdrawActions.getUserWithdraws().then((response) => {
-            this.setState({ loading: false });
-        });
     }
 
     static getDerivedStateFromProps(nextProps, prevState) {
@@ -37,21 +27,16 @@ class Main extends Component {
         if (prevState.user !== nextProps.userState) {
             obj.user = nextProps.userState;
         }
-        if (prevState.withdraws !== nextProps.withdrawsState.user) {
-            obj.withdraws = nextProps.withdrawsState.user;
-        }
         return Object.keys(obj).length > 0 ? obj : null;
     }
 
     render() {
         const { balance } = this.state.user.data;
-        return this.state.loading ? (
-            <Loading/>
-        ) : (
+        return (
             <View style={styles.container}>
                 <View style={styles.headerContainer}>
                     <View style={{ flex: 1 }}>
-					    <Text style={styles.balanceText}>{balance.toFixed(2)} <Icon size={35} name="currency-rub" color="#474747"/></Text>
+                        <Text style={styles.balanceText}>{balance.toFixed(2)} <Icon size={35} name="currency-rub" color="#474747"/></Text>
                     </View>
                     <View style={{ flex: 1 }}>
                         <Button
@@ -62,22 +47,10 @@ class Main extends Component {
                     </View>
                 </View>
                 <View style={styles.withdrawContainer}>
-                    {this.state.withdraws.length > 0 ? (
-                        <View>
-                            <View>
-                                <Text style={styles.withdrawText}>История платежей</Text>
-                            </View>
-                            <View>
-                                {this.state.withdraws.map((item) => {
-                                    return <WithdrawItem key={item.id} item={item}/>
-                                })}
-                            </View>
-                        </View>
-                    ) : (
-                        <View>
-                            <Text style={{ textAlign: 'center' }}>Not Found</Text>
-                        </View>
-                    )}
+                    <View>
+                        <Text style={styles.withdrawText}>История платежей</Text>
+                    </View>
+                    <WithdrawList user={true} actions={this.props.withdrawActions}/>
                 </View>
             </View>
         )
@@ -93,11 +66,13 @@ Main.propTypes = {
 // component styles
 const styles = StyleSheet.create({
     container: {
+        flex: 1,
         paddingTop: 20,
         flexDirection: 'column',
         backgroundColor: '#fafafa'
     },
     headerContainer: {
+        flex: 0,
         flexDirection: 'row',
         paddingLeft: 20,
         paddingRight: 20,
@@ -110,6 +85,7 @@ const styles = StyleSheet.create({
 		color: '#474747'
 	},
     withdrawContainer: {
+        flex: 1,
         paddingTop: 20
     },
     withdrawText: {

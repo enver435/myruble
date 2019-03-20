@@ -10,7 +10,8 @@ import {
 import {
     GET_ALL_WITHDRAW,
     GET_USER_WITHDRAW,
-    INSERT_WITHDRAW
+    INSERT_WITHDRAW,
+    RESET_WITHDRAW
 } from '../../constants/actions/withdraws';
 
 // import api constants
@@ -79,7 +80,7 @@ export const getUserWithdraws = (offset = 0, limit = 10) => async dispatch => {
     }
 }
 
-export const insertWithdraw = (data) => async dispatch => {
+export const insert = (data) => async dispatch => {
     try {
         const response = await POST(API_URL + API_INSERT_WITHDRAW, data);
         if(response.data.status) {
@@ -98,4 +99,10 @@ export const insertWithdraw = (data) => async dispatch => {
             message: err.message
         });
     }
+}
+
+export const reset = () => async dispatch => {
+    dispatch({
+        type: RESET_WITHDRAW
+    });
 }

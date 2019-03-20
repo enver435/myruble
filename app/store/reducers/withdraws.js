@@ -2,7 +2,8 @@
 import {
     GET_ALL_WITHDRAW,
     GET_USER_WITHDRAW,
-    INSERT_WITHDRAW
+    INSERT_WITHDRAW,
+    RESET_WITHDRAW
 } from '../../constants/actions/withdraws';
 
 // init state
@@ -28,6 +29,8 @@ export default function withdrawsReducer(state = INITIAL_STATE, action) {
                 all: [ ...action.payload, ...state.all ],
                 user: [ ...action.payload, ...state.user ]
             }
+        case RESET_WITHDRAW:
+            return INITIAL_STATE;
         default:
             return state;
     }

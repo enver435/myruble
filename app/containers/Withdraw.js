@@ -12,7 +12,7 @@ import * as withdrawActions from '../store/actions/withdraws';
 const mapStateToProps = (state, ownProps) => {
     return {
         userState: state.user,
-        withdrawsState: state.withdraws
+        withdrawState: state.withdraws
     }
 }
 
