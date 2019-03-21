@@ -32,6 +32,5 @@ export const API_GET_PAYMENT_METHODS = "/withdraw/payment-methods";
 /**
  * WITHDRAW URL's
  */
-export const API_GET_WITHDRAW           = "/withdraw";
-export const API_CHECK_WAITING_WITHDRAW = "/withdraw/checkWaiting"
-export const API_INSERT_WITHDRAW        = "/withdraw/insert"
+export const API_GET_WITHDRAW    = "/withdraw";
+export const API_INSERT_WITHDRAW = "/withdraw/insert"

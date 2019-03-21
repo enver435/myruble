@@ -17,15 +17,13 @@ import { withNavigation } from 'react-navigation'
 import {
     POST,
     setResponse,
-    showToast,
-    getStorage
+    showToast
 } from '../../Helpers';
 
 // import api constants
 import {
     API_URL,
-    API_INSERT_WITHDRAW,
-    API_CHECK_WAITING_WITHDRAW
+    API_INSERT_WITHDRAW
 } from '../../constants/api';
 
 class Payment extends Component {
@@ -62,28 +60,9 @@ class Payment extends Component {
 
     _insertData = async (data) => {
         try {
-            if(await getStorage('userData')) {
+            const { isAuth } = this.props.userState;
+            if(isAuth) {
                 const response = await POST(API_URL + API_INSERT_WITHDRAW, data);
-                // return response
-                return setResponse(response.data);
-            }
-            // set error
-            throw new Error('Error: Not auth!');
-        } catch (err) {
-            return setResponse({
-                status: false,
-                message: err.message
-            });
-        }
-    }
-
-    _checkWaiting = async () => {
-        try {
-            const userData = await getStorage('userData');
-            if(userData) {
-                const response = await POST(API_URL + API_CHECK_WAITING_WITHDRAW, {
-                    user_id: userData.id
-                });
                 // return response
                 return setResponse(response.data);
             }
@@ -99,8 +78,8 @@ class Payment extends Component {
 
     _onClickWithdraw = () => {
         this.setState({ loading: true }, async () => {
-            // get phone storage user data
-            const userData = await getStorage('userData');
+            // get user data
+            const { id, balance } = this.props.userState;
             
             // get payment method information
             const { method, commission, min_withdraw } = this.props.withdrawState.payment;
@@ -108,28 +87,23 @@ class Payment extends Component {
             // insert status
             let insertStatus = false;
 
-            if(this.state.amount < min_withdraw) {
-                showToast('Можно снять как минимум ' + min_withdraw.toFixed(2) + ' рублей');
-            } else if(this.state.amount > userData.balance) {
-                showToast('Ваш баланс не хватает');
-            } else {
-                const resCheckWaiting = await this._checkWaiting();
-                if(resCheckWaiting.status) {
-                    if(resCheckWaiting.data) {
-                        showToast('Ваш недавний запрос на вывод средств не был выполнен. Пожалуйста, повторите попытку позже.');
-                    } else {
-                        insertStatus = true;
-                    }
+            if(this.state.amount > 0 && this.state.wallet_number != '') {
+                if(this.state.amount < min_withdraw) {
+                    showToast('Можно снять как минимум ' + min_withdraw.toFixed(2) + ' рублей');
+                } else if(this.state.amount > balance) {
+                    showToast('Ваш баланс не хватает');
                 } else {
-                    showToast(resCheckWaiting.message);
+                    insertStatus = true;
                 }
+            } else {
+                showToast('Пожалуйста, заполните информацию');
             }
 
             // if insert status true
             if(insertStatus) {
-                // create insert data
+                // create object insert data
                 const data = {
-                    user_id: userData.id,
+                    user_id: id,
                     amount: this.state.amount,
                     commission,
                     payment_method: method,
