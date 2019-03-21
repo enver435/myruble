@@ -45,7 +45,7 @@ class App extends Component {
         // init state
         this.state = {
             isConnected: true,
-            showApp: true
+            showApp: false
         };
         
         // app url
@@ -112,20 +112,18 @@ class App extends Component {
             const appDeviceVersion = DeviceInfo.getVersion();
 
             if (response.data.appVersion != appDeviceVersion) {
-                // hide app
-                this.setState({ showApp: false });
-
                 // show alert
                 Alert.alert(
                     'Новая версия: ' + response.data.appVersion,
                     'Если вы не обновите приложение, оно может работать неправильно. Хотите обновить?',
-                    [{
-                            text: 'Позже',
-                            onPress: () => {
-                                // show app
-                                this.setState({ showApp: true });
-                            }
-                        },
+                    [
+                    // {
+                    //         text: 'Позже',
+                    //         onPress: () => {
+                    //             // show app
+                    //             this.setState({ showApp: true });
+                    //         }
+                    //     },
                         {
                             text: 'Обновить',
                             onPress: () => {
@@ -137,15 +135,14 @@ class App extends Component {
                                         showToast("Don't know how to open URI: " + this.appUrl);
                                     }
                                 });
-                                
-                                // show app
-                                this.setState({ showApp: true });
                             }
                         },
                     ], {
                         cancelable: false
                     },
                 );
+            } else {
+                this.setState({ showApp: true });
             }
         } catch (err) {
             showToast(err.message);
