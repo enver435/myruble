@@ -11,13 +11,11 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Button } from 'react-native-elements';
 
 // import components
-import UserWithdrawList from '../../components/UserWithdrawList';
+import WithdrawList from '../../components/WithdrawList';
 
 class Main extends Component {
     constructor(props) {
         super(props);
-        // init state
-        this.state = {};
     }
 
     render() {
@@ -40,7 +38,7 @@ class Main extends Component {
                     <View>
                         <Text style={styles.withdrawText}>История платежей</Text>
                     </View>
-                    <UserWithdrawList/>
+                    <WithdrawList user={true}/>
                 </View>
             </View>
         )

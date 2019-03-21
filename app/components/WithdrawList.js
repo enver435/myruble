@@ -8,6 +8,7 @@ import {
     FlatList,
     ActivityIndicator
 } from 'react-native';
+import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 // import helpers
@@ -26,7 +27,7 @@ import {
 // import components
 import Loading from './Loading';
 
-class UserWithdrawList extends Component {
+class WithdrawList extends Component {
     constructor(props) {
         super(props);
         // init state
@@ -42,6 +43,9 @@ class UserWithdrawList extends Component {
     }
 
     async componentDidMount() {
+        // set mount
+        this._isMounted = true;
+
         // fetch data
         const response = await this._fetchData();
 
@@ -60,27 +64,44 @@ class UserWithdrawList extends Component {
         this.setState(setStateData);
     }
 
+    componentWillUnmount() {
+        // set mount
+        this._isMounted = false;
+    }
+
     _fetchData = async () => {
         const limit  = this.limit;
         const offset = this.state.page * limit;
         
         try {
-            // get phone storage user data
-            const userData = await getStorage('userData');
-    
-            if(userData) {
-                // request and get user withdraws
-                const response = await GET(API_URL + API_GET_WITHDRAW, {
-                    user_id: userData.id,
-                    offset,
-                    limit
-                });    
-                // return response
-                return setResponse(response.data);
+            // create request data object
+            let requestData = {
+                offset,
+                limit
+            };
+
+            if(this.props.user) {
+                // get phone storage user data
+                const userData = await getStorage('userData');
+
+                if(userData) {
+                    // set request data
+                    requestData.user_id = userData.id;
+                } else {
+                    // set error
+                    throw new Error('Error: Not auth!');
+                }
+            } else {
+                // set request data
+                requestData.payment_status = 1;
             }
-    
-            // set error
-            throw new Error('Error: Not auth!');
+
+            // request and get user withdraws
+            const response = await GET(API_URL + API_GET_WITHDRAW, requestData);
+
+            // return response
+            return setResponse(response.data);
+
         } catch (err) {
             // return response
             return setResponse({
@@ -108,9 +129,11 @@ class UserWithdrawList extends Component {
                 } else {
                     showToast(response.message);
                 }
-    
-                // set state data
-                this.setState(setStateData);
+                
+                if(this._isMounted) {
+                    // set state data
+                    this.setState(setStateData);
+                }
             });
         }
     }
@@ -132,8 +155,10 @@ class UserWithdrawList extends Component {
                 showToast(response.message);
             }
 
-            // set state data
-            this.setState(setStateData);
+            if(this._isMounted) {
+                // set state data
+                this.setState(setStateData);
+            }
         });
     }
 
@@ -201,6 +226,16 @@ class UserWithdrawList extends Component {
     }
 }
 
+// component prop types
+WithdrawList.propTypes = {
+    user: PropTypes.bool
+};
+
+// component default props
+WithdrawList.defaultProps = {
+    user: false
+};
+
 // component styles
 const styles = StyleSheet.create({
     contentContainerStyle: {
@@ -231,4 +266,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default UserWithdrawList;
+export default WithdrawList;
