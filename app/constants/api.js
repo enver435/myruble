@@ -25,10 +25,6 @@ export const API_GAME_DEFAULT = "/game";
 export const API_INSERT_GAME  = "/game/insert";
 
 /**
- * PAYMENT METHODS URL's
- */
-
-/**
  * WITHDRAW URL's
  */
 export const API_GET_WITHDRAW         = "/withdraw";
