@@ -1,7 +1,11 @@
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
 // import screen
 import Withdraw from '../screens/Withdraw';
+
+// import actions
+import * as userActions from '../store/actions/user';
 
 // map state to props
 const mapStateToProps = (state, ownProps) => {
@@ -10,4 +14,11 @@ const mapStateToProps = (state, ownProps) => {
     }
 }
 
-export default connect(mapStateToProps, null)(Withdraw);
+// map dispatch to props
+function mapDispatchToProps(dispatch) {
+    return {
+        userActions: bindActionCreators(userActions, dispatch)
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Withdraw);

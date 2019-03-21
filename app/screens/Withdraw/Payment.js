@@ -3,6 +3,7 @@ import React, {
 } from 'react';
 import {
     View,
+    Text,
     Image,
     Dimensions,
     TextInput,
@@ -12,6 +13,7 @@ import {
 import PropTypes from 'prop-types';
 import { Button } from 'react-native-elements';
 import { withNavigation } from 'react-navigation'
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';0
 
 // import helpers
 import {
@@ -79,10 +81,13 @@ class Payment extends Component {
     _onClickWithdraw = () => {
         this.setState({ loading: true }, async () => {
             // get user data
-            const { id, balance } = this.props.userState;
+            const { id, balance } = this.props.userState.data;
             
             // get payment method information
             const { method, commission, min_withdraw } = this.props.withdrawState.payment;
+
+            // calculate commission balance
+            const commissionBalance = parseFloat((this.state.amount + (commission * this.state.amount / 100)).toFixed(2));
 
             // insert status
             let insertStatus = false;
@@ -90,7 +95,7 @@ class Payment extends Component {
             if(this.state.amount > 0 && this.state.wallet_number != '') {
                 if(this.state.amount < min_withdraw) {
                     showToast('Можно снять как минимум ' + min_withdraw.toFixed(2) + ' рублей');
-                } else if(this.state.amount > balance) {
+                } else if(commissionBalance > balance) {
                     showToast('Ваш баланс не хватает');
                 } else {
                     insertStatus = true;
@@ -101,26 +106,37 @@ class Payment extends Component {
 
             // if insert status true
             if(insertStatus) {
-                // create object insert data
-                const data = {
-                    user_id: id,
-                    amount: this.state.amount,
-                    commission,
-                    payment_method: method,
-                    wallet_number: this.state.wallet_number,
-                    payment_status: 0,
-                    time: Math.round(new Date().getTime() / 1000)
-                };
-                
-                // request insert data
-                const response = await this._insertData(data);
-                if(response.status) {
-                    showToast('Ваш запрос был успешно отправлен. Это будет сделано в течение 24 часов.');
-                    // navigate main screen
-                    this.props.navigation.navigate('Main');
+
+                // update user balance
+                const resUpdate = await this.props.userActions.update({
+                    balance: balance - commissionBalance
+                });
+
+                if(resUpdate.status) {
+                    // create object insert data
+                    const insertData = {
+                        user_id: id,
+                        amount: this.state.amount,
+                        commission,
+                        payment_method: method,
+                        wallet_number: this.state.wallet_number,
+                        payment_status: 0,
+                        time: Math.round(new Date().getTime() / 1000)
+                    };
+
+                    // request insert data
+                    const resInsert = await this._insertData(insertData);
+                    if(resInsert.status) {
+                        showToast('Ваш запрос был успешно отправлен. Это будет сделано в течение 24 часов.');
+                        // navigate main screen
+                        this.props.navigation.navigate('Main');
+                    } else {
+                        showToast(resInsert.message);
+                    }
                 } else {
-                    showToast(response.message);
+                    showToast(resUpdate.message);
                 }
+                
             }
 
             if(this._isMounted) {
@@ -130,6 +146,9 @@ class Payment extends Component {
     }
 
     render() {
+        const { commission } = this.props.withdrawState.payment;
+        const commissionBalance = this.state.amount + (commission * this.state.amount / 100);
+
         return (
             <View style={styles.container}>
                 <ScrollView
@@ -149,7 +168,7 @@ class Payment extends Component {
                                 style={styles.input}
                                 underlineColorAndroid="#474747"
                                 returnKeyType="next"
-                                placeholder={this.state.methodName.charAt(0).toUpperCase() + this.state.methodName.slice(1) + ' Кошелек ID'}
+                                placeholder={this.state.methodName.charAt(0).toUpperCase() + this.state.methodName.slice(1) + ' Кошелек'}
                                 autoCapitalize="none"
                                 onChangeText={(wallet_number) => this.setState({ wallet_number })}
                                 onSubmitEditing={() => { this.inputs['amount'].focus(); }}
@@ -161,8 +180,11 @@ class Payment extends Component {
                                 underlineColorAndroid="#474747"
                                 placeholder="Сумма"
                                 autoCapitalize="none"
-                                onChangeText={(amount) => this.setState({ amount })}
+                                onChangeText={(amount) => this.setState({ amount: parseFloat(amount) })}
                             />
+                            {this.state.amount > 0 ? (
+                                <Text>К оплате {commissionBalance.toFixed(2)} <Icon size={15} name="currency-rub" color="#474747"/>, с учетом комиссии {commission.toFixed(2)} %</Text>
+                            ) : null}
                             <Button
                                 onPress={this._onClickWithdraw}
                                 title="OK"

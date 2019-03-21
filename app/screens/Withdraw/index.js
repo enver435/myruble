@@ -92,7 +92,8 @@ class Withdraw extends Component {
             return <Payment
                         onChangeScreen={this._onChangeScreen}
                         withdrawState={this.state}
-                        userState={this.props.userState}/>
+                        userState={this.props.userState}
+                        userActions={this.props.userActions}/>
         }
     }
 
