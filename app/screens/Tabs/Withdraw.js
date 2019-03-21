@@ -82,26 +82,28 @@ class Withdraw extends Component {
     }
 
     _handleLoadMore = () => {
-        this.setState({ loadingMore: true, page: this.state.page + 1 }, async () => {
-            // fetch data
-            const response = await this._fetchData();
-
-            // state object
-            let setStateData = {
-                loadingMore: false
-            };
-
-            if(response.status) {
-                if(response.data.length > 0) {
-                    setStateData.data = [ ...this.state.data, ...response.data ];
+        if(this.state.data.length >= this.limit) {
+            this.setState({ loadingMore: true, page: this.state.page + 1 }, async () => {
+                // fetch data
+                const response = await this._fetchData();
+    
+                // state object
+                let setStateData = {
+                    loadingMore: false
+                };
+    
+                if(response.status) {
+                    if(response.data.length > 0) {
+                        setStateData.data = [ ...this.state.data, ...response.data ];
+                    }
+                } else {
+                    showToast(response.message);
                 }
-            } else {
-                showToast(response.message);
-            }
-
-            // set state data
-            this.setState(setStateData);
-        });
+    
+                // set state data
+                this.setState(setStateData);
+            });
+        }
     }
 
     _handleRefresh = () => {
