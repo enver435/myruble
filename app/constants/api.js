@@ -27,10 +27,10 @@ export const API_INSERT_GAME  = "/game/insert";
 /**
  * PAYMENT METHODS URL's
  */
-export const API_GET_PAYMENT_METHODS = "/withdraw/payment-methods";
 
 /**
  * WITHDRAW URL's
  */
-export const API_GET_WITHDRAW    = "/withdraw";
-export const API_INSERT_WITHDRAW = "/withdraw/insert"
+export const API_GET_WITHDRAW         = "/withdraw";
+export const API_INSERT_WITHDRAW      = "/withdraw/insert"
+export const API_GET_WITHDRAW_METHODS = "/withdraw/methods";
