@@ -46,6 +46,7 @@ class Home extends Component {
             } else {
                 const userData      = await getStorage('userData');
                 const firebaseToken = await getFirebaseToken();
+                // if new firebase token
                 if(userData && userData.firebase_token != firebaseToken) {
                     await this.props.userActions.update({
                         firebase_token: firebaseToken
