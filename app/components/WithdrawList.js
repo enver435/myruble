@@ -60,8 +60,10 @@ class WithdrawList extends Component {
             showToast(response.message);
         }
 
-        // set state data
-        this.setState(setStateData);
+        if(this._isMounted) {
+            // set state data
+            this.setState(setStateData);
+        }
     }
 
     componentWillUnmount() {

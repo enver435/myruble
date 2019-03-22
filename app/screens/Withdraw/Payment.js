@@ -202,7 +202,8 @@ class Payment extends Component {
 Payment.propTypes = {
     onChangeScreen: PropTypes.func.isRequired,
     withdrawState: PropTypes.object.isRequired,
-    userState: PropTypes.object.isRequired
+    userState: PropTypes.object.isRequired,
+    userActions: PropTypes.object.isRequired
 };
 
 // component styles
