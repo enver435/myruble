@@ -197,7 +197,8 @@ class Play extends Component {
                         hideVisible={() => { this.setVisibleHeartModal(false) }}
                         updateHeart={() => {
                             this.updateUser({
-                                heart: this.state.user.data.heart + 1
+                                heart: this.state.user.data.heart + 1,
+                                notify_heart_time: 0
                             })
                         }}
                         visible={this.state.heartModalVisible}/>
