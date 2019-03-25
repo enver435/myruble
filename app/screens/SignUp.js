@@ -60,7 +60,8 @@ class SignUp extends Component {
             email: this.state.email.toLowerCase(),
             username: this.state.username.toLowerCase(),
             pass: this.state.pass,
-            firebase_token: await getFirebaseToken()
+            firebase_token: await getFirebaseToken(),
+            register_time: Math.round(new Date().getTime() / 1000)
         };
 
         this.props.userActions.signUp(insertData).then((response) => {
