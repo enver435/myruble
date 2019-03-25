@@ -146,7 +146,7 @@ class Payment extends Component {
     }
 
     render() {
-        const { commission } = this.props.withdrawState.payment;
+        const { method, commission } = this.props.withdrawState.payment;
         const commissionBalance = this.state.amount + (commission * this.state.amount / 100);
 
         return (
@@ -155,11 +155,11 @@ class Payment extends Component {
                     contentContainerStyle={{flexGrow : 1, justifyContent : 'center'}}>
                     <View>
                         <View style={styles.imgContainer}>
-                            {this.state.methodName == 'yandex' ? (
+                            {method == 1 ? (
                                 <Image source={require('../../assets/yandex.png')} resizeMode="contain" style={styles.paymentImg}/>
-                            ) : (this.state.methodName == 'payeer' ? (
+                            ) : (method == 2 ? (
                                 <Image source={require('../../assets/payeer.png')} resizeMode="contain" style={styles.paymentImg}/>
-                            ) : (this.state.methodName == 'webmoney' ? (
+                            ) : (method == 3 ? (
                                 <Image source={require('../../assets/webmoney.png')} resizeMode="contain" style={styles.paymentImg}/>
                             ): null))}
                         </View>
@@ -168,7 +168,7 @@ class Payment extends Component {
                                 style={styles.input}
                                 underlineColorAndroid="#474747"
                                 returnKeyType="next"
-                                placeholder={this.state.methodName.charAt(0).toUpperCase() + this.state.methodName.slice(1) + ' Кошелек'}
+                                placeholder={'Кошелек (пример: ' + (method == 1 ? '410011111111111' : (method == 2 ? 'P12345678' : (method == 3 ? 'R123456789111' : null))) + ')'}
                                 autoCapitalize="none"
                                 onChangeText={(wallet_number) => this.setState({ wallet_number })}
                                 onSubmitEditing={() => { this.inputs['amount'].focus(); }}
