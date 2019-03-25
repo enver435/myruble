@@ -79,6 +79,7 @@ class App extends Component {
             notification.setSound('default')
                 .android.setChannelId('myruble_channel')
                 .android.setSmallIcon('ic_launcher')
+                .android.setLargeIcon('ic_launcher')
                 .android.setPriority(firebase.notifications.Android.Priority.Max)
             
             firebase.notifications().displayNotification(notification);
