@@ -5,7 +5,8 @@ import {
     NetInfo,
     Alert,
     Linking,
-    View
+    View,
+    BackHandler
 } from 'react-native';
 import {
     Provider
@@ -24,7 +25,7 @@ import AppNavigator from './app/AppNavigator';
 
 // import helpers
 import {
-    POST,
+    GET,
     showToast
 } from './app/Helpers';
 
@@ -45,7 +46,8 @@ class App extends Component {
         // init state
         this.state = {
             isConnected: true,
-            showApp: false
+            showApp: false,
+            data: {}
         };
         
         // app url
@@ -57,10 +59,31 @@ class App extends Component {
         this._isMounted = true;
 
         // check network
-        this.checkNetwork().then(() => {
+        this._checkNetwork().then(async () => {
             if(this.state.isConnected) {
-                // check app version
-                this.appNewVersionCheck();
+                // fetch app data from api
+                await this._fetchData();
+                if(this.state.data.appStatus == "true") {
+                    // check app version
+                    await this._checkAppVersion();
+                } else {
+                    // show alert
+                    Alert.alert(
+                        'myRuble не работает временно.',
+                        'myRuble не работает временно. Ремонтные работы продолжаются. Пожалуйста, попробуйте позже.',
+                        [{
+                            text: 'OK',
+                            onPress: () => {
+                                // exit app
+                                BackHandler.exitApp();
+                                return true;
+                            }
+                        },
+                        ], {
+                            cancelable: false
+                        },
+                    );
+                }
             }
         });
 
@@ -94,7 +117,18 @@ class App extends Component {
         this.notificationListener();
     }
 
-    checkNetwork = async () => {
+    _fetchData = async () => {
+        try {
+            const response = await GET(API_URL);
+            if(this._isMounted) {
+                this.setState({ data: response.data });
+            }
+        } catch (err) {
+            showToast(err.message);
+        }
+    }
+
+    _checkNetwork = async () => {
         try {
             const isConnected = await NetInfo.isConnected.fetch();
             if (this._isMounted) {
@@ -107,15 +141,14 @@ class App extends Component {
         }
     }
 
-    appNewVersionCheck = async () => {
+    _checkAppVersion = async () => {
         try {
-            const response         = await POST(API_URL);
             const appDeviceVersion = DeviceInfo.getVersion();
 
-            if (response.data.appVersion != appDeviceVersion) {
+            if (this.state.data.appVersion != appDeviceVersion) {
                 // show alert
                 Alert.alert(
-                    'Новая версия: ' + response.data.appVersion,
+                    'Новая версия: ' + this.data.appVersion,
                     'Если вы не обновите приложение, оно может работать неправильно. Хотите обновить?',
                     [
                     // {
@@ -160,7 +193,7 @@ class App extends Component {
                             <AdMobBanner/>
                         </Provider>
                     ) : <View/>
-                ) : <Offline checkNetwork={this.checkNetwork}/>}
+                ) : <Offline checkNetwork={this._checkNetwork}/>}
             </ThemeProvider>
         )
     }
