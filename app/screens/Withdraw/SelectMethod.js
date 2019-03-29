@@ -32,7 +32,7 @@ class SelectMethod extends Component {
         // init state
         this.state = {
             loading: true,
-            data: {}
+            data: []
         };
     }
 
@@ -69,15 +69,13 @@ class SelectMethod extends Component {
         }
     }
 
-    onClickMethod = (method, commission, min_withdraw) => {
-        const data = {
-            method,
-            min_withdraw,
-            commission
-        };
-        this.props.onSetPaymentMethod(data, () => {
-            this.props.onChangeScreen(2);
-        });
+    _onClickMethod = (method) => {
+        const data = this.state.data.filter((item) => { return item.method == method });
+        if(data.length > 0) {
+            this.props.onSetPaymentMethod(data[0], () => {
+                this.props.onChangeScreen(2);
+            });
+        }
     }
 
     render() {
@@ -88,57 +86,24 @@ class SelectMethod extends Component {
                 <View style={{ marginBottom: 20 }}>
                     <Text style={styles.title}>Выберите метод оплаты</Text>
                 </View>
-                <TouchableHighlight
-                    onPress={() => {
-                        this.onClickMethod(1, this.state.data.yandex_commission, this.state.data.yandex_min_withdraw)}
-                    }
-                    underlayColor="transparent">
-                    <View style={styles.itemContainer}>
-                        <View style={[ styles.item, { flex: 1 } ]}>
-                            <Image source={require('../../assets/yandex.png')} resizeMode="contain" style={styles.itemImg}/>
+                {this.state.data.map((item) => {
+                    return item.status ? (<TouchableHighlight
+                        key={item.id}
+                        onPress={() => { this._onClickMethod(item.method) }}
+                        underlayColor="transparent">
+                        <View style={styles.itemContainer}>
+                            <View style={[ styles.item, { flex: 1 } ]}>
+                                <Image source={item.method == 1 ? require('../../assets/yandex.png') : (item.method == 2 ? require('../../assets/payeer.png') : (item.method == 3 ? require('../../assets/webmoney.png') : null))} resizeMode="contain" style={styles.itemImg}/>
+                            </View>
+                            <View style={[ styles.item, { flex: 1 } ]}>
+                                <Text style={styles.itemText}>{item.commission.toFixed(2)}%</Text>
+                            </View>
+                            <View style={[ styles.item, { flex: 1 } ]}>
+                                <Text style={styles.itemText}>{item.min_withdraw.toFixed(2)} <Icon size={15} name="currency-rub" color="#474747"/></Text>
+                            </View>
                         </View>
-                        <View style={[ styles.item, { flex: 1 } ]}>
-                            <Text style={styles.itemText}>{this.state.data.yandex_commission.toFixed(2)}%</Text>
-                        </View>
-                        <View style={[ styles.item, { flex: 1 } ]}>
-                            <Text style={styles.itemText}>{this.state.data.yandex_min_withdraw.toFixed(2)} <Icon size={15} name="currency-rub" color="#474747"/></Text>
-                        </View>
-                    </View>
-                </TouchableHighlight>
-                <TouchableHighlight
-                    onPress={() => {
-                        this.onClickMethod(2, this.state.data.payeer_commission, this.state.data.payeer_min_withdraw)}
-                    }
-                    underlayColor="transparent">
-                    <View style={styles.itemContainer}>
-                        <View style={[ styles.item, { flex: 1 } ]}>
-                            <Image source={require('../../assets/payeer.png')} resizeMode="contain" style={styles.itemImg}/>
-                        </View>
-                        <View style={[ styles.item, { flex: 1 } ]}>
-                            <Text style={styles.itemText}>{this.state.data.payeer_commission.toFixed(2)}%</Text>
-                        </View>
-                        <View style={[ styles.item, { flex: 1 } ]}>
-                            <Text style={styles.itemText}>{this.state.data.payeer_min_withdraw.toFixed(2)} <Icon size={15} name="currency-rub" color="#474747"/></Text>
-                        </View>
-                    </View>
-                </TouchableHighlight>
-                <TouchableHighlight 
-                    onPress={() => {
-                        this.onClickMethod(3, this.state.data.webmoney_commission, this.state.data.webmoney_min_withdraw)}
-                    }
-                    underlayColor="transparent">             
-                    <View style={styles.itemContainer}>
-                        <View style={[ styles.item, { flex: 1 } ]}>
-                            <Image source={require('../../assets/webmoney.png')} resizeMode="contain" style={styles.itemImg}/>
-                        </View>
-                        <View style={[ styles.item, { flex: 1 } ]}>
-                            <Text style={styles.itemText}>{this.state.data.webmoney_commission.toFixed(2)}%</Text>
-                        </View>
-                        <View style={[ styles.item, { flex: 1 } ]}>
-                            <Text style={styles.itemText}>{this.state.data.webmoney_min_withdraw.toFixed(2)} <Icon size={15} name="currency-rub" color="#474747"/></Text>
-                        </View>
-                    </View>
-                </TouchableHighlight>
+                    </TouchableHighlight>) : null
+                })}
             </View>
         )
     }

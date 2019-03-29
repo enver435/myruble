@@ -16,11 +16,7 @@ class Withdraw extends Component {
         // init state
         this.state = {
             screenIndex: 0,
-            payment: {
-                method: null,
-                min_withdraw: null,
-                commission: null
-            }
+            methodData: {}
         };
     }
 
@@ -60,8 +56,8 @@ class Withdraw extends Component {
             });
         } else if (screenIndex == 2) {
             this.props.navigation.setParams({
-                title: this.state.payment.method == 1 ? 'Яндекс.деньги' : (this.state.payment.method == 2 ? 'Payeer' :
-                    (this.state.payment.method == 3 ? 'Webmoney' : 'Unknown'))
+                title: this.state.methodData.method == 1 ? 'Яндекс.деньги' : (this.state.methodData.method == 2 ? 'Payeer' :
+                    (this.state.methodData.method == 3 ? 'Webmoney' : 'Unknown'))
             });
         }
         this.setState({
@@ -69,14 +65,8 @@ class Withdraw extends Component {
         });
     }
 
-    _onSetPaymentMethod = (data, callback) => {
-        this.setState({
-            payment: {
-                method: data.method,
-                min_withdraw: data.min_withdraw,
-                commission: data.commission
-            }
-        }, callback);
+    _onSetPaymentMethod = (methodData, callback) => {
+        this.setState({ methodData }, callback);
     }
 
     _renderScreen = () => {

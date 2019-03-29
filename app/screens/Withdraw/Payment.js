@@ -35,8 +35,7 @@ class Payment extends Component {
         this.state = {
             loading: false,
             wallet_number: '',
-            amount: 0,
-            methodName: ''
+            amount: 0
         };
         this.inputs = {};
     }
@@ -44,20 +43,11 @@ class Payment extends Component {
     componentDidMount() {
         // set mount
         this._isMounted = true;
-
-        // get payment method name
-        this._getPaymentMethod();
     }
 
     componentWillUnmount() {
         // set mount
         this._isMounted = false;
-    }
-
-    _getPaymentMethod = () => {
-        const { method } = this.props.withdrawState.payment;
-        const methodName = method == 1 ? 'yandex' : (method == 2 ? 'payeer' : (method == 3 ? 'webmoney' : null));
-        this.setState({ methodName });
     }
 
     _insertData = async (data) => {
@@ -84,7 +74,7 @@ class Payment extends Component {
             const { id, balance } = this.props.userState.data;
             
             // get payment method information
-            const { method, commission, min_withdraw } = this.props.withdrawState.payment;
+            const { method, commission, min_withdraw } = this.props.withdrawState.methodData;
 
             // calculate commission balance
             const commissionBalance = parseFloat((this.state.amount + (commission * this.state.amount / 100)).toFixed(2));
@@ -146,7 +136,7 @@ class Payment extends Component {
     }
 
     render() {
-        const { method, commission } = this.props.withdrawState.payment;
+        const { method, commission } = this.props.withdrawState.methodData;
         const commissionBalance = this.state.amount + (commission * this.state.amount / 100);
 
         return (
