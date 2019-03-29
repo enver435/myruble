@@ -1,8 +1,22 @@
-import React, { Component } from 'react';
-import { View, Text, ScrollView, StyleSheet, Keyboard } from 'react-native';
+import React, {
+    Component
+} from 'react';
+import {
+    View,
+    Text,
+    ScrollView,
+    StyleSheet,
+    Keyboard,
+    RefreshControl
+} from 'react-native';
 
 // import helpers
-import { showToast, setStorage, getStorage } from '../../Helpers';
+import {
+    showToast,
+    setStorage,
+    getStorage,
+    getFirebaseToken
+} from '../../Helpers';
 
 // import components
 import Loading from '../../components/Loading';
@@ -19,6 +33,7 @@ class Play extends Component {
         // init state
         this.state = {
             loading: false,
+            refreshing: false,
             resultModalVisible: false,
             heartModalVisible: false,
             user: {},
@@ -37,12 +52,22 @@ class Play extends Component {
         return Object.keys(obj).length > 0 ? obj : null;
     }
 
+    componentDidMount() {
+        // set mount
+        this._isMounted = true;
+    }
+
+    componentWillUnmount() {
+        // set mount
+        this._isMounted = false;
+    }
+
     checkEndGame = () => {
-        const gameData        = this.state.game.data;
+        const gameData = this.state.game.data;
         const gameDefaultData = this.state.game.defaultData;
-        if(
-            gameData.status && 
-            gameData.currentTime == gameDefaultData.time || 
+        if (
+            gameData.status &&
+            gameData.currentTime == gameDefaultData.time ||
             gameData.taskSuccess == gameDefaultData.task
         ) {
             // clear timer
@@ -57,7 +82,7 @@ class Play extends Component {
     }
 
     endGame = async () => {
-        const gameData        = this.state.game.data;
+        const gameData = this.state.game.data;
         const gameDefaultData = this.state.game.defaultData;
 
         // dispatch action game results
@@ -72,15 +97,15 @@ class Play extends Component {
 
         // dispatch action result game
         this.props.gameActions.resultsGame(resultData).then((response) => {
-            if(!response.status) {
+            if (!response.status) {
                 showToast(response.message);
             }
         });
 
         // if task completed update user balance
-        if(gameData.taskSuccess == gameDefaultData.task) {
+        if (gameData.taskSuccess == gameDefaultData.task) {
             this.props.userActions.get().then((response) => {
-                if(response.status) {
+                if (response.status) {
                     this.updateUser({
                         balance: this.state.user.data.balance + gameDefaultData.price
                     });
@@ -95,7 +120,7 @@ class Play extends Component {
     }
 
     startGame = async () => {
-        if(this.state.user.data.heart > 0) {
+        if (this.state.user.data.heart > 0) {
             // update user heart
             this.updateUser({
                 heart: this.state.user.data.heart - 1
@@ -114,7 +139,7 @@ class Play extends Component {
             }, 1000);
         } else {
             // set time open heart modal
-            if(!await getStorage('heartModalOpenTime')) {
+            if (!await getStorage('heartModalOpenTime')) {
                 // get open time
                 const openTime = Math.round((new Date().getTime() / 1000) + this.state.game.defaultData.heart_time).toString();
 
@@ -145,13 +170,13 @@ class Play extends Component {
 
     sendAnswer = (answer) => {
         const gameData = this.state.game.data;
-        if(gameData.status) {
+        if (gameData.status) {
             // dispatch action check answer correct
             this.props.gameActions.checkAnswer(answer);
-    
+
             // dispatch action next question
             this.props.gameActions.nextQuestion();
-    
+
             // check end game
             this.checkEndGame();
         }
@@ -160,18 +185,71 @@ class Play extends Component {
     updateUser = (data) => {
         // dispatch action update user
         this.props.userActions.update(data).then((response) => {
-            if(!response.status) {
+            if (!response.status) {
                 showToast(response.message);
             }
         });
     }
 
+    _onRefresh = () => {
+        // show refreshing
+        this.setState({
+            refreshing: true
+        });
+
+        // get user data
+        const getUser = this.props.userActions.get();
+
+        // get game default data
+        const getGameDefault = this.props.gameActions.getDefault();
+
+        // all operation async
+        Promise.all([getUser, getGameDefault]).then(async (response) => {
+
+            /**
+             * Get User
+             */
+            if (!response[0].status) {
+                // show error message
+                showToast(response[0].message);
+            } else {
+                const userData = await getStorage('userData');
+                const firebaseToken = await getFirebaseToken();
+                // if new firebase token
+                if (userData && userData.firebase_token != firebaseToken) {
+                    await this.props.userActions.update({
+                        firebase_token: firebaseToken
+                    });
+                }
+            }
+
+            /**
+             * Get Default Game Information
+             */
+            if (!response[1].status) {
+                // show error message
+                showToast(response[1].message);
+            }
+
+            // hide refreshing
+            if (this._isMounted) {
+                this.setState({
+                    refreshing: false
+                });
+            }
+        });
+    }
+
     setVisibleResultModal = (visible) => {
-        this.setState({ resultModalVisible: visible });
+        this.setState({
+            resultModalVisible: visible
+        });
     }
 
     setVisibleHeartModal = (visible) => {
-        this.setState({ heartModalVisible: visible });
+        this.setState({
+            heartModalVisible: visible
+        });
     }
 
     render() {
@@ -180,7 +258,13 @@ class Play extends Component {
         ) : (
             this.state.user.isAuth === true ? (
                 <View>
-                    <ScrollView>
+                    <ScrollView
+                        refreshControl={
+                            <RefreshControl
+                                refreshing={this.state.refreshing}
+                                onRefresh={this._onRefresh}
+                            />
+                        }>
                         <Balance
                             userState={this.state.user}/>
                         <Main
