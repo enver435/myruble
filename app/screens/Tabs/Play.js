@@ -79,8 +79,14 @@ class Play extends Component {
 
         // if task completed update user balance
         if(gameData.taskSuccess == gameDefaultData.task) {
-            this.updateUser({
-                balance: this.state.user.data.balance + gameDefaultData.price
+            this.props.userActions.get().then((response) => {
+                if(response.status) {
+                    this.updateUser({
+                        balance: this.state.user.data.balance + gameDefaultData.price
+                    });
+                } else {
+                    showToast(response.message);
+                }
             });
         }
 
