@@ -1,14 +1,18 @@
-import React, { Component } from 'react';
+import React, {
+    Component
+} from 'react';
 import {
-    View, 
-    Text, 
-    TextInput, 
-    ScrollView, 
-    Dimensions, 
+    View,
+    Text,
+    TextInput,
+    ScrollView,
+    Dimensions,
     StyleSheet,
     TouchableHighlight
 } from 'react-native';
-import { Button } from 'react-native-elements';
+import {
+    Button
+} from 'react-native-elements';
 
 // import helpers
 import {
@@ -21,7 +25,7 @@ class SignIn extends Component {
     static navigationOptions = {
         title: 'Вход'
     }
-    
+
     constructor(props) {
         super(props);
         // init state
@@ -43,9 +47,9 @@ class SignIn extends Component {
         this._isMounted = false;
 
         // update firebase token
-        const userData      = await getStorage('userData');
+        const userData = await getStorage('userData');
         const firebaseToken = await getFirebaseToken();
-        if(userData && userData.firebase_token != firebaseToken) {
+        if (userData && userData.firebase_token != firebaseToken) {
             await this.props.userActions.update({
                 firebase_token: firebaseToken
             });
@@ -53,22 +57,26 @@ class SignIn extends Component {
     }
 
     onClickSignIn = () => {
-        this.setState({ loading: true });
+        this.setState({
+            loading: true
+        });
 
         const requestData = {
             email: this.state.email,
             pass: this.state.pass
         };
-        
+
         this.props.userActions.signIn(requestData).then((response) => {
-            if(response.status) {
+            if (response.status) {
                 this.props.navigation.navigate('Main');
             } else {
                 showToast(response.message);
             }
 
-            if(this._isMounted) {
-                this.setState({ loading: false });
+            if (this._isMounted) {
+                this.setState({
+                    loading: false
+                });
             }
         });
     }
@@ -76,7 +84,7 @@ class SignIn extends Component {
     onClickSignUp = () => {
         this.props.navigation.navigate('SignUp');
     }
-    
+
     render() {
         return (
             <View style={styles.container}>

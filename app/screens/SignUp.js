@@ -1,16 +1,20 @@
-import React, { Component } from 'react';
+import React, {
+    Component
+} from 'react';
 import {
-    View, 
-    TextInput, 
-    ScrollView, 
-    Dimensions, 
+    View,
+    TextInput,
+    ScrollView,
+    Dimensions,
     StyleSheet
 } from 'react-native';
-import { Button, CheckBox } from 'react-native-elements';
+import {
+    Button,
+    CheckBox
+} from 'react-native-elements';
 
 // import helpers
 import {
-    getStorage,
     getFirebaseToken,
     showToast
 } from '../Helpers';
@@ -42,19 +46,12 @@ class SignUp extends Component {
     async componentWillUnmount() {
         // set mount
         this._isMounted = false;
-
-        // update firebase token
-        const userData      = await getStorage('userData');
-        const firebaseToken = await getFirebaseToken();
-        if(userData && userData.firebase_token != firebaseToken) {
-            await this.props.userActions.update({
-                firebase_token: firebaseToken
-            });
-        }
     }
 
     onClickSignUp = async () => {
-        this.setState({ loading: true });
+        this.setState({
+            loading: true
+        });
 
         const insertData = {
             email: this.state.email.toLowerCase(),
@@ -65,14 +62,16 @@ class SignUp extends Component {
         };
 
         this.props.userActions.signUp(insertData).then((response) => {
-            if(response.status) {
+            if (response.status) {
                 this.props.navigation.navigate('Main');
             } else {
                 showToast(response.message);
             }
 
-            if(this._isMounted) {
-                this.setState({ loading: false });
+            if (this._isMounted) {
+                this.setState({
+                    loading: false
+                });
             }
         });
     }
