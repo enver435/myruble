@@ -88,6 +88,20 @@ export const getRandomInt = (min, max) => {
     return Math.floor(Math.random() * (max - min)) + min;
 }
 
+export const getUniqId = (len) => {
+    const timestamp = +new Date;
+    const ts        = timestamp.toString();
+    const parts     = ts.split("").reverse();
+    let id          = '';
+
+    for (let i = 0; i < len; ++i) {
+        const index = getRandomInt(0, parts.length - 1);
+        id += parts[index];
+    }
+
+    return id;
+}
+
 export const setResponse = (response) => {
     return {
         status: response.status ? response.status : false,

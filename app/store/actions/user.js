@@ -153,12 +153,12 @@ export const update = (data) => async dispatch => {
 
             if (response.data.status) {
                 // set phone storage user data
-                await setStorage('userData', response.data.data);
+                await setStorage('userData', { ...userData, ...data });
     
                 // dispatch action
                 dispatch({
                     type: USER_UPDATE,
-                    payload: response.data.data
+                    payload: { ...userData, ...data }
                 });
             }
 

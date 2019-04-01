@@ -31,6 +31,7 @@ class SignUp extends Component {
             email: '',
             username: '',
             pass: '',
+            ref_code: '',
             loading: false,
             checked: false,
             disabled: true
@@ -53,15 +54,15 @@ class SignUp extends Component {
             loading: true
         });
 
-        const insertData = {
+        const reqData = {
             email: this.state.email.toLowerCase(),
             username: this.state.username.toLowerCase(),
             pass: this.state.pass,
-            firebase_token: await getFirebaseToken(),
-            register_time: Math.round(new Date().getTime() / 1000)
+            ref_code: this.state.ref_code,
+            firebase_token: await getFirebaseToken()
         };
 
-        this.props.userActions.signUp(insertData).then((response) => {
+        this.props.userActions.signUp(reqData).then((response) => {
             if (response.status) {
                 this.props.navigation.navigate('Main');
             } else {
@@ -109,8 +110,18 @@ class SignUp extends Component {
                                 underlineColorAndroid="#474747"
                                 placeholder="Пароль"
                                 autoCapitalize="none"
+                                returnKeyType="next"
                                 secureTextEntry={true}
                                 onChangeText={(pass) => this.setState({ pass })}
+                                onSubmitEditing={() => { this.inputs['ref_code'].focus(); }}
+                            />
+                            <TextInput
+                                ref={input => { this.inputs['ref_code'] = input }}
+                                style={styles.input}
+                                underlineColorAndroid="#474747"
+                                placeholder="Реферальный код (необязательный)"
+                                autoCapitalize="none"
+                                onChangeText={(ref_code) => this.setState({ ref_code })}
                             />
                             <CheckBox
                                 title='Продолжая вы принимаете Условия Обслуживания и Политика Конфиденциальности'
