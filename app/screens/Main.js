@@ -40,11 +40,8 @@ class Home extends Component {
         /**
          * Get User
          */
-        const userResponse = await this.props.userActions.get();
-        if (!userResponse.status) {
-            // show error message
-            showToast(userResponse.message);
-        } else {
+        const userRes = await this.props.userActions.get();
+        if (userRes.status) {
             const userData      = await getStorage('userData');
             const firebaseToken = await getFirebaseToken();
             // if new firebase token
@@ -53,17 +50,24 @@ class Home extends Component {
                     firebase_token: firebaseToken
                 });
             }
+        } else {
+            // show error message
+            if(userRes.message != 'Error: Not auth!') {
+                showToast(userRes.message);
+            }
         }
         
         /**
          * Get Default Game Information
          */
-        const gameResponse = await this.props.gameActions.getLevels();
-        if (gameResponse.status) {
-            await this.props.gameActions.getLevelData(userResponse.data.level_xp);
-        } else {
-            // show error message
-            showToast(gameResponse.message);
+        if (userRes.status) {
+            const gameResponse = await this.props.gameActions.getLevels();
+            if (gameResponse.status) {
+                await this.props.gameActions.getLevelData(userRes.data.level_xp);
+            } else {
+                // show error message
+                showToast(gameResponse.message);
+            }
         }
 
         // hide loading

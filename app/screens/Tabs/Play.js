@@ -12,11 +12,19 @@ import {
 
 // import helpers
 import {
+    POST,
     showToast,
     setStorage,
     getStorage,
-    getFirebaseToken
+    getFirebaseToken,
+    setResponse
 } from '../../Helpers';
+
+// import api constants
+import {
+    API_URL,
+    API_USER_UPDATE
+} from '../../constants/api';
 
 // import components
 import Loading from '../../components/Loading';
@@ -63,7 +71,7 @@ class Play extends Component {
     }
 
     checkEndGame = () => {
-        const gameData = this.state.game.data;
+        const gameData        = this.state.game.data;
         const gameDefaultData = this.state.game.defaultData;
         if (
             gameData.status &&
@@ -96,23 +104,22 @@ class Play extends Component {
         };
 
         // dispatch action result game
-        this.props.gameActions.resultsGame(resultData).then((response) => {
-            if (!response.status) {
-                showToast(response.message);
-            }
-        });
-
-        // if task completed update user balance
-        if (gameData.taskSuccess == gameDefaultData.task) {
-            this.props.userActions.get().then((response) => {
-                if (response.status) {
-                    this.updateUser({
+        const resultRes = await this.props.gameActions.resultGame(resultData);
+        if (resultRes.status) {
+            // if task completed update user balance
+            if (gameData.taskSuccess == gameDefaultData.task) {
+                const userRes = await this.props.userActions.get();
+                if (userRes.status) {
+                    // update balance
+                    this.updateUserByMe({
                         balance: this.state.user.data.balance + gameDefaultData.earn
                     });
                 } else {
-                    showToast(response.message);
+                    showToast(userRes.message);
                 }
-            });
+            }
+        } else {
+            showToast(resultRes.message);
         }
 
         // set visible result modal
@@ -122,7 +129,7 @@ class Play extends Component {
     startGame = async () => {
         if (this.state.user.data.heart > 0) {
             // update user heart
-            this.updateUser({
+            this.updateUserByMe({
                 heart: this.state.user.data.heart - 1
             });
 
@@ -147,7 +154,7 @@ class Play extends Component {
                 await setStorage('heartModalOpenTime', openTime);
 
                 // update user
-                this.updateUser({
+                this.updateUserByMe({
                     notify_heart_time: openTime
                 });
             }
@@ -182,13 +189,32 @@ class Play extends Component {
         }
     }
 
-    updateUser = (data) => {
+    updateUserByMe = (data) => {
         // dispatch action update user
         this.props.userActions.update(data).then((response) => {
             if (!response.status) {
                 showToast(response.message);
             }
         });
+    }
+
+    updateUser = async (id, data) => {
+        try {
+            // post request update user data
+            const response = await POST(API_URL + API_USER_UPDATE, {
+                id,
+                data: { ...data }
+            });
+    
+            // return response
+            return setResponse(response.data);
+        } catch (err) {
+            // return response
+            return setResponse({
+                status: false,
+                message: err.message
+            });
+        }
     }
 
     _onRefresh = async () => {
@@ -200,11 +226,8 @@ class Play extends Component {
         /**
          * Get User
          */
-        const userResponse = await this.props.userActions.get();
-        if (!userResponse.status) {
-            // show error message
-            showToast(userResponse.message);
-        } else {
+        const userRes = await this.props.userActions.get();
+        if (userRes.status) {
             const userData      = await getStorage('userData');
             const firebaseToken = await getFirebaseToken();
             // if new firebase token
@@ -213,17 +236,24 @@ class Play extends Component {
                     firebase_token: firebaseToken
                 });
             }
+        } else {
+            // show error message
+            if(userRes.message != 'Error: Not auth!') {
+                showToast(userRes.message);
+            }
         }
         
         /**
          * Get Default Game Information
          */
-        const gameResponse = await this.props.gameActions.getLevels();
-        if (gameResponse.status) {
-            await this.props.gameActions.getLevelData(userResponse.data.level_xp);
-        } else {
-            // show error message
-            showToast(gameResponse.message);
+        if (userRes.status) {
+            const gameResponse = await this.props.gameActions.getLevels();
+            if (gameResponse.status) {
+                await this.props.gameActions.getLevelData(userRes.data.level_xp);
+            } else {
+                // show error message
+                showToast(gameResponse.message);
+            }
         }
 
         // hide refreshing
@@ -280,7 +310,7 @@ class Play extends Component {
                     <HeartModal
                         hideVisible={() => { this.setVisibleHeartModal(false) }}
                         updateHeart={() => {
-                            this.updateUser({
+                            this.updateUserByMe({
                                 heart: this.state.user.data.heart + 1,
                                 notify_heart_time: 0
                             })

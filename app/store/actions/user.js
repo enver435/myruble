@@ -30,10 +30,10 @@ export const get = () => async dispatch => {
     try {
         // get phone storage user data
         const userData = await getStorage('userData');
-
         if(userData) {
             // request and get user data
             const response = await GET(API_URL + API_USER_INFO, {
+                full: true,
                 id: userData.id
             });
     
@@ -58,7 +58,7 @@ export const get = () => async dispatch => {
     } catch (err) {
         // return response
         return setResponse({
-            status: true,
+            status: false,
             message: err.message
         });
     }

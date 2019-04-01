@@ -14,7 +14,7 @@ import {
     GAME_NEXT_QUESTION,
     GAME_CHECK_ANSWER,
     GAME_CURRENT_TIME,
-    GAME_RESULTS
+    GAME_RESULT
 } from '../../constants/actions/game';
 
 // import api constants
@@ -73,13 +73,13 @@ export const checkAnswer = (answer) => async dispatch => {
     });
 }
 
-export const resultsGame = (data) => async dispatch => {
+export const resultGame = (data) => async dispatch => {
     try {
         const response = await POST(API_URL + API_INSERT_GAME, data);
         if(response.data.status) {
             // dispatch action
             dispatch({
-                type: GAME_RESULTS
+                type: GAME_RESULT
             });
         }
         // return response
