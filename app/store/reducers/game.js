@@ -3,7 +3,8 @@ import { getRandomInt } from '../../Helpers';
 
 // import action type constants
 import {
-    GAME_DEFAULT,
+    GAME_LEVELS,
+    GAME_LEVEL_DATA,
     GAME_START,
     GAME_NEXT_QUESTION,
     GAME_CHECK_ANSWER,
@@ -14,6 +15,7 @@ import {
 // init state
 const INITIAL_STATE = {
     defaultData: {},
+    levels: [],
     data: {
         status: false,
         currentTime: 0,
@@ -30,7 +32,12 @@ export default function gameReducer(state = INITIAL_STATE, action) {
     const secondNumber = getRandomInt(0, 99);
 
     switch (action.type) {
-        case GAME_DEFAULT:
+        case GAME_LEVELS:
+            return {
+                ...state,
+                levels: action.payload
+            };
+        case GAME_LEVEL_DATA:
             return {
                 ...state,
                 defaultData: action.payload

@@ -82,7 +82,7 @@ class Play extends Component {
     }
 
     endGame = async () => {
-        const gameData = this.state.game.data;
+        const gameData        = this.state.game.data;
         const gameDefaultData = this.state.game.defaultData;
 
         // dispatch action game results
@@ -90,7 +90,7 @@ class Play extends Component {
             user_id: this.state.user.data.id,
             task_success: gameData.taskSuccess,
             task_fail: gameData.taskFail,
-            earn: gameData.taskSuccess == gameDefaultData.task ? gameDefaultData.price : 0,
+            earn: gameData.taskSuccess == gameDefaultData.task ? gameDefaultData.earn : 0,
             status: gameData.taskSuccess == gameDefaultData.task ? 1 : 0,
             time: Math.round(new Date().getTime() / 1000)
         };
@@ -107,7 +107,7 @@ class Play extends Component {
             this.props.userActions.get().then((response) => {
                 if (response.status) {
                     this.updateUser({
-                        balance: this.state.user.data.balance + gameDefaultData.price
+                        balance: this.state.user.data.balance + gameDefaultData.earn
                     });
                 } else {
                     showToast(response.message);
@@ -191,53 +191,47 @@ class Play extends Component {
         });
     }
 
-    _onRefresh = () => {
+    _onRefresh = async () => {
         // show refreshing
         this.setState({
             refreshing: true
         });
 
-        // get user data
-        const getUser = this.props.userActions.get();
-
-        // get game default data
-        const getGameDefault = this.props.gameActions.getDefault();
-
-        // all operation async
-        Promise.all([getUser, getGameDefault]).then(async (response) => {
-
-            /**
-             * Get User
-             */
-            if (!response[0].status) {
-                // show error message
-                showToast(response[0].message);
-            } else {
-                const userData = await getStorage('userData');
-                const firebaseToken = await getFirebaseToken();
-                // if new firebase token
-                if (userData && userData.firebase_token != firebaseToken) {
-                    await this.props.userActions.update({
-                        firebase_token: firebaseToken
-                    });
-                }
-            }
-
-            /**
-             * Get Default Game Information
-             */
-            if (!response[1].status) {
-                // show error message
-                showToast(response[1].message);
-            }
-
-            // hide refreshing
-            if (this._isMounted) {
-                this.setState({
-                    refreshing: false
+        /**
+         * Get User
+         */
+        const userResponse = await this.props.userActions.get();
+        if (!userResponse.status) {
+            // show error message
+            showToast(userResponse.message);
+        } else {
+            const userData      = await getStorage('userData');
+            const firebaseToken = await getFirebaseToken();
+            // if new firebase token
+            if (userData && userData.firebase_token != firebaseToken) {
+                await this.props.userActions.update({
+                    firebase_token: firebaseToken
                 });
             }
-        });
+        }
+        
+        /**
+         * Get Default Game Information
+         */
+        const gameResponse = await this.props.gameActions.getLevels();
+        if (gameResponse.status) {
+            await this.props.gameActions.getLevelData(userResponse.data.level_xp);
+        } else {
+            // show error message
+            showToast(gameResponse.message);
+        }
+
+        // hide refreshing
+        if (this._isMounted) {
+            this.setState({
+                refreshing: false
+            });
+        }
     }
 
     setVisibleResultModal = (visible) => {

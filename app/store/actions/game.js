@@ -2,12 +2,14 @@
 import {
     POST,
     GET,
-    setResponse
+    setResponse,
+    _getLevelData
 } from '../../Helpers';
 
 // import action type constants
 import {
-    GAME_DEFAULT,
+    GAME_LEVELS,
+    GAME_LEVEL_DATA,
     GAME_START,
     GAME_NEXT_QUESTION,
     GAME_CHECK_ANSWER,
@@ -18,17 +20,17 @@ import {
 // import api constants
 import {
     API_URL,
-    API_GAME_DEFAULT,
+    API_GAME_LEVELS,
     API_INSERT_GAME
 } from '../../constants/api';
 
-export const getDefault = () => async dispatch => {
+export const getLevels = () => async dispatch => {
     try {
-        const response = await GET(API_URL + API_GAME_DEFAULT);
+        const response = await GET(API_URL + API_GAME_LEVELS);
         if (response.data.status) {
             // dispatch action
             dispatch({
-                type: GAME_DEFAULT,
+                type: GAME_LEVELS,
                 payload: response.data.data
             });
         }
@@ -41,6 +43,13 @@ export const getDefault = () => async dispatch => {
             message: err.message
         });
     }
+}
+
+export const getLevelData = (levelXP) => async dispatch => {
+    dispatch({
+        type: GAME_LEVEL_DATA,
+        payload: _getLevelData(levelXP)
+    });
 }
 
 export const startGame = () => async dispatch => {

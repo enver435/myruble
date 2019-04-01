@@ -5,6 +5,9 @@ import {
 import Axios from 'axios';
 import firebase from 'react-native-firebase';
 
+// import store
+import store from './store';
+
 export const IsJsonString = (str) => {
     try {
         JSON.parse(str);
@@ -90,9 +93,9 @@ export const getRandomInt = (min, max) => {
 
 export const getUniqId = (len) => {
     const timestamp = +new Date;
-    const ts        = timestamp.toString();
-    const parts     = ts.split("").reverse();
-    let id          = '';
+    const ts = timestamp.toString();
+    const parts = ts.split("").reverse();
+    let id = '';
 
     for (let i = 0; i < len; ++i) {
         const index = getRandomInt(0, parts.length - 1);
@@ -108,4 +111,13 @@ export const setResponse = (response) => {
         message: response.message ? response.message : null,
         data: response.data ? response.data : null
     };
+}
+
+export const _getLevelData = (levelXP) => {
+    const state  = store.getState();
+    const levels = state.game.levels;
+    const level  = levels.filter((item) => {
+        return levelXP >= item.level_start_xp && levelXP < item.level_end_xp;
+    });
+    return !level.length ? levels[levels.length-1] : level[level.length-1];
 }

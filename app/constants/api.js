@@ -21,8 +21,8 @@ export const API_USER_UPDATE = "/user/update";
 /**
  * GAME URL's
  */
-export const API_GAME_DEFAULT = "/game";
-export const API_INSERT_GAME  = "/game/insert";
+export const API_GAME_LEVELS = "/game/levels";
+export const API_INSERT_GAME = "/game/insert";
 
 /**
  * WITHDRAW URL's

@@ -47,7 +47,7 @@ class SignIn extends Component {
         this._isMounted = false;
 
         // update firebase token
-        const userData = await getStorage('userData');
+        const userData      = await getStorage('userData');
         const firebaseToken = await getFirebaseToken();
         if (userData && userData.firebase_token != firebaseToken) {
             await this.props.userActions.update({
@@ -61,12 +61,12 @@ class SignIn extends Component {
             loading: true
         });
 
-        const requestData = {
+        const reqData = {
             email: this.state.email,
             pass: this.state.pass
         };
 
-        this.props.userActions.signIn(requestData).then((response) => {
+        this.props.userActions.signIn(reqData).then((response) => {
             if (response.status) {
                 this.props.navigation.navigate('Main');
             } else {

@@ -18,7 +18,7 @@ class ResultModal extends Component {
 
     render() {
         const { taskSuccess, taskFail } = this.props.gameState.data;
-        const { task, price } = this.props.gameState.defaultData;
+        const { task, earn } = this.props.gameState.defaultData;
 
         return (
             <Overlay
@@ -40,7 +40,7 @@ class ResultModal extends Component {
                     </View>
                     <View style={styles.block}>
                         <Text style={styles.blockTitle}>Заработанные Деньги</Text>
-                        <Text style={styles.earnPrice}>{taskSuccess == task ? price.toFixed(2) : 0} <Icon size={15} name="currency-rub" color="#474747"/></Text>
+                        <Text style={styles.earnPrice}>{taskSuccess == task ? earn.toFixed(2) : 0} <Icon size={15} name="currency-rub" color="#474747"/></Text>
                     </View>
                     <Button
                         onPress={this.props.hideVisible}
