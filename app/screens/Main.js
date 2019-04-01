@@ -39,13 +39,15 @@ class Home extends Component {
 
         // set focus listener
         this.focusListener = this.props.navigation.addListener("didFocus", () => {
-            this.setState({ loading: true }, async () => {
+            this.setState({
+                loading: true
+            }, async () => {
                 /**
                  * Get User
                  */
                 const userRes = await this.props.userActions.get();
                 if (userRes.status) {
-                    const userData      = await getStorage('userData');
+                    const userData = await getStorage('userData');
                     const firebaseToken = await getFirebaseToken();
                     // if new firebase token
                     if (userData && userData.firebase_token != firebaseToken) {
@@ -55,11 +57,11 @@ class Home extends Component {
                     }
                 } else {
                     // show error message
-                    if(userRes.message != 'Error: Not auth!') {
+                    if (userRes.message != 'Error: Not auth!') {
                         showToast(userRes.message);
                     }
                 }
-                
+
                 /**
                  * Get Default Game Information
                  */
@@ -72,7 +74,7 @@ class Home extends Component {
                         showToast(gameResponse.message);
                     }
                 }
-        
+
                 // hide loading
                 if (this._isMounted) {
                     this.setState({

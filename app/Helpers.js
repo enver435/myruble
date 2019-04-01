@@ -76,13 +76,15 @@ export const getFirebaseToken = async () => {
 }
 
 export const showToast = (message) => {
-    ToastAndroid.showWithGravityAndOffset(
-        message,
-        ToastAndroid.LONG,
-        ToastAndroid.BOTTOM,
-        0,
-        50,
-    );
+    if (message) {
+        ToastAndroid.showWithGravityAndOffset(
+            message,
+            ToastAndroid.LONG,
+            ToastAndroid.BOTTOM,
+            0,
+            50,
+        );
+    }
 }
 
 export const getRandomInt = (min, max) => {
@@ -114,10 +116,10 @@ export const setResponse = (response) => {
 }
 
 export const _getLevelData = (levelXP) => {
-    const state  = store.getState();
+    const state = store.getState();
     const levels = state.game.levels;
-    const level  = levels.filter((item) => {
+    const level = levels.filter((item) => {
         return levelXP >= item.level_start_xp && levelXP < item.level_end_xp;
     });
-    return !level.length ? levels[levels.length-1] : level[level.length-1];
+    return !level.length ? levels[levels.length - 1] : level[level.length - 1];
 }

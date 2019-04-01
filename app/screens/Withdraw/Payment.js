@@ -11,9 +11,13 @@ import {
     StyleSheet
 } from 'react-native';
 import PropTypes from 'prop-types';
-import { Button } from 'react-native-elements';
-import { withNavigation } from 'react-navigation'
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';0
+import {
+    Button
+} from 'react-native-elements';
+import {
+    withNavigation
+} from 'react-navigation'
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 // import helpers
 import {
@@ -52,8 +56,10 @@ class Payment extends Component {
 
     _insertData = async (data) => {
         try {
-            const { isAuth } = this.props.userState;
-            if(isAuth) {
+            const {
+                isAuth
+            } = this.props.userState;
+            if (isAuth) {
                 const response = await POST(API_URL + API_INSERT_WITHDRAW, data);
                 // return response
                 return setResponse(response.data);
@@ -69,12 +75,21 @@ class Payment extends Component {
     }
 
     _onClickWithdraw = () => {
-        this.setState({ loading: true }, async () => {
+        this.setState({
+            loading: true
+        }, async () => {
             // get user data
-            const { id, balance } = this.props.userState.data;
-            
+            const {
+                id,
+                balance
+            } = this.props.userState.data;
+
             // get payment method information
-            const { method, commission, min_withdraw } = this.props.withdrawState.methodData;
+            const {
+                method,
+                commission,
+                min_withdraw
+            } = this.props.withdrawState.methodData;
 
             // calculate commission balance
             const commissionBalance = parseFloat((this.state.amount + (commission * this.state.amount / 100)).toFixed(2));
@@ -82,10 +97,10 @@ class Payment extends Component {
             // insert status
             let insertStatus = false;
 
-            if(this.state.amount > 0 && this.state.wallet_number != '') {
-                if(this.state.amount < min_withdraw) {
+            if (this.state.amount > 0 && this.state.wallet_number != '') {
+                if (this.state.amount < min_withdraw) {
                     showToast('Можно снять как минимум ' + min_withdraw.toFixed(2) + ' рублей');
-                } else if(commissionBalance > balance) {
+                } else if (commissionBalance > balance) {
                     showToast('Ваш баланс не хватает');
                 } else {
                     insertStatus = true;
@@ -95,14 +110,17 @@ class Payment extends Component {
             }
 
             // if insert status true
-            if(insertStatus) {
+            if (insertStatus) {
 
                 // update user balance
                 const resUpdate = await this.props.userActions.update({
-                    balance: balance - commissionBalance
+                    balance: {
+                        increment: true,
+                        value: commissionBalance
+                    }
                 });
 
-                if(resUpdate.status) {
+                if (resUpdate.status) {
                     // create object insert data
                     const insertData = {
                         user_id: id,
@@ -116,7 +134,7 @@ class Payment extends Component {
 
                     // request insert data
                     const resInsert = await this._insertData(insertData);
-                    if(resInsert.status) {
+                    if (resInsert.status) {
                         showToast('Ваш запрос был успешно отправлен. Это будет сделано в течение 24 часов.');
                         // navigate main screen
                         this.props.navigation.navigate('Main');
@@ -126,18 +144,20 @@ class Payment extends Component {
                 } else {
                     showToast(resUpdate.message);
                 }
-                
+
             }
 
-            if(this._isMounted) {
-                this.setState({ loading: false });
+            if (this._isMounted) {
+                this.setState({
+                    loading: false
+                });
             }
         });
     }
 
     render() {
         const { method, commission } = this.props.withdrawState.methodData;
-        const commissionBalance = this.state.amount + (commission * this.state.amount / 100);
+        const commissionBalance      = this.state.amount + (commission * this.state.amount / 100);
 
         return (
             <View style={styles.container}>

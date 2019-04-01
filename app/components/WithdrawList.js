@@ -55,13 +55,13 @@ class WithdrawList extends Component {
             loading: false
         };
 
-        if(response.status) {
+        if (response.status) {
             setStateData.data = response.data;
         } else {
             showToast(response.message);
         }
 
-        if(this._isMounted) {
+        if (this._isMounted) {
             // set state data
             this.setState(setStateData);
         }
@@ -73,9 +73,9 @@ class WithdrawList extends Component {
     }
 
     _fetchData = async () => {
-        const limit  = this.limit;
+        const limit = this.limit;
         const offset = this.state.page * limit;
-        
+
         try {
             // create request data object
             let requestData = {
@@ -83,11 +83,11 @@ class WithdrawList extends Component {
                 limit
             };
 
-            if(this.props.user) {
+            if (this.props.user) {
                 // get phone storage user data
                 const userData = await getStorage('userData');
 
-                if(userData) {
+                if (userData) {
                     // set request data
                     requestData.user_id = userData.id;
                 } else {
@@ -115,25 +115,28 @@ class WithdrawList extends Component {
     }
 
     _handleLoadMore = () => {
-        if(this.state.data.length >= this.limit) {
-            this.setState({ loadingMore: true, page: this.state.page + 1 }, async () => {
+        if (this.state.data.length >= this.limit) {
+            this.setState({
+                loadingMore: true,
+                page: this.state.page + 1
+            }, async () => {
                 // fetch data
                 const response = await this._fetchData();
-    
+
                 // state object
                 let setStateData = {
                     loadingMore: false
                 };
-    
-                if(response.status) {
-                    if(response.data.length > 0) {
-                        setStateData.data = [ ...this.state.data, ...response.data ];
+
+                if (response.status) {
+                    if (response.data.length > 0) {
+                        setStateData.data = [...this.state.data, ...response.data];
                     }
                 } else {
                     showToast(response.message);
                 }
-                
-                if(this._isMounted) {
+
+                if (this._isMounted) {
                     // set state data
                     this.setState(setStateData);
                 }
@@ -142,7 +145,10 @@ class WithdrawList extends Component {
     }
 
     _handleRefresh = () => {
-        this.setState({ loading: true, page: 0 }, async () => {
+        this.setState({
+            loading: true,
+            page: 0
+        }, async () => {
             // fetch data
             const response = await this._fetchData();
 
@@ -152,13 +158,13 @@ class WithdrawList extends Component {
                 loading: false
             };
 
-            if(response.status) {
+            if (response.status) {
                 setStateData.data = response.data;
             } else {
                 showToast(response.message);
             }
 
-            if(this._isMounted) {
+            if (this._isMounted) {
                 // set state data
                 this.setState(setStateData);
             }

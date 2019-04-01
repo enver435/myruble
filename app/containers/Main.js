@@ -1,5 +1,9 @@
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import {
+    connect
+} from 'react-redux';
+import {
+    bindActionCreators
+} from 'redux';
 
 // import screen
 import Main from '../screens/Main';

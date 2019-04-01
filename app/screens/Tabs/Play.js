@@ -7,7 +7,8 @@ import {
     ScrollView,
     StyleSheet,
     Keyboard,
-    RefreshControl
+    RefreshControl,
+    ActivityIndicator
 } from 'react-native';
 
 // import helpers
@@ -41,6 +42,7 @@ class Play extends Component {
         // init state
         this.state = {
             loading: false,
+            overlayLoading: false,
             refreshing: false,
             resultModalVisible: false,
             heartModalVisible: false,
@@ -71,7 +73,7 @@ class Play extends Component {
     }
 
     checkEndGame = () => {
-        const gameData        = this.state.game.data;
+        const gameData = this.state.game.data;
         const gameDefaultData = this.state.game.defaultData;
         if (
             gameData.status &&
@@ -87,81 +89,113 @@ class Play extends Component {
             // keyboard dismiss
             Keyboard.dismiss();
         }
+
+        // if game status stop
+        if (!gameData.status) {
+            // clear timer
+            clearInterval(this.timerInterval);
+        }
     }
 
-    endGame = async () => {
-        const gameData        = this.state.game.data;
-        const gameDefaultData = this.state.game.defaultData;
+    endGame = () => {
+        this.setState({
+            overlayLoading: true
+        }, async () => {
+            const gameData = this.state.game.data;
+            const gameDefaultData = this.state.game.defaultData;
 
-        // dispatch action game results
-        const resultData = {
-            user_id: this.state.user.data.id,
-            task_success: gameData.taskSuccess,
-            task_fail: gameData.taskFail,
-            earn: gameData.taskSuccess == gameDefaultData.task ? gameDefaultData.earn : 0,
-            status: gameData.taskSuccess == gameDefaultData.task ? 1 : 0,
-            time: Math.round(new Date().getTime() / 1000)
-        };
+            // dispatch action game results
+            const earn_referral = gameDefaultData.earn * gameDefaultData.referral_percent / 100;
+            const resultData = {
+                user_id: this.state.user.data.id,
+                task_success: gameData.taskSuccess,
+                task_fail: gameData.taskFail,
+                earn: gameData.taskSuccess == gameDefaultData.task ? gameDefaultData.earn : 0,
+                earn_referral: gameData.taskSuccess == gameDefaultData.task ? earn_referral : 0,
+                status: gameData.taskSuccess == gameDefaultData.task ? 1 : 0,
+                time: Math.round(new Date().getTime() / 1000)
+            };
 
-        // dispatch action result game
-        const resultRes = await this.props.gameActions.resultGame(resultData);
-        if (resultRes.status) {
-            // if task completed update user balance
-            if (gameData.taskSuccess == gameDefaultData.task) {
-                const userRes = await this.props.userActions.get();
-                if (userRes.status) {
-                    // update balance
-                    this.updateUserByMe({
-                        balance: this.state.user.data.balance + gameDefaultData.earn
+            // dispatch action result game
+            const resultRes = await this.props.gameActions.resultGame(resultData);
+            if (resultRes.status) {
+                // if task completed update user balance
+                if (gameData.taskSuccess == gameDefaultData.task) {
+                    // update user balance
+                    await this.updateUserByMe({
+                        balance: {
+                            increment: true,
+                            value: gameDefaultData.earn
+                        }
                     });
-                } else {
-                    showToast(userRes.message);
-                }
-            }
-        } else {
-            showToast(resultRes.message);
-        }
 
-        // set visible result modal
-        this.setVisibleResultModal(true);
+                    // update referral balance
+                    await this.updateUser(this.state.user.data.ref_user_id, {
+                        balance: {
+                            increment: true,
+                            value: earn_referral
+                        }
+                    });
+                }
+            } else {
+                showToast(resultRes.message);
+            }
+
+            this.setState({
+                overlayLoading: false
+            }, () => {
+                // set visible result modal
+                this.setVisibleResultModal(true);
+            });
+        });
     }
 
-    startGame = async () => {
-        if (this.state.user.data.heart > 0) {
-            // update user heart
-            this.updateUserByMe({
-                heart: this.state.user.data.heart - 1
-            });
-
-            // dispatch action start game
-            this.props.gameActions.startGame();
-
-            // start timer
-            this.timerInterval = setInterval(() => {
-                // dispatch action current time
-                this.props.gameActions.setCurrentTime();
-
-                // check end game
-                this.checkEndGame();
-            }, 1000);
-        } else {
-            // set time open heart modal
-            if (!await getStorage('heartModalOpenTime')) {
-                // get open time
-                const openTime = Math.round((new Date().getTime() / 1000) + this.state.game.defaultData.heart_time).toString();
-
-                // set storage
-                await setStorage('heartModalOpenTime', openTime);
-
-                // update user
-                this.updateUserByMe({
-                    notify_heart_time: openTime
+    startGame = () => {
+        this.setState({
+            overlayLoading: true
+        }, async () => {
+            if (this.state.user.data.heart > 0) {
+                // update user heart
+                const updateHeartRes = await this.updateUserByMe({
+                    heart: this.state.user.data.heart - 1
                 });
+
+                if (updateHeartRes.status) {
+                    // dispatch action start game
+                    await this.props.gameActions.startGame();
+
+                    // start timer
+                    this.timerInterval = setInterval(() => {
+                        // dispatch action current time
+                        this.props.gameActions.setCurrentTime();
+
+                        // check end game
+                        this.checkEndGame();
+                    }, 1000);
+                }
+            } else {
+                // set time open heart modal
+                if (!await getStorage('heartModalOpenTime')) {
+                    // get open time
+                    const openTime = Math.round((new Date().getTime() / 1000) + this.state.game.defaultData.heart_time).toString();
+
+                    // set storage
+                    await setStorage('heartModalOpenTime', openTime);
+
+                    // update user
+                    await this.updateUserByMe({
+                        notify_heart_time: openTime
+                    });
+                }
+
+                // set visible heart modal
+                this.setVisibleHeartModal(true);
             }
 
-            // set visible heart modal
-            this.setVisibleHeartModal(true);
-        }
+            this.setState({
+                overlayLoading: false
+            });
+        });
     }
 
     stopGame = () => {
@@ -195,6 +229,7 @@ class Play extends Component {
         if (!response.status) {
             showToast(response.message);
         }
+        return response;
     }
 
     updateUser = async (id, data) => {
@@ -202,9 +237,9 @@ class Play extends Component {
             // post request update user data
             const response = await POST(API_URL + API_USER_UPDATE, {
                 id,
-                data: { ...data }
+                data
             });
-    
+
             // return response
             return setResponse(response.data);
         } catch (err) {
@@ -227,7 +262,7 @@ class Play extends Component {
          */
         const userRes = await this.props.userActions.get();
         if (userRes.status) {
-            const userData      = await getStorage('userData');
+            const userData = await getStorage('userData');
             const firebaseToken = await getFirebaseToken();
             // if new firebase token
             if (userData && userData.firebase_token != firebaseToken) {
@@ -237,11 +272,11 @@ class Play extends Component {
             }
         } else {
             // show error message
-            if(userRes.message != 'Error: Not auth!') {
+            if (userRes.message != 'Error: Not auth!') {
                 showToast(userRes.message);
             }
         }
-        
+
         /**
          * Get Default Game Information
          */
@@ -315,6 +350,12 @@ class Play extends Component {
                             })
                         }}
                         visible={this.state.heartModalVisible}/>
+
+                {this.state.overlayLoading &&
+                    <View style={styles.loading}>
+                        <ActivityIndicator size="large" color="#ffffff" />
+                    </View>
+                }
                 </View>
             ) : (
                 <View style={styles.screenCenter}>
@@ -329,6 +370,17 @@ class Play extends Component {
 const styles = StyleSheet.create({
     screenCenter: {
         flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    loading: {
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        top: 0,
+        bottom: 0,
+        opacity: 0.5,
+        backgroundColor: 'black',
         justifyContent: 'center',
         alignItems: 'center'
     }

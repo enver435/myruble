@@ -8,7 +8,9 @@ import {
 } from 'react-native';
 import PropTypes from 'prop-types';
 import Overlay from 'react-native-modal-overlay';
-import { Button } from 'react-native-elements';
+import {
+    Button
+} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 class ResultModal extends Component {
@@ -17,8 +19,14 @@ class ResultModal extends Component {
     }
 
     render() {
-        const { taskSuccess, taskFail } = this.props.gameState.data;
-        const { task, earn } = this.props.gameState.defaultData;
+        const {
+            taskSuccess,
+            taskFail
+        } = this.props.gameState.data;
+        const {
+            task,
+            earn
+        } = this.props.gameState.defaultData;
 
         return (
             <Overlay
@@ -56,7 +64,7 @@ class ResultModal extends Component {
 const styles = StyleSheet.create({
     container: {
         flexDirection: 'column'
-    }, 
+    },
     containerStyle: {
         backgroundColor: 'rgba(0, 0, 0, 0.7)'
     },
@@ -64,7 +72,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#eee'
     },
     resultsText: {
-        fontWeight:'300', 
+        fontWeight: '300',
         fontSize: 20
     },
     resultsBorderBottom: {

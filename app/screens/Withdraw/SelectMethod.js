@@ -46,7 +46,7 @@ class SelectMethod extends Component {
             loading: false
         };
 
-        if(response.status) {
+        if (response.status) {
             setStateData.data = response.data;
         } else {
             showToast(response.message);
@@ -71,8 +71,10 @@ class SelectMethod extends Component {
     }
 
     _onClickMethod = (method) => {
-        const data = this.state.data.filter((item) => { return item.method == method });
-        if(data.length > 0) {
+        const data = this.state.data.filter((item) => {
+            return item.method == method
+        });
+        if (data.length > 0) {
             this.props.onSetPaymentMethod(data[0], () => {
                 this.props.onChangeScreen(2);
             });

@@ -1,6 +1,12 @@
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { withNavigation } from 'react-navigation';
+import {
+    connect
+} from 'react-redux';
+import {
+    bindActionCreators
+} from 'redux';
+import {
+    withNavigation
+} from 'react-navigation';
 
 // import screen
 import SignIn from '../screens/SignIn';

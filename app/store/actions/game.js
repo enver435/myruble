@@ -76,7 +76,7 @@ export const checkAnswer = (answer) => async dispatch => {
 export const resultGame = (data) => async dispatch => {
     try {
         const response = await POST(API_URL + API_INSERT_GAME, data);
-        if(response.data.status) {
+        if (response.data.status) {
             // dispatch action
             dispatch({
                 type: GAME_RESULT

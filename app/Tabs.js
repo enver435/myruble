@@ -1,6 +1,14 @@
-import React, { Component } from 'react';
-import { Dimensions, StyleSheet } from 'react-native';
-import { TabView, TabBar } from 'react-native-tab-view';
+import React, {
+	Component
+} from 'react';
+import {
+	Dimensions,
+	StyleSheet
+} from 'react-native';
+import {
+	TabView,
+	TabBar
+} from 'react-native-tab-view';
 
 // import containers
 import Referal from './containers/Tabs/Referal';
@@ -14,10 +22,18 @@ class Tabs extends Component {
 		// init state
 		this.state = {
 			index: 1,
-			routes: [
-				{ key: 'referal', title: 'Реферал' },
-				{ key: 'play', title: 'Играть' },
-				{ key: 'withdraw', title: 'Выплаты' }
+			routes: [{
+					key: 'referal',
+					title: 'Реферал'
+				},
+				{
+					key: 'play',
+					title: 'Играть'
+				},
+				{
+					key: 'withdraw',
+					title: 'Выплаты'
+				}
 			]
 		};
 	}

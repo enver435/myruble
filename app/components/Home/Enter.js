@@ -1,5 +1,12 @@
-import React, { Component } from 'react';
-import { View, TextInput, TouchableHighlight, StyleSheet } from 'react-native';
+import React, {
+    Component
+} from 'react';
+import {
+    View,
+    TextInput,
+    TouchableHighlight,
+    StyleSheet
+} from 'react-native';
 import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
@@ -13,11 +20,13 @@ class Enter extends Component {
     }
 
     onClickSend = () => {
-        if(this.state.input.length > 0) {
+        if (this.state.input.length > 0) {
             // send answer
             this.props.sendAnswer(this.state.input);
             // clear input
-            this.setState({ input: '' });
+            this.setState({
+                input: ''
+            });
         }
     }
 

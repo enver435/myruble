@@ -1,5 +1,7 @@
 // import helpers
-import { getRandomInt } from '../../Helpers';
+import {
+    getRandomInt
+} from '../../Helpers';
 
 // import action type constants
 import {
@@ -9,7 +11,7 @@ import {
     GAME_NEXT_QUESTION,
     GAME_CHECK_ANSWER,
     GAME_CURRENT_TIME,
-    GAME_RESULTS
+    GAME_RESULT
 } from '../../constants/actions/game';
 
 // init state
@@ -28,7 +30,7 @@ const INITIAL_STATE = {
 };
 
 export default function gameReducer(state = INITIAL_STATE, action) {
-    const firstNumber  = getRandomInt(0, 99);
+    const firstNumber = getRandomInt(0, 99);
     const secondNumber = getRandomInt(0, 99);
 
     switch (action.type) {
@@ -54,9 +56,9 @@ export default function gameReducer(state = INITIAL_STATE, action) {
                 }
             };
         case GAME_CHECK_ANSWER:
-            const correct     = action.payload.answer == state.data.correctAnswer ? true : false;
+            const correct = action.payload.answer == state.data.correctAnswer ? true : false;
             const taskSuccess = correct ? state.data.taskSuccess + 1 : state.data.taskSuccess;
-            const taskFail    = !correct ? state.data.taskFail + 1 : state.data.taskFail;
+            const taskFail = !correct ? state.data.taskFail + 1 : state.data.taskFail;
 
             return {
                 ...state,
@@ -81,10 +83,10 @@ export default function gameReducer(state = INITIAL_STATE, action) {
                 ...state,
                 data: {
                     ...state.data,
-                    currentTime: state.data.currentTime+1
+                    currentTime: state.data.currentTime + 1
                 }
             };
-        case GAME_RESULTS:
+        case GAME_RESULT:
             return {
                 ...state,
                 data: {

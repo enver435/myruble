@@ -1,7 +1,16 @@
-import React, { Component } from 'react';
-import { View, Text, Image, StyleSheet, TouchableHighlight } from 'react-native';
+import React, {
+	Component
+} from 'react';
+import {
+	View,
+	Text,
+	StyleSheet,
+	TouchableHighlight
+} from 'react-native';
 import PropTypes from 'prop-types';
-import { withNavigation } from 'react-navigation';
+import {
+	withNavigation
+} from 'react-navigation';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 class Balance extends Component {
@@ -14,7 +23,9 @@ class Balance extends Component {
 	}
 
 	render() {
-		const { balance } = this.props.userState.data;
+		const {
+			balance
+		} = this.props.userState.data;
 		return (
 			<View style={styles.container}>
 				<View style={styles.balanceContainer}>

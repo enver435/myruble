@@ -1,10 +1,17 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import {
+    View,
+    StyleSheet
+} from 'react-native';
 import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { Button } from 'react-native-elements';
+import {
+    Button
+} from 'react-native-elements';
 
-const Offline = ({ checkNetwork }) => (
+const Offline = ({
+    checkNetwork
+}) => (
     <View style={styles.container}>
         <Icon name="access-point-network-off" size={55} color="#474747"></Icon>
         <Button

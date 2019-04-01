@@ -1,22 +1,28 @@
-import React, { Component } from 'react';
-import { View, StyleSheet, TouchableHighlight } from 'react-native';
+import React, {
+    Component
+} from 'react';
+import {
+    View,
+    StyleSheet,
+    TouchableHighlight
+} from 'react-native';
 import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 class Control extends Component {
-	constructor(props) {
+    constructor(props) {
         super(props);
     }
 
     onPressControl = (status) => {
-        if(!status) {
+        if (!status) {
             this.props.startGame()
         } else {
             this.props.stopGame()
         }
     }
 
-	render() {
+    render() {
 		return (
 			<View style={styles.container}>
                 <TouchableHighlight 
@@ -31,7 +37,7 @@ class Control extends Component {
 
 // component styles
 const styles = StyleSheet.create({
-	container: {
+    container: {
         flex: 1,
         justifyContent: 'center',
         alignContent: 'center',

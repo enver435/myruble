@@ -31,7 +31,9 @@ export default function userReducer(state = INITIAL_STATE, action) {
                 }
             };
         case USER_LOGOUT:
-            return { ...INITIAL_STATE };
+            return {
+                ...INITIAL_STATE
+            };
         default:
             return state;
     }

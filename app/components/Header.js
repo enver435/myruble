@@ -1,8 +1,17 @@
-import React, { Component } from 'react';
-import { View, Text, TouchableHighlight, StyleSheet } from 'react-native';
+import React, {
+    Component
+} from 'react';
+import {
+    View,
+    Text,
+    TouchableHighlight,
+    StyleSheet
+} from 'react-native';
 import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { withNavigation } from 'react-navigation';
+import {
+    withNavigation
+} from 'react-navigation';
 
 class Header extends Component {
     constructor(props) {

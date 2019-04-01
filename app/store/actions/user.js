@@ -30,18 +30,18 @@ export const get = () => async dispatch => {
     try {
         // get phone storage user data
         const userData = await getStorage('userData');
-        if(userData) {
+        if (userData) {
             // request and get user data
             const response = await GET(API_URL + API_USER_INFO, {
                 full: true,
                 id: userData.id
             });
-    
+
             // if status true
             if (response.data.status) {
                 // set phone storage user data
                 await setStorage('userData', response.data.data);
-    
+
                 // dispatch action
                 dispatch({
                     type: USER_GET,
@@ -52,7 +52,7 @@ export const get = () => async dispatch => {
             // return response
             return setResponse(response.data);
         }
-        
+
         // set error
         throw new Error('Error: Not auth!');
     } catch (err) {
@@ -144,21 +144,21 @@ export const update = (data) => async dispatch => {
         // get phone storage user data
         const userData = await getStorage('userData');
 
-        if(userData) {
+        if (userData) {
             // post request update user data
             const response = await POST(API_URL + API_USER_UPDATE, {
                 id: userData.id,
-                data: { ...data }
+                data
             });
 
             if (response.data.status) {
                 // set phone storage user data
-                await setStorage('userData', { ...userData, ...data });
-    
+                await setStorage('userData', response.data.data);
+
                 // dispatch action
                 dispatch({
                     type: USER_UPDATE,
-                    payload: { ...userData, ...data }
+                    payload: response.data.data
                 });
             }
 

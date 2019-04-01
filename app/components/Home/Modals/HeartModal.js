@@ -8,7 +8,9 @@ import {
 } from 'react-native';
 import PropTypes from 'prop-types';
 import Overlay from 'react-native-modal-overlay';
-import { Button } from 'react-native-elements';
+import {
+    Button
+} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import firebase from 'react-native-firebase';
 
@@ -47,7 +49,7 @@ class HeartModal extends Component {
 
     componentDidUpdate(prevProps, prevState) {
         // visible not equal
-        if(this.props.visible != prevProps.visible) {
+        if (this.props.visible != prevProps.visible) {
             // init admob rewarded
             this.initAdMob();
 
@@ -65,17 +67,22 @@ class HeartModal extends Component {
         // set timer
         this.timerInterval = setInterval(() => {
             this.calcEndTime().then((time) => {
-                if(time <= 0) {
+                if (time <= 0) {
                     setTimeout(() => {
-                        if(this.state.btnGetHeartDisabled && this._isMounted) {
-                            this.setState({ btnGetHeartDisabled: false });
+                        if (this.state.btnGetHeartDisabled && this._isMounted) {
+                            this.setState({
+                                btnGetHeartDisabled: false
+                            });
                         }
                     }, 100);
                     // clear timer
                     clearInterval(this.timerInterval);
                 } else {
-                    if(this._isMounted) {
-                        this.setState({ time, btnGetHeartDisabled: true });
+                    if (this._isMounted) {
+                        this.setState({
+                            time,
+                            btnGetHeartDisabled: true
+                        });
                     }
                 }
             });
@@ -97,24 +104,28 @@ class HeartModal extends Component {
         await removeStorage('heartModalOpenTime');
 
         // disable button
-        if(this._isMounted) {
-            this.setState({ btnGetHeartDisabled: true });
+        if (this._isMounted) {
+            this.setState({
+                btnGetHeartDisabled: true
+            });
         }
     }
 
     initAdMob = () => {
         // Init admob rewarded
-        this.advert     = firebase.admob().rewarded('ca-app-pub-4602055361552926/1723905120');
+        this.advert = firebase.admob().rewarded('ca-app-pub-4602055361552926/1723905120');
         const AdRequest = firebase.admob.AdRequest;
-        const request   = new AdRequest();
+        const request = new AdRequest();
 
         // Load the advert with our AdRequest
         this.advert.loadAd(request.build());
 
         // onAdLoaded
         this.advert.on('onAdLoaded', () => {
-            if(this._isMounted) {
-                this.setState({ btnShowAdDisabled: false });
+            if (this._isMounted) {
+                this.setState({
+                    btnShowAdDisabled: false
+                });
             }
         });
 
@@ -180,7 +191,7 @@ class HeartModal extends Component {
 const styles = StyleSheet.create({
     container: {
         flexDirection: 'column'
-    }, 
+    },
     containerStyle: {
         backgroundColor: 'rgba(0, 0, 0, 0.7)'
     },

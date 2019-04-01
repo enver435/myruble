@@ -8,7 +8,9 @@ import {
 } from 'react-native';
 import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { Button } from 'react-native-elements';
+import {
+    Button
+} from 'react-native-elements';
 
 // import components
 import WithdrawList from '../../components/WithdrawList';
@@ -68,10 +70,10 @@ const styles = StyleSheet.create({
         borderBottomColor: '#dcdcdc',
         paddingBottom: 20
     },
-	balanceText: {
-		fontSize: 35,
-		color: '#474747'
-	},
+    balanceText: {
+        fontSize: 35,
+        color: '#474747'
+    },
     withdrawContainer: {
         flex: 1,
         paddingTop: 20

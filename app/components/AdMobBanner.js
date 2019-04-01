@@ -1,4 +1,6 @@
-import React, { Component } from 'react';
+import React, {
+    Component
+} from 'react';
 import firebase from 'react-native-firebase';
 
 class AdMobBanner extends Component {
@@ -7,9 +9,9 @@ class AdMobBanner extends Component {
     }
 
     render() {
-        const Banner    = firebase.admob.Banner;
+        const Banner = firebase.admob.Banner;
         const AdRequest = firebase.admob.AdRequest;
-        const request   = new AdRequest();
+        const request = new AdRequest();
 
         return (
             <Banner

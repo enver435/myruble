@@ -1,5 +1,11 @@
-import React, { Component } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React, {
+    Component
+} from 'react';
+import {
+    View,
+    Text,
+    StyleSheet
+} from 'react-native';
 import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
@@ -13,9 +19,20 @@ class Main extends Component {
     }
 
     render() {
-        const { status, firstNumber, secondNumber, taskSuccess, currentTime } = this.props.gameState.data;
-        const { task, time } = this.props.gameState.defaultData;
-        const { heart } = this.props.userState.data;
+        const {
+            status,
+            firstNumber,
+            secondNumber,
+            taskSuccess,
+            currentTime
+        } = this.props.gameState.data;
+        const {
+            task,
+            time
+        } = this.props.gameState.defaultData;
+        const {
+            heart
+        } = this.props.userState.data;
 
         return (
             <View style={styles.container}>
