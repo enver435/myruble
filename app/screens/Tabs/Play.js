@@ -28,7 +28,6 @@ import {
 } from '../../constants/api';
 
 // import components
-import Loading from '../../components/Loading';
 import Balance from '../../components/Home/Balance';
 import Enter from '../../components/Home/Enter';
 import Main from '../../components/Home/Main';
@@ -311,58 +310,61 @@ class Play extends Component {
     }
 
     render() {
-        return this.state.loading === true ? (
-            <Loading/>
-        ) : (
-            this.state.user.isAuth === true ? (
-                <View>
-                    <ScrollView
-                        refreshControl={
-                            <RefreshControl
-                                refreshing={this.state.refreshing}
-                                onRefresh={this._onRefresh}
-                            />
-                        }>
-                        <Balance
-                            userState={this.state.user}/>
-                        <Main
-                            userState={this.state.user}
-                            gameState={this.state.game}/>
-                        <Enter
-                            sendAnswer={this.sendAnswer}/>
-                        <Control
-                            status={this.state.game.data.status}
-                            startGame={this.startGame}
-                            stopGame={this.stopGame}/>
-                    </ScrollView>
-
-                    <ResultModal
-                        hideVisible={() => { this.setVisibleResultModal(false) }}
-                        visible={this.state.resultModalVisible}
+        return this.state.user.isAuth === true ? (
+            <View style={{ flex: 1 }}>
+                <ScrollView
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={this.state.refreshing}
+                            onRefresh={this._onRefresh}
+                        />
+                    }>
+                    <Balance
+                        userState={this.state.user}/>
+                    <Main
+                        userState={this.state.user}
                         gameState={this.state.game}/>
+                    <Enter
+                        sendAnswer={this.sendAnswer}/>
+                    <Control
+                        status={this.state.game.data.status}
+                        startGame={this.startGame}
+                        stopGame={this.stopGame}/>
+                </ScrollView>
 
-                    <HeartModal
-                        hideVisible={() => { this.setVisibleHeartModal(false) }}
-                        updateHeart={() => {
-                            this.updateUserByMe({
+                <ResultModal
+                    hideVisible={() => { this.setVisibleResultModal(false) }}
+                    visible={this.state.resultModalVisible}
+                    gameState={this.state.game}/>
+
+                <HeartModal
+                    hideVisible={() => { this.setVisibleHeartModal(false) }}
+                    updateHeart={() => {
+                        this.setState({
+                            overlayLoading: true
+                        }, async () => {
+                            await this.updateUserByMe({
                                 heart: this.state.user.data.heart + 1,
                                 notify_heart_time: 0
-                            })
-                        }}
-                        visible={this.state.heartModalVisible}/>
+                            });
+                            this.setState({
+                                overlayLoading: false
+                            });
+                        });
+                    }}
+                    visible={this.state.heartModalVisible}/>
 
                 {this.state.overlayLoading &&
                     <View style={styles.loading}>
-                        <ActivityIndicator size="large" color="#ffffff" />
+                        <ActivityIndicator size="large" color="#474747" />
                     </View>
                 }
-                </View>
-            ) : (
-                <View style={styles.screenCenter}>
-                    <Text style={{ textAlign: 'center' }}>Пожалуйста, войдите, чтобы просмотреть эту страницу.</Text>
-                </View>
-            )
-        );
+            </View>
+        ) : (
+            <View style={styles.screenCenter}>
+                <Text style={{ textAlign: 'center' }}>Пожалуйста, войдите, чтобы просмотреть эту страницу.</Text>
+            </View>
+        )
     }
 }
 
@@ -374,13 +376,13 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     loading: {
+        flex: 1,
         position: 'absolute',
         left: 0,
         right: 0,
         top: 0,
         bottom: 0,
-        opacity: 0.5,
-        backgroundColor: 'black',
+        backgroundColor: '#F5FCFF88',
         justifyContent: 'center',
         alignItems: 'center'
     }
