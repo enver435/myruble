@@ -30,7 +30,9 @@ import {
 } from './app/Helpers';
 
 // import api constants
-import { API_URL } from './app/constants/api';
+import {
+    API_URL
+} from './app/constants/api';
 
 // import components
 import Offline from './app/components/Offline';
@@ -49,7 +51,7 @@ class App extends Component {
             showApp: false,
             data: {}
         };
-        
+
         // app url
         this.appUrl = 'https://play.google.com/store/apps/details?id=com.myruble';
     }
@@ -60,10 +62,10 @@ class App extends Component {
 
         // check network
         this._checkNetwork().then(async () => {
-            if(this.state.isConnected) {
+            if (this.state.isConnected) {
                 // fetch app data from api
                 await this._fetchData();
-                if(this.state.data.appStatus == "true") {
+                if (this.state.data.appStatus == "true") {
                     // check app version
                     await this._checkAppVersion();
                 } else {
@@ -78,8 +80,7 @@ class App extends Component {
                                 BackHandler.exitApp();
                                 return true;
                             }
-                        },
-                        ], {
+                        }, ], {
                             cancelable: false
                         },
                     );
@@ -104,7 +105,7 @@ class App extends Component {
                 .android.setSmallIcon('ic_launcher')
                 .android.setLargeIcon('ic_launcher')
                 .android.setPriority(firebase.notifications.Android.Priority.Max)
-            
+
             firebase.notifications().displayNotification(notification);
         });
     }
@@ -120,8 +121,10 @@ class App extends Component {
     _fetchData = async () => {
         try {
             const response = await GET(API_URL);
-            if(this._isMounted) {
-                this.setState({ data: response.data });
+            if (this._isMounted) {
+                this.setState({
+                    data: response.data
+                });
             }
         } catch (err) {
             showToast(err.message);
@@ -151,13 +154,13 @@ class App extends Component {
                     'Новая версия: ' + this.data.state.appVersion,
                     'Если вы не обновите приложение, оно может работать неправильно. Хотите обновить?',
                     [
-                    // {
-                    //         text: 'Позже',
-                    //         onPress: () => {
-                    //             // show app
-                    //             this.setState({ showApp: true });
-                    //         }
-                    //     },
+                        // {
+                        //         text: 'Позже',
+                        //         onPress: () => {
+                        //             // show app
+                        //             this.setState({ showApp: true });
+                        //         }
+                        //     },
                         {
                             text: 'Обновить',
                             onPress: () => {
@@ -176,7 +179,9 @@ class App extends Component {
                     },
                 );
             } else {
-                this.setState({ showApp: true });
+                this.setState({
+                    showApp: true
+                });
             }
         } catch (err) {
             showToast(err.message);
