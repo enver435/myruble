@@ -54,6 +54,7 @@ class SignUp extends Component {
             loading: true
         });
 
+        // create request object data
         const reqData = {
             email: this.state.email.toLowerCase(),
             username: this.state.username.toLowerCase(),
@@ -62,19 +63,19 @@ class SignUp extends Component {
             firebase_token: await getFirebaseToken()
         };
 
-        this.props.userActions.signUp(reqData).then((response) => {
-            if (response.status) {
-                this.props.navigation.navigate('Main');
-            } else {
-                showToast(response.message);
-            }
+        // request sign up
+        const response = await this.props.userActions.signUp(reqData);
+        if (response.status) {
+            this.props.navigation.navigate('Main');
+        } else {
+            showToast(response.message);
+        }
 
-            if (this._isMounted) {
-                this.setState({
-                    loading: false
-                });
-            }
-        });
+        if (this._isMounted) {
+            this.setState({
+                loading: false
+            });
+        }
     }
 
     render() {

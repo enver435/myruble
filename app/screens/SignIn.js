@@ -16,8 +16,6 @@ import {
 
 // import helpers
 import {
-    getStorage,
-    getFirebaseToken,
     showToast
 } from '../Helpers';
 
@@ -42,43 +40,35 @@ class SignIn extends Component {
         this._isMounted = true;
     }
 
-    async componentWillUnmount() {
+    componentWillUnmount() {
         // set mount
         this._isMounted = false;
-
-        // update firebase token
-        const userData      = await getStorage('userData');
-        const firebaseToken = await getFirebaseToken();
-        if (userData && userData.firebase_token != firebaseToken) {
-            await this.props.userActions.update({
-                firebase_token: firebaseToken
-            });
-        }
     }
 
-    onClickSignIn = () => {
+    onClickSignIn = async () => {
         this.setState({
             loading: true
         });
 
+        // create request object data
         const reqData = {
             email: this.state.email,
             pass: this.state.pass
         };
 
-        this.props.userActions.signIn(reqData).then((response) => {
-            if (response.status) {
-                this.props.navigation.navigate('Main');
-            } else {
-                showToast(response.message);
-            }
+        // request sign in
+        const response = this.props.userActions.signIn(reqData);
+        if (response.status) {
+            this.props.navigation.navigate('Main');
+        } else {
+            showToast(response.message);
+        }
 
-            if (this._isMounted) {
-                this.setState({
-                    loading: false
-                });
-            }
-        });
+        if (this._isMounted) {
+            this.setState({
+                loading: false
+            });
+        }
     }
 
     onClickSignUp = () => {

@@ -36,51 +36,59 @@ class Home extends Component {
     async componentDidMount() {
         // set mount
         this._isMounted = true;
-        
-        /**
-         * Get User
-         */
-        const userRes = await this.props.userActions.get();
-        if (userRes.status) {
-            const userData      = await getStorage('userData');
-            const firebaseToken = await getFirebaseToken();
-            // if new firebase token
-            if (userData && userData.firebase_token != firebaseToken) {
-                await this.props.userActions.update({
-                    firebase_token: firebaseToken
-                });
-            }
-        } else {
-            // show error message
-            if(userRes.message != 'Error: Not auth!') {
-                showToast(userRes.message);
-            }
-        }
-        
-        /**
-         * Get Default Game Information
-         */
-        if (userRes.status) {
-            const gameResponse = await this.props.gameActions.getLevels();
-            if (gameResponse.status) {
-                await this.props.gameActions.getLevelData(userRes.data.level_xp);
-            } else {
-                // show error message
-                showToast(gameResponse.message);
-            }
-        }
 
-        // hide loading
-        if (this._isMounted) {
-            this.setState({
-                loading: false
+        // set focus listener
+        this.focusListener = this.props.navigation.addListener("didFocus", () => {
+            this.setState({ loading: true }, async () => {
+                /**
+                 * Get User
+                 */
+                const userRes = await this.props.userActions.get();
+                if (userRes.status) {
+                    const userData      = await getStorage('userData');
+                    const firebaseToken = await getFirebaseToken();
+                    // if new firebase token
+                    if (userData && userData.firebase_token != firebaseToken) {
+                        await this.props.userActions.update({
+                            firebase_token: firebaseToken
+                        });
+                    }
+                } else {
+                    // show error message
+                    if(userRes.message != 'Error: Not auth!') {
+                        showToast(userRes.message);
+                    }
+                }
+                
+                /**
+                 * Get Default Game Information
+                 */
+                if (userRes.status) {
+                    const gameResponse = await this.props.gameActions.getLevels();
+                    if (gameResponse.status) {
+                        await this.props.gameActions.getLevelData(userRes.data.level_xp);
+                    } else {
+                        // show error message
+                        showToast(gameResponse.message);
+                    }
+                }
+        
+                // hide loading
+                if (this._isMounted) {
+                    this.setState({
+                        loading: false
+                    });
+                }
             });
-        }
+        });
     }
 
     componentWillUnmount() {
         // set mount
         this._isMounted = false;
+
+        // remove focus listener
+        this.focusListener.remove();
     }
 
     render() {
@@ -93,7 +101,7 @@ class Home extends Component {
                     userActions={this.props.userActions}/>
                 <Tabs/>
             </View>
-        );
+        )
     }
 }
 

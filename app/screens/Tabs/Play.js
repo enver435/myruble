@@ -189,13 +189,12 @@ class Play extends Component {
         }
     }
 
-    updateUserByMe = (data) => {
+    updateUserByMe = async (data) => {
         // dispatch action update user
-        this.props.userActions.update(data).then((response) => {
-            if (!response.status) {
-                showToast(response.message);
-            }
-        });
+        const response = await this.props.userActions.update(data);
+        if (!response.status) {
+            showToast(response.message);
+        }
     }
 
     updateUser = async (id, data) => {
@@ -247,12 +246,12 @@ class Play extends Component {
          * Get Default Game Information
          */
         if (userRes.status) {
-            const gameResponse = await this.props.gameActions.getLevels();
-            if (gameResponse.status) {
+            const levelRes = await this.props.gameActions.getLevels();
+            if (levelRes.status) {
                 await this.props.gameActions.getLevelData(userRes.data.level_xp);
             } else {
                 // show error message
-                showToast(gameResponse.message);
+                showToast(levelRes.message);
             }
         }
 
