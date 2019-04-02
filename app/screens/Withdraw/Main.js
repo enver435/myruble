@@ -21,7 +21,10 @@ class Main extends Component {
     }
 
     render() {
-        const { balance } = this.props.userState.data;
+        const {
+            balance
+        } = this.props.userState.data;
+
         return (
             <View style={styles.container}>
                 <View style={styles.headerContainer}>

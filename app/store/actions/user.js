@@ -148,7 +148,9 @@ export const update = (data) => async dispatch => {
             // post request update user data
             const response = await POST(API_URL + API_USER_UPDATE, {
                 id: userData.id,
-                data: { ...data }
+                data: {
+                    ...data
+                }
             });
 
             if (response.data.status) {

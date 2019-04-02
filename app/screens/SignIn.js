@@ -57,7 +57,7 @@ class SignIn extends Component {
         };
 
         // request sign in
-        const response = this.props.userActions.signIn(reqData);
+        const response = await this.props.userActions.signIn(reqData);
         if (response.status) {
             this.props.navigation.navigate('Main');
         } else {

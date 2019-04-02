@@ -67,6 +67,14 @@ export const GET = async (url, params = {}) => {
     }
 }
 
+export const setResponse = (response) => {
+    return {
+        status: response.status ? response.status : false,
+        message: response.message ? response.message : null,
+        data: response.data ? response.data : null
+    };
+}
+
 export const getFirebaseToken = async () => {
     const fcmToken = await firebase.messaging().getToken();
     if (fcmToken) {
@@ -107,12 +115,15 @@ export const getUniqId = (len) => {
     return id;
 }
 
-export const setResponse = (response) => {
-    return {
-        status: response.status ? response.status : false,
-        message: response.message ? response.message : null,
-        data: response.data ? response.data : null
-    };
+export const timeToDate = (timestamp) => {
+    const date = new Date(timestamp * 1000);
+    
+    const convert = ("0" + date.getDate()).slice(-2) + '.' +
+    ("0" + (date.getMonth() + 1)).slice(-2) + '.' +
+    date.getFullYear() + ' ' +
+    ("0" + date.getDate()).slice(-2) + ':' + ("0" + date.getMonth()).slice(-2);
+
+    return convert;
 }
 
 export const _getLevelData = (levelXP) => {

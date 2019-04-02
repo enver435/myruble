@@ -135,7 +135,7 @@ class Play extends Component {
                 task_success: taskSuccess,
                 task_fail: taskFail,
                 earn: taskSuccess == task ? earn : 0,
-                earn_referral: taskSuccess == task ? earn_referral : 0,
+                earn_referral: ref_user_id && taskSuccess == task ? earn_referral : 0,
                 status: taskSuccess == task ? 1 : 0,
                 time: Math.round(new Date().getTime() / 1000)
             };
@@ -143,30 +143,36 @@ class Play extends Component {
             // dispatch action result game
             const resultRes = await this.props.gameActions.resultGame(resultData);
             if (resultRes.status) {
-                // if task completed update user
+                // if all task completed
                 if (taskSuccess == task) {
-                    // update user
+                    // create object update data for me
                     let updateUserByMeData = {
                         balance: {
                             increment: true,
                             value: earn
                         }
                     };
+
+                    // if isset max level > current level
                     if (maxLevel.level > currentLevel.level) {
                         updateUserByMeData.level_xp = {
                             increment: true,
                             value: earn_xp
                         };
                     }
+
+                    // update user for me
                     await this.updateUserByMe(updateUserByMeData);
 
-                    // update referral balance
-                    await this.updateUser(ref_user_id, {
-                        balance: {
-                            increment: true,
-                            value: earn_referral
-                        }
-                    });
+                    // update user for referral
+                    if(ref_user_id) {
+                        await this.updateUser(ref_user_id, {
+                            balance: {
+                                increment: true,
+                                value: earn_referral
+                            }
+                        });
+                    }
                 }
             } else {
                 showToast(resultRes.message);
@@ -194,14 +200,14 @@ class Play extends Component {
         }, async () => {
             if (heart > 0) {
                 // update user heart
-                const updateHeartRes = await this.updateUserByMe({
+                const updateRes = await this.updateUserByMe({
                     heart: {
                         decrement: true,
                         value: 1
                     }
                 });
 
-                if (updateHeartRes.status) {
+                if (updateRes.status) {
                     // dispatch action start game
                     await this.props.gameActions.startGame();
 
@@ -296,50 +302,49 @@ class Play extends Component {
     }
 
     _onRefresh = async () => {
-        // show refreshing
         this.setState({
             refreshing: true
-        });
-
-        /**
-         * Get User
-         */
-        const userRes = await this.props.userActions.get();
-        if (userRes.status) {
-            const userData = await getStorage('userData');
-            const firebaseToken = await getFirebaseToken();
-            // if new firebase token
-            if (userData && userData.firebase_token != firebaseToken) {
-                await this.props.userActions.update({
-                    firebase_token: firebaseToken
-                });
-            }
-        } else {
-            // show error message
-            if (userRes.message != 'Error: Not auth!') {
-                showToast(userRes.message);
-            }
-        }
-
-        /**
-         * Get Default Game Information
-         */
-        if (userRes.status) {
-            const levelRes = await this.props.gameActions.getLevels();
-            if (levelRes.status) {
-                await this.props.gameActions.getLevelData(userRes.data.level_xp);
+        }, async () => {
+            /**
+             * Get User
+             */
+            const userRes = await this.props.userActions.get();
+            if (userRes.status) {
+                const userData = await getStorage('userData');
+                const firebaseToken = await getFirebaseToken();
+                // if new firebase token
+                if (userData && userData.firebase_token != firebaseToken) {
+                    await this.props.userActions.update({
+                        firebase_token: firebaseToken
+                    });
+                }
             } else {
                 // show error message
-                showToast(levelRes.message);
+                if (userRes.message != 'Error: Not auth!') {
+                    showToast(userRes.message);
+                }
             }
-        }
 
-        // hide refreshing
-        if (this._isMounted) {
-            this.setState({
-                refreshing: false
-            });
-        }
+            /**
+             * Get Default Game Information
+             */
+            if (userRes.status) {
+                const levelRes = await this.props.gameActions.getLevels();
+                if (levelRes.status) {
+                    await this.props.gameActions.getLevelData(userRes.data.level_xp);
+                } else {
+                    // show error message
+                    showToast(levelRes.message);
+                }
+            }
+
+            // hide refrehsing
+            if (this._isMounted) {
+                this.setState({
+                    refreshing: false
+                });
+            }
+        });
     }
 
     setVisibleResultModal = (visible) => {

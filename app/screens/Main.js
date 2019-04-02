@@ -61,20 +61,20 @@ class Home extends Component {
                         showToast(userRes.message);
                     }
                 }
-
+    
                 /**
                  * Get Default Game Information
                  */
                 if (userRes.status) {
-                    const gameResponse = await this.props.gameActions.getLevels();
-                    if (gameResponse.status) {
+                    const levelRes = await this.props.gameActions.getLevels();
+                    if (levelRes.status) {
                         await this.props.gameActions.getLevelData(userRes.data.level_xp);
                     } else {
                         // show error message
-                        showToast(gameResponse.message);
+                        showToast(levelRes.message);
                     }
                 }
-
+    
                 // hide loading
                 if (this._isMounted) {
                     this.setState({

@@ -11,7 +11,7 @@ import {
 } from 'react-native-tab-view';
 
 // import containers
-import Referal from './containers/Tabs/Referal';
+import MyProfile from './containers/Tabs/MyProfile';
 import Play from './containers/Tabs/Play';
 import Withdraw from './containers/Tabs/Withdraw';
 
@@ -23,8 +23,8 @@ class Tabs extends Component {
 		this.state = {
 			index: 1,
 			routes: [{
-					key: 'referal',
-					title: 'Реферал'
+					key: 'myprofile',
+					title: 'Профиль'
 				},
 				{
 					key: 'play',
@@ -51,8 +51,8 @@ class Tabs extends Component {
 
 	_renderScene = ({ route }) => {
 		switch (route.key) {
-			case 'referal':
-				return <Referal/>;
+			case 'myprofile':
+				return <MyProfile/>;
 			case 'play':
 				return <Play/>;
 			case 'withdraw':

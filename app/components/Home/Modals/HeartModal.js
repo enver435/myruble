@@ -4,12 +4,13 @@ import React, {
 import {
     Text,
     View,
-    StyleSheet
+    StyleSheet,
+    Dimensions
 } from 'react-native';
 import PropTypes from 'prop-types';
-import Overlay from 'react-native-modal-overlay';
 import {
-    Button
+    Button,
+    Overlay
 } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import firebase from 'react-native-firebase';
@@ -152,53 +153,46 @@ class HeartModal extends Component {
     render() {
         return (
             <Overlay
-                style={styles.container}
-                onClose={this.props.hideVisible}
-                visible={this.props.visible}
-                animationType="zoomIn"
-                animationDuration={50}
-                containerStyle={styles.containerStyle}
-                childrenWrapperStyle={styles.childrenWrapperStyle}>
-                    <View style={styles.block}>
-                        <Text>Чтобы начать игру, посмотрите рекламу или подождите</Text>
-                    </View>
-                    <View style={[styles.block, { justifyContent: 'center', alignItems: 'center' }]}>
-                        <Icon name="favorite-border" size={45} color="#474747"/>
-                        <Text style={styles.heartText}>+1</Text>
-                    </View>
-                    <View style={styles.block}>
-                        <View style={[styles.button, { paddingRight: 10 }]}>
-                            <Button
-                                onPress={this.onClickShowAds}
-                                title="Смотреть"
-                                titleStyle={{ color: '#fbbc05' }}
-                                disabled={this.state.btnShowAdDisabled}
-                            />
+                onBackdropPress={this.props.hideVisible}
+                isVisible={this.props.visible}
+                windowBackgroundColor="rgba(255, 255, 255, .5)"
+                overlayBackgroundColor="#eee"
+                width={Dimensions.get('window').width - 40}
+                height="auto"
+                children={
+                    <View>
+                        <View style={styles.block}>
+                            <Text>Чтобы начать игру, посмотрите рекламу или подождите</Text>
                         </View>
-                        <View style={[styles.button, { paddingLeft: 10 }]}>
-                            <Button
-                                onPress={this.onClickGetHeart}
-                                title={this.state.btnGetHeartDisabled ? this.fmtMSS(this.state.time) : 'Возьми'}
-                                disabled={this.state.btnGetHeartDisabled}
-                            />
+                        <View style={[styles.block, { justifyContent: 'center', alignItems: 'center' }]}>
+                            <Icon name="favorite-border" size={45} color="#474747"/>
+                            <Text style={styles.heartText}>+1</Text>
+                        </View>
+                        <View style={styles.block}>
+                            <View style={[styles.button, { paddingRight: 10 }]}>
+                                <Button
+                                    onPress={this.onClickShowAds}
+                                    title="Смотреть"
+                                    titleStyle={{ color: '#fbbc05' }}
+                                    disabled={this.state.btnShowAdDisabled}
+                                />
+                            </View>
+                            <View style={[styles.button, { paddingLeft: 10 }]}>
+                                <Button
+                                    onPress={this.onClickGetHeart}
+                                    title={this.state.btnGetHeartDisabled ? this.fmtMSS(this.state.time) : 'Возьми'}
+                                    disabled={this.state.btnGetHeartDisabled}
+                                />
+                            </View>
                         </View>
                     </View>
-            </Overlay>
+                }/>
         );
     }
 }
 
 // component styles
 const styles = StyleSheet.create({
-    container: {
-        flexDirection: 'column'
-    },
-    containerStyle: {
-        backgroundColor: 'rgba(0, 0, 0, 0.7)'
-    },
-    childrenWrapperStyle: {
-        backgroundColor: '#eee'
-    },
     block: {
         justifyContent: 'space-between',
         flexDirection: 'row',

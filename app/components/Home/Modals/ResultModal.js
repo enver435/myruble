@@ -4,12 +4,13 @@ import React, {
 import {
     Text,
     View,
-    StyleSheet
+    StyleSheet,
+    Dimensions
 } from 'react-native';
 import PropTypes from 'prop-types';
-import Overlay from 'react-native-modal-overlay';
 import {
-    Button
+    Button,
+    Overlay
 } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -27,36 +28,38 @@ class ResultModal extends Component {
             task,
             earn
         } = this.props.gameState.defaultData;
-
+        
         return (
             <Overlay
-                style={styles.container}
-                onClose={this.props.hideVisible}
-                visible={this.props.visible}
-                animationType="zoomIn"
-                animationDuration={50}
-                containerStyle={styles.containerStyle}
-                childrenWrapperStyle={styles.childrenWrapperStyle}>
-                    <Text style={styles.resultsText}>Результаты</Text>
-                    <View style={styles.resultsBorderBottom}></View>
-                    <View style={styles.block}>
-                        <Text style={styles.blockTitle}>Правильные Ответы</Text>
-                        <Text style={styles.taskSuccessCount}>{taskSuccess}</Text>
+                onBackdropPress={this.props.hideVisible}
+                isVisible={this.props.visible}
+                windowBackgroundColor="rgba(255, 255, 255, .5)"
+                overlayBackgroundColor="#eee"
+                width={Dimensions.get('window').width - 40}
+                height="auto"
+                children={
+                    <View style={styles.container}>
+                        <Text style={styles.resultsText}>Результаты</Text>
+                        <View style={styles.resultsBorderBottom}></View>
+                        <View style={styles.block}>
+                            <Text style={styles.blockTitle}>Правильные Ответы</Text>
+                            <Text style={styles.taskSuccessCount}>{taskSuccess}</Text>
+                        </View>
+                        <View style={styles.block}>
+                            <Text style={styles.blockTitle}>Неправильные Ответы</Text>
+                            <Text style={styles.taskFailCount}>{taskFail}</Text>
+                        </View>
+                        <View style={styles.block}>
+                            <Text style={styles.blockTitle}>Заработанные Деньги</Text>
+                            <Text style={styles.earnPrice}>{taskSuccess == task ? earn.toFixed(2) : 0} <Icon size={15} name="currency-rub" color="#474747"/></Text>
+                        </View>
+                        <Button
+                            onPress={this.props.hideVisible}
+                            title="OK"
+                            containerStyle={{ marginTop: 20, width: '50%' }}
+                        />
                     </View>
-                    <View style={styles.block}>
-                        <Text style={styles.blockTitle}>Неправильные Ответы</Text>
-                        <Text style={styles.taskFailCount}>{taskFail}</Text>
-                    </View>
-                    <View style={styles.block}>
-                        <Text style={styles.blockTitle}>Заработанные Деньги</Text>
-                        <Text style={styles.earnPrice}>{taskSuccess == task ? earn.toFixed(2) : 0} <Icon size={15} name="currency-rub" color="#474747"/></Text>
-                    </View>
-                    <Button
-                        onPress={this.props.hideVisible}
-                        title="OK"
-                        containerStyle={{ marginTop: 20, width: '50%' }}
-                    />
-            </Overlay>
+                }/>
         );
     }
 }
@@ -64,13 +67,8 @@ class ResultModal extends Component {
 // component styles
 const styles = StyleSheet.create({
     container: {
-        flexDirection: 'column'
-    },
-    containerStyle: {
-        backgroundColor: 'rgba(0, 0, 0, 0.7)'
-    },
-    childrenWrapperStyle: {
-        backgroundColor: '#eee'
+        alignContent: 'center',
+        alignItems: 'center'
     },
     resultsText: {
         fontWeight: '300',

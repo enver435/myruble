@@ -8,7 +8,6 @@ import {
     FlatList,
     ActivityIndicator
 } from 'react-native';
-import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 // import helpers
@@ -16,19 +15,20 @@ import {
     GET,
     setResponse,
     getStorage,
-    showToast
+    showToast,
+    timeToDate
 } from '../Helpers';
 
 // import api constants
 import {
     API_URL,
-    API_GET_WITHDRAWS
+    API_GET_REFERRALS
 } from '../constants/api';
 
 // import components
 import Loading from './Loading';
 
-class WithdrawList extends Component {
+class ReferralList extends Component {
     constructor(props) {
         super(props);
         // init state
@@ -77,30 +77,18 @@ class WithdrawList extends Component {
         const offset = this.state.page * limit;
 
         try {
+            // get phone storage user data
+            const userData = await getStorage('userData');
+
             // create request data object
             let requestData = {
+                user_id: userData.id,
                 offset,
                 limit
             };
 
-            if (this.props.user) {
-                // get phone storage user data
-                const userData = await getStorage('userData');
-
-                if (userData) {
-                    // set request data
-                    requestData.user_id = userData.id;
-                } else {
-                    // set error
-                    throw new Error('Error: Not auth!');
-                }
-            } else {
-                // set request data
-                requestData.payment_status = 1;
-            }
-
             // request and get user withdraws
-            const response = await GET(API_URL + API_GET_WITHDRAWS, requestData);
+            const response = await GET(API_URL + API_GET_REFERRALS, requestData);
 
             // return response
             return setResponse(response.data);
@@ -144,32 +132,32 @@ class WithdrawList extends Component {
         }
     }
 
-    _handleRefresh = () => {
-        this.setState({
-            loading: true,
-            page: 0
-        }, async () => {
-            // fetch data
-            const response = await this._fetchData();
+    // _handleRefresh = () => {
+    //     this.setState({
+    //         loading: true,
+    //         page: 0
+    //     }, async () => {
+    //         // fetch data
+    //         const response = await this._fetchData();
 
-            // state object
-            let setStateData = {
-                refreshing: false,
-                loading: false
-            };
+    //         // state object
+    //         let setStateData = {
+    //             refreshing: false,
+    //             loading: false
+    //         };
 
-            if (response.status) {
-                setStateData.data = response.data;
-            } else {
-                showToast(response.message);
-            }
+    //         if (response.status) {
+    //             setStateData.data = response.data;
+    //         } else {
+    //             showToast(response.message);
+    //         }
 
-            if (this._isMounted) {
-                // set state data
-                this.setState(setStateData);
-            }
-        });
-    }
+    //         if (this._isMounted) {
+    //             // set state data
+    //             this.setState(setStateData);
+    //         }
+    //     });
+    // }
 
     _renderFooter = () => {
         if (!this.state.loadingMore) return null;
@@ -200,33 +188,25 @@ class WithdrawList extends Component {
                 keyExtractor={item => item.id.toString()}
                 renderItem={({ item }) => (
                     <View style={styles.itemContainer}>
-                        <View style={[ styles.item, { flex: 0.3 } ]}>
-                            <Text style={styles.itemText}>{item.id}</Text>
+                        <View style={[ styles.item, { flex: 1 } ]}>
+                            <Text style={styles.itemText}>{item.username}</Text>
+                            <Text style={styles.itemText}>{item.user_id}</Text>
                         </View>
                         <View style={[ styles.item, { flex: 1 } ]}>
-                            <Text style={styles.itemText}>{
-                                item.payment_method == 1 ? 'Яндекс.деньги' :
-                                (item.payment_method == 2 ? 'Payeer' :
-                                (item.payment_method == 3 ? 'Webmoney' : 'Unknown'))
-                            }</Text>
-                            <Text style={styles.itemText}>{item.wallet_number}</Text>
-                        </View>
-                        <View style={[ styles.item, { flex: 1 } ]}>
-                            <Text style={styles.itemText}>{
-                                item.payment_status == 0 ? 'в ожидании' :
-                                (item.payment_status == 1 ? 'оплаченный' :
-                                (item.payment_status == 2 ? 'не оплачено' : 'Unknown'))
-                            }</Text>
+                            <Text style={styles.itemText}>{timeToDate(item.time)}</Text>
                         </View>
                         <View style={[ styles.item, { flex: 0.5 } ]}>
-                            <Text style={styles.itemText}>{item.amount.toFixed(2)} <Icon size={15} name="currency-rub" color="#474747"/></Text>
+                            <Text style={styles.itemText}>{item.referral_percent}%</Text>
+                        </View>
+                        <View style={[ styles.item, { flex: 0.5 } ]}>
+                            <Text style={styles.itemText}>{item.earn_referral.toFixed(2)} <Icon size={15} name="currency-rub" color="#474747"/></Text>
                         </View>
                     </View>
                 )}
                 onEndReached={this._handleLoadMore}
                 onEndReachedThreshold={0.5}
-                refreshing={this.state.refreshing}
-                onRefresh={this._handleRefresh}
+                // refreshing={this.state.refreshing}
+                // onRefresh={this._handleRefresh}
                 initialNumToRender={this.limit}
                 ListFooterComponent={this._renderFooter}
                 ListEmptyComponent={this._renderEmpty}
@@ -234,16 +214,6 @@ class WithdrawList extends Component {
         );
     }
 }
-
-// component prop types
-WithdrawList.propTypes = {
-    user: PropTypes.bool
-};
-
-// component default props
-WithdrawList.defaultProps = {
-    user: false
-};
 
 // component styles
 const styles = StyleSheet.create({
@@ -275,4 +245,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default WithdrawList;
+export default ReferralList;
