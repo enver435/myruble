@@ -18,7 +18,8 @@ import {
     setStorage,
     getStorage,
     getFirebaseToken,
-    setResponse
+    setResponse,
+    _getLevelData
 } from '../../Helpers';
 
 // import api constants
@@ -72,12 +73,20 @@ class Play extends Component {
     }
 
     checkEndGame = () => {
-        const gameData = this.state.game.data;
-        const gameDefaultData = this.state.game.defaultData;
+        const {
+            status,
+            currentTime,
+            taskSuccess
+        } = this.state.game.data;
+        const {
+            time,
+            task
+        } = this.state.game.defaultData;
+
         if (
-            gameData.status &&
-            gameData.currentTime == gameDefaultData.time ||
-            gameData.taskSuccess == gameDefaultData.task
+            status &&
+            currentTime == time ||
+            taskSuccess == task
         ) {
             // clear timer
             clearInterval(this.timerInterval);
@@ -90,7 +99,7 @@ class Play extends Component {
         }
 
         // if game status stop
-        if (!gameData.status) {
+        if (!status) {
             // clear timer
             clearInterval(this.timerInterval);
         }
@@ -100,36 +109,59 @@ class Play extends Component {
         this.setState({
             overlayLoading: true
         }, async () => {
-            const gameData = this.state.game.data;
-            const gameDefaultData = this.state.game.defaultData;
+            const {
+                taskSuccess,
+                taskFail
+            } = this.state.game.data;
+            const {
+                task,
+                earn,
+                earn_xp,
+                referral_percent
+            } = this.state.game.defaultData;
+            const {
+                level_xp,
+                ref_user_id
+            } = this.state.user.data;
+            const {
+                currentLevel,
+                maxLevel
+            } = _getLevelData(level_xp);
 
             // dispatch action game results
-            const earn_referral = gameDefaultData.earn * gameDefaultData.referral_percent / 100;
+            const earn_referral = earn * referral_percent / 100;
             const resultData = {
                 user_id: this.state.user.data.id,
-                task_success: gameData.taskSuccess,
-                task_fail: gameData.taskFail,
-                earn: gameData.taskSuccess == gameDefaultData.task ? gameDefaultData.earn : 0,
-                earn_referral: gameData.taskSuccess == gameDefaultData.task ? earn_referral : 0,
-                status: gameData.taskSuccess == gameDefaultData.task ? 1 : 0,
+                task_success: taskSuccess,
+                task_fail: taskFail,
+                earn: taskSuccess == task ? earn : 0,
+                earn_referral: taskSuccess == task ? earn_referral : 0,
+                status: taskSuccess == task ? 1 : 0,
                 time: Math.round(new Date().getTime() / 1000)
             };
 
             // dispatch action result game
             const resultRes = await this.props.gameActions.resultGame(resultData);
             if (resultRes.status) {
-                // if task completed update user balance
-                if (gameData.taskSuccess == gameDefaultData.task) {
-                    // update user balance
-                    await this.updateUserByMe({
+                // if task completed update user
+                if (taskSuccess == task) {
+                    // update user
+                    let updateUserByMeData = {
                         balance: {
                             increment: true,
-                            value: gameDefaultData.earn
+                            value: earn
                         }
-                    });
+                    };
+                    if (maxLevel.level > currentLevel.level) {
+                        updateUserByMeData.level_xp = {
+                            increment: true,
+                            value: earn_xp
+                        };
+                    }
+                    await this.updateUserByMe(updateUserByMeData);
 
                     // update referral balance
-                    await this.updateUser(this.state.user.data.ref_user_id, {
+                    await this.updateUser(ref_user_id, {
                         balance: {
                             increment: true,
                             value: earn_referral
@@ -150,13 +182,23 @@ class Play extends Component {
     }
 
     startGame = () => {
+        const {
+            heart_time
+        } = this.state.game.defaultData;
+        const {
+            heart
+        } = this.state.user.data;
+
         this.setState({
             overlayLoading: true
         }, async () => {
-            if (this.state.user.data.heart > 0) {
+            if (heart > 0) {
                 // update user heart
                 const updateHeartRes = await this.updateUserByMe({
-                    heart: this.state.user.data.heart - 1
+                    heart: {
+                        decrement: true,
+                        value: 1
+                    }
                 });
 
                 if (updateHeartRes.status) {
@@ -176,7 +218,7 @@ class Play extends Component {
                 // set time open heart modal
                 if (!await getStorage('heartModalOpenTime')) {
                     // get open time
-                    const openTime = Math.round((new Date().getTime() / 1000) + this.state.game.defaultData.heart_time).toString();
+                    const openTime = Math.round((new Date().getTime() / 1000) + heart_time).toString();
 
                     // set storage
                     await setStorage('heartModalOpenTime', openTime);
@@ -209,8 +251,11 @@ class Play extends Component {
     }
 
     sendAnswer = (answer) => {
-        const gameData = this.state.game.data;
-        if (gameData.status) {
+        const {
+            status
+        } = this.state.game.data;
+
+        if (status) {
             // dispatch action check answer correct
             this.props.gameActions.checkAnswer(answer);
 
@@ -344,7 +389,10 @@ class Play extends Component {
                             overlayLoading: true
                         }, async () => {
                             await this.updateUserByMe({
-                                heart: this.state.user.data.heart + 1,
+                                heart: {
+                                    increment: true,
+                                    value: 1
+                                },
                                 notify_heart_time: 0
                             });
                             this.setState({

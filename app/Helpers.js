@@ -121,5 +121,9 @@ export const _getLevelData = (levelXP) => {
     const level = levels.filter((item) => {
         return levelXP >= item.level_start_xp && levelXP < item.level_end_xp;
     });
-    return !level.length ? levels[levels.length - 1] : level[level.length - 1];
+
+    return {
+        currentLevel: !level.length ? levels[levels.length - 1] : level[level.length - 1],
+        maxLevel: levels[levels.length - 1]
+    }
 }

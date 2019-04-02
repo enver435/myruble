@@ -46,9 +46,10 @@ export const getLevels = () => async dispatch => {
 }
 
 export const getLevelData = (levelXP) => async dispatch => {
+    const { currentLevel } = _getLevelData(levelXP);
     dispatch({
         type: GAME_LEVEL_DATA,
-        payload: _getLevelData(levelXP)
+        payload: currentLevel
     });
 }
 

@@ -34,6 +34,7 @@ class ResultModal extends Component {
                 onClose={this.props.hideVisible}
                 visible={this.props.visible}
                 animationType="zoomIn"
+                animationDuration={50}
                 containerStyle={styles.containerStyle}
                 childrenWrapperStyle={styles.childrenWrapperStyle}>
                     <Text style={styles.resultsText}>Результаты</Text>
