@@ -21,8 +21,7 @@ import {
     showToast,
     getStorage,
     getFirebaseToken,
-    setResponse,
-    strPadBoth
+    setResponse
 } from '../../Helpers';
 
 // import components
@@ -228,7 +227,7 @@ class MyProfile extends Component {
                                 underlineColorAndroid="#474747"
                                 keyboardType="numeric"
                                 returnKeyType="next"
-                                value={ref_user_id ? strPadBoth(ref_user_id, 6) : this.state.input}
+                                value={ref_user_id ? ref_user_id.toString().padStart(6, '0') : this.state.input}
                                 onChangeText={(ref_code) => this.setState({ ref_code })}
                                 onSubmitEditing={() => {
                                     this._onClickSend();
