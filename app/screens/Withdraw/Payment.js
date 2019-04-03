@@ -62,7 +62,7 @@ class Payment extends Component {
             if (isAuth) {
                 const response = await POST(API_URL + API_INSERT_WITHDRAW, data);
                 // return response
-                return setResponse(response.data);
+                return response;
             }
             // set error
             throw new Error('Error: Not auth!');
@@ -111,15 +111,13 @@ class Payment extends Component {
 
             // if insert status true
             if (insertStatus) {
-
                 // update user balance
                 const resUpdate = await this.props.userActions.update({
                     balance: {
-                        increment: true,
+                        decrement: true,
                         value: commissionBalance
                     }
                 });
-
                 if (resUpdate.status) {
                     // create object insert data
                     const insertData = {
@@ -129,7 +127,9 @@ class Payment extends Component {
                         payment_method: method,
                         wallet_number: this.state.wallet_number,
                         payment_status: 0,
-                        time: Math.round(new Date().getTime() / 1000)
+                        time: {
+                            currentTime: true
+                        }
                     };
 
                     // request insert data
@@ -144,9 +144,9 @@ class Payment extends Component {
                 } else {
                     showToast(resUpdate.message);
                 }
-
             }
 
+            // hide loading
             if (this._isMounted) {
                 this.setState({
                     loading: false
@@ -156,8 +156,11 @@ class Payment extends Component {
     }
 
     render() {
-        const { method, commission } = this.props.withdrawState.methodData;
-        const commissionBalance      = this.state.amount + (commission * this.state.amount / 100);
+        const {
+            method,
+            commission
+        } = this.props.withdrawState.methodData;
+        const commissionBalance = this.state.amount + (commission * this.state.amount / 100);
 
         return (
             <View style={styles.container}>

@@ -19,6 +19,7 @@ import {
 
 // import components
 import ReferralList from '../../components/ReferralList';
+import ProgressBar from '../../components/ProgressBar';
 
 class MyProfile extends Component {
     constructor(props) {
@@ -26,7 +27,8 @@ class MyProfile extends Component {
         // init state
         this.state = {
             refreshing: false,
-            user: {}
+            user: {},
+            game: {}
         };
     }
 
@@ -34,6 +36,9 @@ class MyProfile extends Component {
         let obj = {};
         if (prevState.user !== nextProps.userState) {
             obj.user = nextProps.userState;
+        }
+        if (prevState.game !== nextProps.gameState) {
+            obj.game = nextProps.gameState;
         }
         return Object.keys(obj).length > 0 ? obj : null;
     }
@@ -78,7 +83,7 @@ class MyProfile extends Component {
             if (userRes.status) {
                 const levelRes = await this.props.gameActions.getLevels();
                 if (levelRes.status) {
-                    await this.props.gameActions.getLevelData(userRes.data.level_xp);
+                    await this.props.gameActions.getLevelData(userRes.data.level);
                 } else {
                     // show error message
                     showToast(levelRes.message);
@@ -98,8 +103,15 @@ class MyProfile extends Component {
         const {
             username,
             total_referral,
-            total_earn_referral
+            total_earn_referral,
+            level,
+            level_xp
         } = this.state.user.data;
+        const {
+            level_start_xp,
+            level_end_xp
+        } = this.state.game.defaultData;
+        const progressBarPercent = ((level_xp - level_start_xp) / level_end_xp) * 100;
 
         return this.state.user.isAuth === true ? (
             <View style={styles.container}>
@@ -127,7 +139,11 @@ class MyProfile extends Component {
                                 </View>
                             </View>
                             <View style={styles.levelContainer}>
-                                <Text>dwqdqwdqw</Text>
+                                <View style={styles.levelHeader}>
+                                    <Text style={styles.levelHeaderText}>Уровень {level}</Text>
+                                    <Text style={styles.levelHeaderText}>{level_xp}/{level_end_xp}</Text>
+                                </View>
+                                <ProgressBar percent={progressBarPercent}/>
                             </View>
                         </View>
                     </ScrollView>
@@ -197,7 +213,16 @@ const styles = StyleSheet.create({
         textAlign: 'center'
     },
     levelContainer: {
-
+        flexDirection: 'column',
+        marginTop: 15
+    },
+    levelHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    },
+    levelHeaderText: {
+        fontSize: 13,
+        marginBottom: 3,
     }
 });
 

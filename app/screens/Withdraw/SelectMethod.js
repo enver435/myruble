@@ -6,7 +6,9 @@ import {
     Text,
     Image,
     StyleSheet,
-    TouchableHighlight
+    TouchableHighlight,
+    ScrollView,
+    RefreshControl
 } from 'react-native';
 import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -33,27 +35,34 @@ class SelectMethod extends Component {
         // init state
         this.state = {
             loading: true,
+            refreshing: false,
             data: []
         };
     }
 
     async componentDidMount() {
-        // fetch data
+        // set mount
+        this._isMounted = true;
+
+        // fetch payment methods
         const response = await this._fetchData();
-
-        // state object
-        let setStateData = {
-            loading: false
-        };
-
-        if (response.status) {
-            setStateData.data = response.data;
-        } else {
+    
+        if (!response.status) {
             showToast(response.message);
         }
 
-        // set state data
-        this.setState(setStateData);
+        // set state
+        if(this._isMounted) {
+            this.setState({
+                data: response.status ? response.data : [],
+                loading: false
+            });
+        }
+    }
+
+    componentWillUnmount() {
+        // set mount
+        this._isMounted = false;
     }
 
     _fetchData = async () => {
@@ -61,7 +70,7 @@ class SelectMethod extends Component {
             // request
             const response = await GET(API_URL + API_GET_WITHDRAW_METHODS);
             // return response
-            return setResponse(response.data);
+            return response;
         } catch (err) {
             return setResponse({
                 status: false,
@@ -81,6 +90,30 @@ class SelectMethod extends Component {
         }
     }
 
+    _onRefresh = () => {
+        this.setState({
+            data: [],
+            refreshing: true,
+            loading: true
+        }, async () => {
+            // fetch payment methods
+            const response = await this._fetchData();
+
+            if(!response.status) {
+                showToast(response.message);
+            }
+
+            // set state
+            if(this._isMounted) {
+                this.setState({
+                    data: response.status ? response.data : [],
+                    refreshing: false,
+                    loading: false
+                });
+            }
+        });
+    }
+
     render() {
         return this.state.loading ? (
             <Loading/>
@@ -89,24 +122,40 @@ class SelectMethod extends Component {
                 <View style={{ marginBottom: 20 }}>
                     <Text style={styles.title}>Выберите метод оплаты</Text>
                 </View>
-                {this.state.data.map((item) => {
-                    return item.status ? (<TouchableHighlight
-                        key={item.id}
-                        onPress={() => { this._onClickMethod(item.method) }}
-                        underlayColor="transparent">
-                        <View style={styles.itemContainer}>
-                            <View style={[ styles.item, { flex: 1 } ]}>
-                                <Image source={item.method == 1 ? require('../../assets/yandex.png') : (item.method == 2 ? require('../../assets/payeer.png') : (item.method == 3 ? require('../../assets/webmoney.png') : null))} resizeMode="contain" style={styles.itemImg}/>
-                            </View>
-                            <View style={[ styles.item, { flex: 1 } ]}>
-                                <Text style={styles.itemText}>{item.commission.toFixed(2)}%</Text>
-                            </View>
-                            <View style={[ styles.item, { flex: 1 } ]}>
-                                <Text style={styles.itemText}>{item.min_withdraw.toFixed(2)} <Icon size={15} name="currency-rub" color="#474747"/></Text>
-                            </View>
+                <ScrollView
+                    style={{ flex: 1, height: '100%' }}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={this.state.refreshing}
+                            onRefresh={this._onRefresh}
+                        />
+                    }>
+                    {this.state.data.length > 0 ? (
+                        this.state.data.map((item) => {
+                            return item.status ? (<TouchableHighlight
+                                key={item.id}
+                                onPress={() => { this._onClickMethod(item.method) }}
+                                underlayColor="transparent">
+                                <View style={styles.itemContainer}>
+                                    <View style={[ styles.item, { flex: 1 } ]}>
+                                        <Image source={item.method == 1 ? require('../../assets/yandex.png') : (item.method == 2 ? require('../../assets/payeer.png') : (item.method == 3 ? require('../../assets/webmoney.png') : null))} resizeMode="contain" style={styles.itemImg}/>
+                                    </View>
+                                    <View style={[ styles.item, { flex: 1 } ]}>
+                                        <Text style={styles.itemText}>{item.commission.toFixed(2)}%</Text>
+                                    </View>
+                                    <View style={[ styles.item, { flex: 1 } ]}>
+                                        <Text style={styles.itemText}>{item.min_withdraw.toFixed(2)} <Icon size={15} name="currency-rub" color="#474747"/></Text>
+                                    </View>
+                                </View>
+                            </TouchableHighlight>) : null
+                        })
+                    ) : (
+                        <View style={styles.notFoundContainer}>
+                            <Icon size={45} name="alert-circle-outline" color="#474747"/>
+                            <Text style={styles.notFoundText}>Результат не найден</Text>
                         </View>
-                    </TouchableHighlight>) : null
-                })}
+                    )}
+                </ScrollView>
             </View>
         )
     }
@@ -160,6 +209,20 @@ const styles = StyleSheet.create({
     itemImg: {
         width: 110,
         height: 45
+    },
+    notFoundContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignContent: 'center',
+        alignItems: 'center',
+        alignSelf: 'center',
+        height: '100%'
+    },
+    notFoundText: {
+        marginTop: 5,
+        fontSize: 15,
+        fontWeight: 'bold',
+        color: '#474747'
     }
 });
 

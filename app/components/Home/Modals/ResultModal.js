@@ -26,7 +26,8 @@ class ResultModal extends Component {
         } = this.props.gameState.data;
         const {
             task,
-            earn
+            earn,
+            earn_xp
         } = this.props.gameState.defaultData;
         
         return (
@@ -48,6 +49,10 @@ class ResultModal extends Component {
                         <View style={styles.block}>
                             <Text style={styles.blockTitle}>Неправильные Ответы</Text>
                             <Text style={styles.taskFailCount}>{taskFail}</Text>
+                        </View>
+                        <View style={styles.block}>
+                            <Text style={styles.blockTitle}>Заработанные XP</Text>
+                            <Text style={styles.earnPrice}>{taskSuccess == task ? earn_xp : 0}</Text>
                         </View>
                         <View style={styles.block}>
                             <Text style={styles.blockTitle}>Заработанные Деньги</Text>

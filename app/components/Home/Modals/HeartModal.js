@@ -17,30 +17,41 @@ import firebase from 'react-native-firebase';
 
 // import helpers
 import {
+    GET,
+    showToast,
     getStorage,
     removeStorage
 } from '../../../Helpers';
+
+// import api constants
+import {
+    API_URL
+} from '../../../constants/api';
 
 class HeartModal extends Component {
     constructor(props) {
         super(props);
         // init state
         this.state = {
+            currentTime: 0,
             time: 0,
             btnGetHeartDisabled: true,
             btnShowAdDisabled: true
         };
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         // set mount
         this._isMounted = true;
 
-        // init admob rewarded
-        this.initAdMob();
+        // fetch get current time
+        await this._fetchCurrentTime();
 
         // set timer
-        this.setTimer();
+        await this.setTimer();
+
+        // init admob rewarded
+        this.initAdMob();
     }
 
     componentWillUnmount() {
@@ -48,50 +59,73 @@ class HeartModal extends Component {
         this._isMounted = false;
     }
 
-    componentDidUpdate(prevProps, prevState) {
+    async componentDidUpdate(prevProps, prevState) {
         // visible not equal
         if (this.props.visible != prevProps.visible) {
-            // init admob rewarded
-            this.initAdMob();
+            // fetch get current time
+            await this._fetchCurrentTime();
 
             // set timer
-            this.setTimer();
+            await this.setTimer();
+
+            // init admob rewarded
+            this.initAdMob();
+        }
+    }
+
+    _fetchCurrentTime = async () => {
+        try {
+            const response = await GET(API_URL);
+            if(response.status) {
+                if (this._isMounted) {
+                    this.setState({
+                        currentTime: response.data.appTime
+                    });
+                }
+            }
+        } catch (err) {
+            showToast(err.message);
         }
     }
 
     calcEndTime = async () => {
-        const getOpenTime = parseInt(await getStorage('heartModalOpenTime'));
-        return getOpenTime - Math.round(new Date().getTime() / 1000);
+        if(this._isMounted) {
+            // set state current time
+            this.setState({
+                currentTime: this.state.currentTime + 1
+            }, async () => {
+                // set time
+                this.setState({
+                    time: this.modalTime - this.state.currentTime
+                }, () => {
+                    if(this.state.time <= 0) {
+                        this.setState({
+                            time: 0,
+                            btnGetHeartDisabled: false
+                        });
+                        // clear timer
+                        clearInterval(this.timerInterval);
+                    }
+                });
+            });
+        }
     }
 
-    setTimer = () => {
+    setTimer = async () => {
+        // clear timer
+        clearInterval(this.timerInterval);
+
+        // get phone storage heart modal time
+        this.modalTime = parseInt(await getStorage('heartModalTime'));
+
         // set timer
         this.timerInterval = setInterval(() => {
-            this.calcEndTime().then((time) => {
-                if (time <= 0) {
-                    setTimeout(() => {
-                        if (this.state.btnGetHeartDisabled && this._isMounted) {
-                            this.setState({
-                                btnGetHeartDisabled: false
-                            });
-                        }
-                    }, 100);
-                    // clear timer
-                    clearInterval(this.timerInterval);
-                } else {
-                    if (this._isMounted) {
-                        this.setState({
-                            time,
-                            btnGetHeartDisabled: true
-                        });
-                    }
-                }
-            });
+            this.calcEndTime();
         }, 1000);
     }
 
     fmtMSS = (s) => {
-        return (s - (s %= 60)) / 60 + (9 < s ? ':' : ':0') + s;
+        return s < 0 || isNaN(s) ? this.fmtMSS(0) : (s - (s %= 60)) / 60 + (9 < s ? ':' : ':0') + s;
     }
 
     onClickGetHeart = async () => {
@@ -102,7 +136,7 @@ class HeartModal extends Component {
         this.props.hideVisible();
 
         // open time modal remove from storage
-        await removeStorage('heartModalOpenTime');
+        await removeStorage('heartModalTime');
 
         // disable button
         if (this._isMounted) {
@@ -139,7 +173,7 @@ class HeartModal extends Component {
             this.props.hideVisible();
 
             // open time modal remove from storage
-            await removeStorage('heartModalOpenTime');
+            await removeStorage('heartModalTime');
         });
     }
 

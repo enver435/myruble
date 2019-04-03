@@ -15,7 +15,7 @@ class Main extends Component {
     }
 
     fmtMSS = (s) => {
-        return (s - (s %= 60)) / 60 + (9 < s ? ':' : ':0') + s;
+        return s < 0 || isNaN(s) ? this.fmtMSS(0) : (s - (s %= 60)) / 60 + (9 < s ? ':' : ':0') + s;
     }
 
     render() {

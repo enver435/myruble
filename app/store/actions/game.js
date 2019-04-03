@@ -27,15 +27,15 @@ import {
 export const getLevels = () => async dispatch => {
     try {
         const response = await GET(API_URL + API_GAME_LEVELS);
-        if (response.data.status) {
+        if (response.status) {
             // dispatch action
             dispatch({
                 type: GAME_LEVELS,
-                payload: response.data.data
+                payload: response.data
             });
         }
         // return response
-        return setResponse(response.data);
+        return response;
     } catch (err) {
         // return response
         return setResponse({
@@ -45,11 +45,11 @@ export const getLevels = () => async dispatch => {
     }
 }
 
-export const getLevelData = (levelXP) => async dispatch => {
+export const getLevelData = (level) => async dispatch => {
     const {
         currentLevel
-    } = _getLevelData(levelXP);
-    
+    } = _getLevelData(level);
+    // dispatch action
     dispatch({
         type: GAME_LEVEL_DATA,
         payload: currentLevel
@@ -57,18 +57,21 @@ export const getLevelData = (levelXP) => async dispatch => {
 }
 
 export const startGame = () => async dispatch => {
+    // dispatch action
     dispatch({
         type: GAME_START
     });
 }
 
 export const nextQuestion = () => async dispatch => {
+    // dispatch action
     dispatch({
         type: GAME_NEXT_QUESTION
     });
 }
 
 export const checkAnswer = (answer) => async dispatch => {
+    // dispatch action
     dispatch({
         type: GAME_CHECK_ANSWER,
         payload: {
@@ -80,14 +83,14 @@ export const checkAnswer = (answer) => async dispatch => {
 export const resultGame = (data) => async dispatch => {
     try {
         const response = await POST(API_URL + API_INSERT_GAME, data);
-        if (response.data.status) {
+        if (response.status) {
             // dispatch action
             dispatch({
                 type: GAME_RESULT
             });
         }
         // return response
-        return setResponse(response.data);
+        return response;
     } catch (err) {
         // return response
         return setResponse({
@@ -98,6 +101,7 @@ export const resultGame = (data) => async dispatch => {
 }
 
 export const setCurrentTime = () => async dispatch => {
+    // dispatch action
     dispatch({
         type: GAME_CURRENT_TIME
     });

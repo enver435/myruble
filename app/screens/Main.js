@@ -68,7 +68,7 @@ class Home extends Component {
                 if (userRes.status) {
                     const levelRes = await this.props.gameActions.getLevels();
                     if (levelRes.status) {
-                        await this.props.gameActions.getLevelData(userRes.data.level_xp);
+                        await this.props.gameActions.getLevelData(userRes.data.level);
                     } else {
                         // show error message
                         showToast(levelRes.message);

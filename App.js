@@ -121,10 +121,12 @@ class App extends Component {
     _fetchData = async () => {
         try {
             const response = await GET(API_URL);
-            if (this._isMounted) {
-                this.setState({
-                    data: response.data
-                });
+            if(response.status) {
+                if (this._isMounted) {
+                    this.setState({
+                        data: response.data
+                    });
+                }
             }
         } catch (err) {
             showToast(err.message);

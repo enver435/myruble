@@ -50,20 +50,16 @@ class ReferralList extends Component {
         // fetch data
         const response = await this._fetchData();
 
-        // state object
-        let setStateData = {
-            loading: false
-        };
-
-        if (response.status) {
-            setStateData.data = response.data;
-        } else {
+        if (!response.status) {
             showToast(response.message);
         }
 
         if (this._isMounted) {
             // set state data
-            this.setState(setStateData);
+            this.setState({
+                data: response.status ? response.data : [],
+                loading: false
+            });
         }
     }
 
@@ -91,8 +87,7 @@ class ReferralList extends Component {
             const response = await GET(API_URL + API_GET_REFERRALS, requestData);
 
             // return response
-            return setResponse(response.data);
-
+            return response;
         } catch (err) {
             // return response
             return setResponse({
@@ -125,36 +120,33 @@ class ReferralList extends Component {
                 }
 
                 if (this._isMounted) {
-                    // set state data
+                    // set state
                     this.setState(setStateData);
                 }
             });
         }
     }
 
-    // _handleRefresh = () => {
+    // _onRefresh = () => {
     //     this.setState({
     //         loading: true,
-    //         page: 0
+    //         page: 0,
+    //         data: []
     //     }, async () => {
     //         // fetch data
     //         const response = await this._fetchData();
 
-    //         // state object
-    //         let setStateData = {
-    //             refreshing: false,
-    //             loading: false
-    //         };
-
-    //         if (response.status) {
-    //             setStateData.data = response.data;
-    //         } else {
+    //         if (!response.status) {
     //             showToast(response.message);
     //         }
 
     //         if (this._isMounted) {
-    //             // set state data
-    //             this.setState(setStateData);
+    //             // set state
+    //             this.setState({
+    //                 data: response.status ? response.data : [],
+    //                 refreshing: false,
+    //                 loading: false
+    //             });
     //         }
     //     });
     // }
@@ -171,8 +163,9 @@ class ReferralList extends Component {
 
     _renderEmpty = () => {
         return (
-            <View>
-                <Text style={{ textAlign: 'center' }}>Not Found</Text>
+            <View style={styles.notFoundContainer}>
+                <Icon size={45} name="alert-circle-outline" color="#474747"/>
+                <Text style={styles.notFoundText}>Результат не найден</Text>
             </View>
         )
     }
@@ -199,14 +192,14 @@ class ReferralList extends Component {
                             <Text style={styles.itemText}>{item.referral_percent}%</Text>
                         </View>
                         <View style={[ styles.item, { flex: 0.5 } ]}>
-                            <Text style={styles.itemText}>{item.earn_referral.toFixed(2)} <Icon size={15} name="currency-rub" color="#474747"/></Text>
+                            <Text style={styles.itemText}>{item.total_earn_referral.toFixed(2)} <Icon size={15} name="currency-rub" color="#474747"/></Text>
                         </View>
                     </View>
                 )}
                 onEndReached={this._handleLoadMore}
                 onEndReachedThreshold={0.5}
                 // refreshing={this.state.refreshing}
-                // onRefresh={this._handleRefresh}
+                // onRefresh={this._onRefresh}
                 initialNumToRender={this.limit}
                 ListFooterComponent={this._renderFooter}
                 ListEmptyComponent={this._renderEmpty}
@@ -242,6 +235,20 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         color: '#474747',
         fontSize: 13
+    },
+    notFoundContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignContent: 'center',
+        alignItems: 'center',
+        alignSelf: 'center',
+        height: '100%'
+    },
+    notFoundText: {
+        marginTop: 5,
+        fontSize: 15,
+        fontWeight: 'bold',
+        color: '#474747'
     }
 });
 

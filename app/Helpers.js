@@ -51,19 +51,27 @@ export const removeStorage = async (key) => {
 
 export const POST = async (url, data = {}) => {
     try {
-        return await Axios.post(url, data);
+        const response = await Axios.post(url, data);
+        return setResponse(response.data);
     } catch (err) {
-        showToast(err.message);
+        return setResponse({
+            status: false,
+            message: err.message
+        });
     }
 }
 
 export const GET = async (url, params = {}) => {
     try {
-        return await Axios.get(url, {
+        const response = await Axios.get(url, {
             params
         });
+        return setResponse(response.data);
     } catch (err) {
-        showToast(err.message);
+        return setResponse({
+            status: false,
+            message: err.message
+        });
     }
 }
 
@@ -126,15 +134,16 @@ export const timeToDate = (timestamp) => {
     return convert;
 }
 
-export const _getLevelData = (levelXP) => {
+export const _getLevelData = (level) => {
     const state = store.getState();
+    
     const levels = state.game.levels;
-    const level = levels.filter((item) => {
-        return levelXP >= item.level_start_xp && levelXP < item.level_end_xp;
+    level = levels.filter((item) => {
+        return level == item.level;
     });
 
     return {
-        currentLevel: !level.length ? levels[levels.length - 1] : level[level.length - 1],
+        currentLevel: level[0],
         maxLevel: levels[levels.length - 1]
     }
 }

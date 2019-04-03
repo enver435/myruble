@@ -120,13 +120,13 @@ class Play extends Component {
                 referral_percent
             } = this.state.game.defaultData;
             const {
-                level_xp,
+                level,
                 ref_user_id
             } = this.state.user.data;
             const {
                 currentLevel,
                 maxLevel
-            } = _getLevelData(level_xp);
+            } = _getLevelData(level);
 
             // dispatch action game results
             const earn_referral = earn * referral_percent / 100;
@@ -137,7 +137,9 @@ class Play extends Component {
                 earn: taskSuccess == task ? earn : 0,
                 earn_referral: ref_user_id && taskSuccess == task ? earn_referral : 0,
                 status: taskSuccess == task ? 1 : 0,
-                time: Math.round(new Date().getTime() / 1000)
+                time: {
+                    currentTime: true
+                }
             };
 
             // dispatch action result game
@@ -222,17 +224,20 @@ class Play extends Component {
                 }
             } else {
                 // set time open heart modal
-                if (!await getStorage('heartModalOpenTime')) {
-                    // get open time
-                    const openTime = Math.round((new Date().getTime() / 1000) + heart_time).toString();
-
-                    // set storage
-                    await setStorage('heartModalOpenTime', openTime);
-
+                if (!await getStorage('heartModalTime')) {
                     // update user
-                    await this.updateUserByMe({
-                        notify_heart_time: openTime
+                    const updateRes = await this.updateUserByMe({
+                        notify_heart_time: {
+                            currentTime: true
+                        }
                     });
+
+                    if(updateRes.status) {   
+                        // set storage
+                        await setStorage('heartModalTime', (updateRes.data.notify_heart_time + heart_time).toString());
+                    } else {
+                        showToast(updateRes.message);
+                    }
                 }
 
                 // set visible heart modal
@@ -289,9 +294,8 @@ class Play extends Component {
                 id,
                 data
             });
-
             // return response
-            return setResponse(response.data);
+            return response;
         } catch (err) {
             // return response
             return setResponse({
@@ -331,7 +335,7 @@ class Play extends Component {
             if (userRes.status) {
                 const levelRes = await this.props.gameActions.getLevels();
                 if (levelRes.status) {
-                    await this.props.gameActions.getLevelData(userRes.data.level_xp);
+                    await this.props.gameActions.getLevelData(userRes.data.level);
                 } else {
                     // show error message
                     showToast(levelRes.message);
