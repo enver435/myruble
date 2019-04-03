@@ -16,7 +16,8 @@ import {
     GET,
     setResponse,
     getStorage,
-    showToast
+    showToast,
+    strMasked
 } from '../Helpers';
 
 // import api constants
@@ -141,9 +142,9 @@ class WithdrawList extends Component {
 
     _onRefresh = () => {
         this.setState({
+            refreshing: true,
             loading: true,
-            page: 0,
-            data: []
+            page: 0
         }, async () => {
             // fetch data
             const response = await this._fetchData();
@@ -202,7 +203,7 @@ class WithdrawList extends Component {
                                 (item.payment_method == 2 ? 'Payeer' :
                                 (item.payment_method == 3 ? 'Webmoney' : 'Unknown'))
                             }</Text>
-                            <Text style={styles.itemText}>{item.wallet_number}</Text>
+                            <Text style={styles.itemText}>{this.props.user ? item.wallet_number : strMasked(item.wallet_number, 4)}</Text>
                         </View>
                         <View style={[ styles.item, { flex: 1 } ]}>
                             <Text style={styles.itemText}>{
@@ -242,7 +243,8 @@ WithdrawList.defaultProps = {
 const styles = StyleSheet.create({
     contentContainerStyle: {
         flexDirection: 'column',
-        width: '100%'
+        width: '100%',
+        flexGrow: 1
     },
     itemContainer: {
         backgroundColor: '#fff',

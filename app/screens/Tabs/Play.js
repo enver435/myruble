@@ -155,7 +155,7 @@ class Play extends Component {
                         }
                     };
 
-                    // if isset max level > current level
+                    // if isset max level > current level, increment XP
                     if (maxLevel.level > currentLevel.level) {
                         updateUserByMeData.level_xp = {
                             increment: true,
@@ -244,6 +244,7 @@ class Play extends Component {
                 this.setVisibleHeartModal(true);
             }
 
+            // set state
             this.setState({
                 overlayLoading: false
             });
@@ -324,9 +325,7 @@ class Play extends Component {
                 }
             } else {
                 // show error message
-                if (userRes.message != 'Error: Not auth!') {
-                    showToast(userRes.message);
-                }
+                showToast(userRes.message);
             }
 
             /**
@@ -412,7 +411,7 @@ class Play extends Component {
                     visible={this.state.heartModalVisible}/>
 
                 {this.state.overlayLoading &&
-                    <View style={styles.loading}>
+                    <View style={styles.overlayLoading}>
                         <ActivityIndicator size="large" color="#474747" />
                     </View>
                 }
@@ -432,7 +431,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center'
     },
-    loading: {
+    overlayLoading: {
         flex: 1,
         position: 'absolute',
         left: 0,

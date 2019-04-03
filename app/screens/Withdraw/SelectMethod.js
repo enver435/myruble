@@ -92,9 +92,7 @@ class SelectMethod extends Component {
 
     _onRefresh = () => {
         this.setState({
-            data: [],
-            refreshing: true,
-            loading: true
+            refreshing: true
         }, async () => {
             // fetch payment methods
             const response = await this._fetchData();
@@ -107,8 +105,7 @@ class SelectMethod extends Component {
             if(this._isMounted) {
                 this.setState({
                     data: response.status ? response.data : [],
-                    refreshing: false,
-                    loading: false
+                    refreshing: false
                 });
             }
         });
@@ -129,7 +126,8 @@ class SelectMethod extends Component {
                             refreshing={this.state.refreshing}
                             onRefresh={this._onRefresh}
                         />
-                    }>
+                    }
+                    contentContainerStyle={{flexGrow: 1}}>
                     {this.state.data.length > 0 ? (
                         this.state.data.map((item) => {
                             return item.status ? (<TouchableHighlight

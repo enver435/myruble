@@ -6,20 +6,33 @@ import {
     Text,
     StyleSheet,
     ScrollView,
-    RefreshControl
+    RefreshControl,
+    TextInput,
+    TouchableHighlight,
+    ActivityIndicator,
+    Clipboard
 } from 'react-native';
+import { withNavigation } from 'react-navigation';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 // import helpers
 import {
+    POST,
     showToast,
     getStorage,
-    getFirebaseToken
+    getFirebaseToken,
+    setResponse,
+    strPadBoth
 } from '../../Helpers';
 
 // import components
-import ReferralList from '../../components/ReferralList';
 import ProgressBar from '../../components/ProgressBar';
+
+// import api constants
+import {
+    API_URL,
+    API_INSERT_REFERRAL
+} from '../../constants/api';
 
 class MyProfile extends Component {
     constructor(props) {
@@ -27,6 +40,8 @@ class MyProfile extends Component {
         // init state
         this.state = {
             refreshing: false,
+            overlayLoading: false,
+            ref_code: '',
             user: {},
             game: {}
         };
@@ -72,9 +87,7 @@ class MyProfile extends Component {
                 }
             } else {
                 // show error message
-                if (userRes.message != 'Error: Not auth!') {
-                    showToast(userRes.message);
-                }
+                showToast(userRes.message);
             }
 
             /**
@@ -99,13 +112,58 @@ class MyProfile extends Component {
         });
     }
 
+    _insertReferral = async () => {
+        try {
+            const response = await POST(API_URL + API_INSERT_REFERRAL, {
+                user_id: this.state.user.data.id,
+                ref_code: this.state.ref_code
+            });
+            return response;
+        } catch (err) {
+            return setResponse({
+                status: false,
+                message: err.message
+            });
+        }
+    }
+
+    _onClickSend = () => {
+        this.setState({
+            overlayLoading: true
+        }, async () => {
+            const response = await this._insertReferral();
+            if (response.status) {
+                // dispatch action, get user information
+                const userRes = await this.props.userActions.get();
+                if (!userRes.status) {
+                    // show error message
+                    showToast(userRes.message);
+                }
+            } else {
+                showToast(response.message);
+            }
+
+            // set state
+            this.setState({
+                overlayLoading: false
+            });
+        });
+    }
+
+    _copyReferralClipboard = () => {
+        Clipboard.setString(this.state.user.data.referral_code);
+        showToast('Код реферала скопирован в буфер обмена');
+    }
+
     render() {
         const {
             username,
             total_referral,
             total_earn_referral,
             level,
-            level_xp
+            level_xp,
+            referral_code,
+            ref_user_id
         } = this.state.user.data;
         const {
             level_start_xp,
@@ -115,14 +173,15 @@ class MyProfile extends Component {
 
         return this.state.user.isAuth === true ? (
             <View style={styles.container}>
-                <View style={styles.headerContainer}>
-                    <ScrollView
-                        refreshControl={
-                            <RefreshControl
-                                refreshing={this.state.refreshing}
-                                onRefresh={this._onRefresh}
-                            />
-                        }>
+                <ScrollView
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={this.state.refreshing}
+                            onRefresh={this._onRefresh}
+                        />
+                    }
+                    contentContainerStyle={{flexGrow: 1}}>    
+                    <View style={styles.headerContainer}>                
                         <View style={{ flexDirection: 'column' }}>
                             <View style={styles.gridHeader}>
                                 <View style={styles.gridHeaderItem}>
@@ -134,8 +193,14 @@ class MyProfile extends Component {
                                     <Text style={styles.gridHeaderTitle}>{username}</Text>
                                 </View>
                                 <View style={styles.gridHeaderItem}>
-                                    <Text style={styles.gridHeaderTitle}>{total_referral}</Text>
-                                    <Text>pеферал</Text>
+                                    <TouchableHighlight
+                                        underlayColor="transparent"
+                                        onPress={() => { this.props.navigation.navigate('MyReferrals'); }}>
+                                        <View style={{ alignContent: 'center', alignItems: 'center', textAlign: 'center' }}>
+                                            <Text style={styles.gridHeaderTitle}>{total_referral}</Text>
+                                            <Text>pеферал</Text>
+                                        </View>
+                                    </TouchableHighlight>
                                 </View>
                             </View>
                             <View style={styles.levelContainer}>
@@ -146,16 +211,48 @@ class MyProfile extends Component {
                                 <ProgressBar percent={progressBarPercent}/>
                             </View>
                         </View>
-                    </ScrollView>
-                </View>
-                <View style={styles.referralContainer}>
-                    <View>
-                        <Text style={styles.referralText}>Мои рефералы</Text>
                     </View>
-                    {!this.state.refreshing ? (
-                        <ReferralList/>
-                    ) : null}
-                </View>
+                    <View style={styles.referralContainer}>
+                        <View style={{ marginBottom: 10 }}>
+                            <Text style={styles.referralText}>Ваша код для привлечения рефералов:</Text>
+                            <TouchableHighlight
+                                underlayColor="transparent"
+                                onPress={this._copyReferralClipboard}>
+                                <Text style={styles.referralCode}>{referral_code} <Icon size={30} name="content-copy" color="#474747"/></Text>
+                            </TouchableHighlight>
+                        </View>
+                        <View style={ref_user_id ? [styles.referralForm, { opacity: 0.5 }] : styles.referralForm}
+                            pointerEvents={ref_user_id ? "none" : "auto"}>
+                            <TextInput
+                                style={styles.textInput}
+                                underlineColorAndroid="#474747"
+                                keyboardType="numeric"
+                                returnKeyType="next"
+                                value={ref_user_id ? strPadBoth(ref_user_id, 6) : this.state.input}
+                                onChangeText={(ref_code) => this.setState({ ref_code })}
+                                onSubmitEditing={() => {
+                                    this._onClickSend();
+                                }}
+                                blurOnSubmit={false}
+                            />
+                            <TouchableHighlight
+                                onPress={() => {
+                                    this._onClickSend()
+                                }}
+                                underlayColor="transparent">
+                                <Icon name="send" size={35} color="#474747" style={styles.btnSend} />
+                            </TouchableHighlight>
+                        </View>
+                        <View>
+                            <Text style={styles.referralText}>Невозможно изменить реферальный код, если он написан.</Text>
+                        </View>
+                        {this.state.overlayLoading &&
+                            <View style={styles.overlayLoading}>
+                                <ActivityIndicator size="large" color="#474747" />
+                            </View>
+                        }
+                    </View>
+                </ScrollView>
             </View>
         ) : (
             <View style={styles.screenCenter}>
@@ -203,15 +300,6 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: '#474747'
     },
-    referralContainer: {
-        flex: 1,
-        paddingTop: 20
-    },
-    referralText: {
-        color: '#979797',
-        fontSize: 12,
-        textAlign: 'center'
-    },
     levelContainer: {
         flexDirection: 'column',
         marginTop: 15
@@ -223,7 +311,50 @@ const styles = StyleSheet.create({
     levelHeaderText: {
         fontSize: 13,
         marginBottom: 3,
+    },
+    referralContainer: {
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignContent: 'center',
+        alignItems: 'center',
+        paddingTop: 20,
+        paddingLeft: 35,
+        paddingRight: 35
+    },
+    referralText: {
+        color: '#979797',
+        fontSize: 12,
+        textAlign: 'center',
+        marginBottom: 10
+    },
+    referralCode: {
+        color: '#474747',
+        fontSize: 35,
+        textAlign: 'center'
+    },
+    referralForm: {
+        flexDirection: 'row',
+        marginBottom: 10
+    },
+    textInput: {
+        fontSize: 17,
+        flex: 1
+    },
+    btnSend: {
+        marginTop: 7
+    },
+    overlayLoading: {
+        flex: 1,
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        top: 0,
+        bottom: 0,
+        backgroundColor: '#F5FCFF88',
+        justifyContent: 'center',
+        alignItems: 'center'
     }
 });
 
-export default MyProfile;
+export default withNavigation(MyProfile);

@@ -127,29 +127,29 @@ class ReferralList extends Component {
         }
     }
 
-    // _onRefresh = () => {
-    //     this.setState({
-    //         loading: true,
-    //         page: 0,
-    //         data: []
-    //     }, async () => {
-    //         // fetch data
-    //         const response = await this._fetchData();
+    _onRefresh = () => {
+        this.setState({
+            refreshing: true,
+            loading: true,
+            page: 0
+        }, async () => {
+            // fetch data
+            const response = await this._fetchData();
 
-    //         if (!response.status) {
-    //             showToast(response.message);
-    //         }
+            if (!response.status) {
+                showToast(response.message);
+            }
 
-    //         if (this._isMounted) {
-    //             // set state
-    //             this.setState({
-    //                 data: response.status ? response.data : [],
-    //                 refreshing: false,
-    //                 loading: false
-    //             });
-    //         }
-    //     });
-    // }
+            if (this._isMounted) {
+                // set state
+                this.setState({
+                    data: response.status ? response.data : [],
+                    refreshing: false,
+                    loading: false
+                });
+            }
+        });
+    }
 
     _renderFooter = () => {
         if (!this.state.loadingMore) return null;
@@ -198,8 +198,8 @@ class ReferralList extends Component {
                 )}
                 onEndReached={this._handleLoadMore}
                 onEndReachedThreshold={0.5}
-                // refreshing={this.state.refreshing}
-                // onRefresh={this._onRefresh}
+                refreshing={this.state.refreshing}
+                onRefresh={this._onRefresh}
                 initialNumToRender={this.limit}
                 ListFooterComponent={this._renderFooter}
                 ListEmptyComponent={this._renderEmpty}
@@ -212,7 +212,8 @@ class ReferralList extends Component {
 const styles = StyleSheet.create({
     contentContainerStyle: {
         flexDirection: 'column',
-        width: '100%'
+        width: '100%',
+        flexGrow: 1
     },
     itemContainer: {
         backgroundColor: '#fff',

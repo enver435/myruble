@@ -125,18 +125,30 @@ export const getUniqId = (len) => {
 
 export const timeToDate = (timestamp) => {
     const date = new Date(timestamp * 1000);
-    
+
     const convert = ("0" + date.getDate()).slice(-2) + '.' +
-    ("0" + (date.getMonth() + 1)).slice(-2) + '.' +
-    date.getFullYear() + ' ' +
-    ("0" + date.getDate()).slice(-2) + ':' + ("0" + date.getMonth()).slice(-2);
+        ("0" + (date.getMonth() + 1)).slice(-2) + '.' +
+        date.getFullYear() + ' ' +
+        ("0" + date.getDate()).slice(-2) + ':' + ("0" + date.getMonth()).slice(-2);
 
     return convert;
 }
 
+export const strPadBoth = (str, length, pad = '0') => {
+    str = str.toString();
+    var spaces = length - str.length;
+    var padLeft = spaces / 2 + str.length;
+    return str.padStart(padLeft, pad).padEnd(length, pad);
+}
+
+export const strMasked = (str, length, pad = '*') => {
+    str = str.toString();
+    return str.slice(0, str.length - length).padEnd(str.length, pad)
+}
+
 export const _getLevelData = (level) => {
     const state = store.getState();
-    
+
     const levels = state.game.levels;
     level = levels.filter((item) => {
         return level == item.level;
