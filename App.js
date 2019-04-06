@@ -148,7 +148,7 @@ class App extends Component {
             if (this.state.data.appVersion != appDeviceVersion) {
                 // show alert
                 Alert.alert(
-                    'Новая версия: ' + this.data.state.appVersion,
+                    'Новая версия: ' + this.state.data.appVersion,
                     'Если вы не обновите приложение, оно может работать неправильно. Хотите обновить?',
                     [
                         // {
