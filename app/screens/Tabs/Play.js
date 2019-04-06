@@ -164,17 +164,22 @@ class Play extends Component {
                     }
 
                     // update user for me
-                    await this.updateUserByMe(updateUserByMeData);
+                    const response = await this.updateUserByMe(updateUserByMeData);
+                    if(response.status) {
+                        // check new level and dispatch new level data
+                        await this.props.gameActions.getLevelData(response.data.level);
 
-                    // update user for referral
-                    if(ref_user_id) {
-                        await this.updateUser(ref_user_id, {
-                            balance: {
-                                increment: true,
-                                value: earn_referral
-                            }
-                        });
+                        // update user for referral
+                        if(ref_user_id) {
+                            await this.updateUser(ref_user_id, {
+                                balance: {
+                                    increment: true,
+                                    value: earn_referral
+                                }
+                            });
+                        }
                     }
+
                 }
             } else {
                 showToast(resultRes.message);
@@ -191,11 +196,11 @@ class Play extends Component {
 
     startGame = () => {
         const {
-            heart_time
-        } = this.state.game.defaultData;
-        const {
             heart
         } = this.state.user.data;
+        const {
+            heart_time
+        } = this.state.game.defaultData;
 
         this.setState({
             overlayLoading: true
@@ -392,14 +397,15 @@ class Play extends Component {
 
                 <HeartModal
                     hideVisible={() => { this.setVisibleHeartModal(false) }}
-                    updateHeart={() => {
+                    heart={this.state.game.defaultData.heart}
+                    updateHeart={(heart) => {
                         this.setState({
                             overlayLoading: true
                         }, async () => {
                             await this.updateUserByMe({
                                 heart: {
                                     increment: true,
-                                    value: 1
+                                    value: heart
                                 },
                                 notify_heart_time: 0
                             });

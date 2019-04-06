@@ -135,7 +135,7 @@ class Payment extends Component {
                     // request insert data
                     const resInsert = await this._insertData(insertData);
                     if (resInsert.status) {
-                        showToast('Ваш запрос был успешно отправлен. Это будет сделано в течение 24 часов.');
+                        showToast('Ваш запрос был успешно отправлен. Это будет сделано в течение 3 дней.');
                         // navigate main screen
                         this.props.navigation.navigate('Main');
                     } else {

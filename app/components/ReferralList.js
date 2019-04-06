@@ -192,7 +192,7 @@ class ReferralList extends Component {
                             <Text style={styles.itemText}>{item.referral_percent}%</Text>
                         </View>
                         <View style={[ styles.item, { flex: 0.5 } ]}>
-                            <Text style={styles.itemText}>{item.total_earn_referral.toFixed(2)} <Icon size={15} name="currency-rub" color="#474747"/></Text>
+                            <Text style={styles.itemText}>{item.total_earn_referral.toFixed(3)} <Icon size={15} name="currency-rub" color="#474747"/></Text>
                         </View>
                     </View>
                 )}

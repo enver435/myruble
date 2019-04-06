@@ -29,7 +29,7 @@ class Main extends Component {
             <View style={styles.container}>
                 <View style={styles.headerContainer}>
                     <View style={{ flex: 1 }}>
-                        <Text style={styles.balanceText}>{balance.toFixed(2)} <Icon size={35} name="currency-rub" color="#474747"/></Text>
+                        <Text style={styles.balanceText}>{balance.toFixed(3)} <Icon size={30} name="currency-rub" color="#474747"/></Text>
                     </View>
                     <View style={{ flex: 1 }}>
                         <Button
@@ -71,10 +71,11 @@ const styles = StyleSheet.create({
         paddingRight: 20,
         borderBottomWidth: 1,
         borderBottomColor: '#dcdcdc',
-        paddingBottom: 20
+        paddingBottom: 20,
+        justifyContent: 'center'
     },
     balanceText: {
-        fontSize: 35,
+        fontSize: 30,
         color: '#474747'
     },
     withdrawContainer: {

@@ -129,8 +129,8 @@ class HeartModal extends Component {
     }
 
     onClickGetHeart = async () => {
-        // update heart +1
-        this.props.updateHeart();
+        // update heart
+        this.props.updateHeart(this.props.heart);
 
         // hide modal
         this.props.hideVisible();
@@ -166,8 +166,8 @@ class HeartModal extends Component {
 
         // onRewarded
         this.advert.on('onRewarded', async () => {
-            // update heart +1
-            this.props.updateHeart();
+            // update heart
+            this.props.updateHeart(this.props.heart);
 
             // hide modal
             this.props.hideVisible();
@@ -200,7 +200,7 @@ class HeartModal extends Component {
                         </View>
                         <View style={[styles.block, { justifyContent: 'center', alignItems: 'center' }]}>
                             <Icon name="favorite-border" size={45} color="#474747"/>
-                            <Text style={styles.heartText}>+1</Text>
+                            <Text style={styles.heartText}>+{this.props.heart}</Text>
                         </View>
                         <View style={styles.block}>
                             <View style={[styles.button, { paddingRight: 10 }]}>
@@ -246,12 +246,14 @@ const styles = StyleSheet.create({
 HeartModal.propTypes = {
     hideVisible: PropTypes.func.isRequired,
     updateHeart: PropTypes.func.isRequired,
-    visible: PropTypes.bool
+    visible: PropTypes.bool,
+    heart: PropTypes.number
 };
 
 // component default props
 HeartModal.defaultProps = {
-    visible: false
+    visible: false,
+    heart: 1
 };
 
 export default HeartModal;
