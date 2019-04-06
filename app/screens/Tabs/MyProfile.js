@@ -183,7 +183,7 @@ class MyProfile extends Component {
                         <View style={{ flexDirection: 'column' }}>
                             <View style={styles.gridHeader}>
                                 <View style={styles.gridHeaderItem}>
-                                    <Text style={styles.gridHeaderTitle}>{total_earn_referral.toFixed(2)} <Icon size={16} name="currency-rub" color="#474747"/></Text>
+                                    <Text style={styles.gridHeaderTitle}>{total_earn_referral.toFixed(3)} <Icon size={16} name="currency-rub" color="#474747"/></Text>
                                     <Text>pеферал</Text>
                                 </View>
                                 <View style={styles.gridHeaderItem}>
