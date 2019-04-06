@@ -8,6 +8,12 @@ import firebase from 'react-native-firebase';
 // import store
 import store from './store';
 
+// import api constants
+import {
+    API_URL_DEV,
+    API_URL_PROD
+} from './constants/api';
+
 export const IsJsonString = (str) => {
     try {
         JSON.parse(str);
@@ -51,7 +57,13 @@ export const removeStorage = async (key) => {
 
 export const POST = async (url, data = {}) => {
     try {
-        const response = await Axios.post(url, data);
+        const response = await Axios.post(url, data, {
+            baseURL: __DEV__ ? API_URL_DEV : API_URL_PROD,
+            auth: {
+                username: 'myrubleapi',
+                password: 'Gg4sXd([:h@#tKM$'
+            }
+        });
         return setResponse(response.data);
     } catch (err) {
         return setResponse({
@@ -64,7 +76,12 @@ export const POST = async (url, data = {}) => {
 export const GET = async (url, params = {}) => {
     try {
         const response = await Axios.get(url, {
-            params
+            params,
+            baseURL: __DEV__ ? API_URL_DEV : API_URL_PROD,
+            auth: {
+                username: 'myrubleapi',
+                password: 'Gg4sXd([:h@#tKM$'
+            }
         });
         return setResponse(response.data);
     } catch (err) {

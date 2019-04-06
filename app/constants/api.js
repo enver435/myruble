@@ -1,10 +1,5 @@
-const API_URL_DEV = "http://192.168.1.109/myruble/api";
-const API_URL_PROD = "http://myruble.com/api";
-
-/**
- * API Url
- */
-export const API_URL = API_URL_DEV;
+export const API_URL_DEV = "http://192.168.1.109/myruble/api";
+export const API_URL_PROD = "http://myruble.com/api";
 
 /**
  * AUTH Routes
