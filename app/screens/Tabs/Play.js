@@ -71,6 +71,16 @@ class Play extends Component {
         this._isMounted = false;
     }
 
+    refreshGameData = async () => {
+        const levelRes = await this.props.gameActions.getLevels();
+        if (levelRes.status) {
+            await this.props.gameActions.getLevelData(this.state.user.data.level);
+        } else {
+            // show error message
+            showToast(levelRes.message);
+        }
+    }
+
     checkEndGame = () => {
         const {
             status,
@@ -146,47 +156,43 @@ class Play extends Component {
             if (resultRes.status) {
                 // if all task completed
                 if (taskSuccess == task) {
-                    // create object update data for me
-                    let updateUserByMeData = {
+                    // update user for me
+                    const updateMe = await this.updateUserByMe({
                         balance: {
                             increment: true,
                             value: earn
-                        }
-                    };
-
-                    // if isset max level > current level, increment XP
-                    if (maxLevel.level > currentLevel.level) {
-                        updateUserByMeData.level_xp = {
+                        },
+                        level_xp: {
                             increment: true,
-                            value: earn_xp
-                        };
-                    }
-
-                    // update user for me
-                    const response = await this.updateUserByMe(updateUserByMeData);
-                    if(response.status) {
-                        // check new level and dispatch new level data
-                        await this.props.gameActions.getLevelData(response.data.level);
-
+                            value: maxLevel.level > currentLevel.level ? earn_xp : 0
+                        }
+                    });
+                    if (updateMe.status) {
                         // update user for referral
-                        if(ref_user_id) {
-                            await this.updateUser(ref_user_id, {
+                        if (ref_user_id) {
+                            const updateRef = await this.updateUser(ref_user_id, {
                                 balance: {
                                     increment: true,
                                     value: earn_referral
                                 }
                             });
+                            if (!updateRef.status) {
+                                showToast(updateRef.message);
+                            }
                         }
                     }
-
                 }
             } else {
                 showToast(resultRes.message);
             }
 
+            // refresh game level data
+            await this.refreshGameData();
+
+            // set state
             this.setState({
                 overlayLoading: false
-            }, () => {
+            }, async () => {
                 // set visible result modal
                 this.setVisibleResultModal(true);
             });
@@ -205,15 +211,14 @@ class Play extends Component {
             overlayLoading: true
         }, async () => {
             if (heart > 0) {
-                // update user heart
-                const updateRes = await this.updateUserByMe({
+                // update user for me
+                const updateMe = await this.updateUserByMe({
                     heart: {
                         decrement: true,
                         value: 1
                     }
                 });
-
-                if (updateRes.status) {
+                if (updateMe.status) {
                     // dispatch action start game
                     await this.props.gameActions.startGame();
 
@@ -229,18 +234,15 @@ class Play extends Component {
             } else {
                 // set time open heart modal
                 if (!await getStorage('heartModalTime')) {
-                    // update user
-                    const updateRes = await this.updateUserByMe({
+                    // update user for me
+                    const updateMe = await this.updateUserByMe({
                         notify_heart_time: {
                             currentTime: true
                         }
                     });
-
-                    if(updateRes.status) {   
+                    if (updateMe.status) {
                         // set storage
-                        await setStorage('heartModalTime', (updateRes.data.notify_heart_time + heart_time).toString());
-                    } else {
-                        showToast(updateRes.message);
+                        await setStorage('heartModalTime', (updateMe.data.notify_heart_time + heart_time).toString());
                     }
                 }
 
