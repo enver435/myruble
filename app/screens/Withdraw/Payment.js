@@ -28,7 +28,6 @@ import {
 
 // import api constants
 import {
-    API_URL,
     API_INSERT_WITHDRAW
 } from '../../constants/api';
 
@@ -60,7 +59,7 @@ class Payment extends Component {
                 isAuth
             } = this.props.userState;
             if (isAuth) {
-                const response = await POST(API_URL + API_INSERT_WITHDRAW, data);
+                const response = await POST(API_INSERT_WITHDRAW, data);
                 // return response
                 return response;
             }

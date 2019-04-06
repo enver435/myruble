@@ -19,14 +19,13 @@ import {
 
 // import api constants
 import {
-    API_URL,
     API_GAME_LEVELS,
     API_INSERT_GAME
 } from '../../constants/api';
 
 export const getLevels = () => async dispatch => {
     try {
-        const response = await GET(API_URL + API_GAME_LEVELS);
+        const response = await GET(API_GAME_LEVELS);
         if (response.status) {
             // dispatch action
             dispatch({
@@ -82,7 +81,7 @@ export const checkAnswer = (answer) => async dispatch => {
 
 export const resultGame = (data) => async dispatch => {
     try {
-        const response = await POST(API_URL + API_INSERT_GAME, data);
+        const response = await POST(API_INSERT_GAME, data);
         if (response.status) {
             // dispatch action
             dispatch({

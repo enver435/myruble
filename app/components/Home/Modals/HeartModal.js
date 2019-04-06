@@ -23,11 +23,6 @@ import {
     removeStorage
 } from '../../../Helpers';
 
-// import api constants
-import {
-    API_URL
-} from '../../../constants/api';
-
 class HeartModal extends Component {
     constructor(props) {
         super(props);
@@ -75,7 +70,7 @@ class HeartModal extends Component {
 
     _fetchCurrentTime = async () => {
         try {
-            const response = await GET(API_URL);
+            const response = await GET();
             if(response.status) {
                 if (this._isMounted) {
                     this.setState({

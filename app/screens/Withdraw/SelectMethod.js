@@ -22,7 +22,6 @@ import {
 
 // import api constants
 import {
-    API_URL,
     API_GET_WITHDRAW_METHODS
 } from '../../constants/api';
 
@@ -68,7 +67,7 @@ class SelectMethod extends Component {
     _fetchData = async () => {
         try {
             // request
-            const response = await GET(API_URL + API_GET_WITHDRAW_METHODS);
+            const response = await GET(API_GET_WITHDRAW_METHODS);
             // return response
             return response;
         } catch (err) {

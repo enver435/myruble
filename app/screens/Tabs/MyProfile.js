@@ -29,7 +29,6 @@ import ProgressBar from '../../components/ProgressBar';
 
 // import api constants
 import {
-    API_URL,
     API_INSERT_REFERRAL
 } from '../../constants/api';
 
@@ -113,7 +112,7 @@ class MyProfile extends Component {
 
     _insertReferral = async () => {
         try {
-            const response = await POST(API_URL + API_INSERT_REFERRAL, {
+            const response = await POST(API_INSERT_REFERRAL, {
                 user_id: this.state.user.data.id,
                 ref_code: this.state.ref_code
             });

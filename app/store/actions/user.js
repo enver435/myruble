@@ -19,7 +19,6 @@ import {
 
 // import api constants
 import {
-    API_URL,
     API_USER_INFO,
     API_USER_UPDATE,
     API_SIGN_IN,
@@ -32,7 +31,7 @@ export const get = () => async dispatch => {
         const userData = await getStorage('userData');
         if (userData) {
             // request and get user data
-            const response = await GET(API_URL + API_USER_INFO, {
+            const response = await GET(API_USER_INFO, {
                 full: true,
                 id: userData.id
             });
@@ -61,7 +60,7 @@ export const get = () => async dispatch => {
 
 export const signIn = (data) => async dispatch => {
     try {
-        const response = await POST(API_URL + API_SIGN_IN, data);
+        const response = await POST(API_SIGN_IN, data);
         if (response.status) {
             // set phone storage user data
             await setStorage('userData', response.data);
@@ -84,7 +83,7 @@ export const signIn = (data) => async dispatch => {
 
 export const signUp = (data) => async dispatch => {
     try {
-        const response = await POST(API_URL + API_SIGN_UP, data);
+        const response = await POST(API_SIGN_UP, data);
         if (response.status) {
             // set phone storage user data
             await setStorage('userData', response.data);
@@ -134,7 +133,7 @@ export const update = (data) => async dispatch => {
         const userData = await getStorage('userData');
         if (userData) {
             // post request update user data
-            const response = await POST(API_URL + API_USER_UPDATE, {
+            const response = await POST(API_USER_UPDATE, {
                 id: userData.id,
                 data: {
                     ...data

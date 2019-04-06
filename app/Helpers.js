@@ -55,7 +55,7 @@ export const removeStorage = async (key) => {
     }
 }
 
-export const POST = async (url, data = {}) => {
+export const POST = async (url = '', data = {}) => {
     try {
         const response = await Axios.post(url, data, {
             baseURL: __DEV__ ? API_URL_DEV : API_URL_PROD,
@@ -73,7 +73,7 @@ export const POST = async (url, data = {}) => {
     }
 }
 
-export const GET = async (url, params = {}) => {
+export const GET = async (url = '', params = {}) => {
     try {
         const response = await Axios.get(url, {
             params,

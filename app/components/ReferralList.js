@@ -21,7 +21,6 @@ import {
 
 // import api constants
 import {
-    API_URL,
     API_GET_REFERRALS
 } from '../constants/api';
 
@@ -84,7 +83,7 @@ class ReferralList extends Component {
             };
 
             // request and get user withdraws
-            const response = await GET(API_URL + API_GET_REFERRALS, requestData);
+            const response = await GET(API_GET_REFERRALS, requestData);
 
             // return response
             return response;

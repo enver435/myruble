@@ -29,11 +29,6 @@ import {
     showToast
 } from './app/Helpers';
 
-// import api constants
-import {
-    API_URL
-} from './app/constants/api';
-
 // import components
 import Offline from './app/components/Offline';
 import AdMobBanner from './app/components/AdMobBanner';
@@ -120,7 +115,7 @@ class App extends Component {
 
     _fetchData = async () => {
         try {
-            const response = await GET(API_URL);
+            const response = await GET();
             if(response.status) {
                 if (this._isMounted) {
                     this.setState({

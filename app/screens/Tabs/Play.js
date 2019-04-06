@@ -24,7 +24,6 @@ import {
 
 // import api constants
 import {
-    API_URL,
     API_USER_UPDATE
 } from '../../constants/api';
 
@@ -296,7 +295,7 @@ class Play extends Component {
     updateUser = async (id, data) => {
         try {
             // post request update user data
-            const response = await POST(API_URL + API_USER_UPDATE, {
+            const response = await POST(API_USER_UPDATE, {
                 id,
                 data
             });

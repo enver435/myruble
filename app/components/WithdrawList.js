@@ -22,7 +22,6 @@ import {
 
 // import api constants
 import {
-    API_URL,
     API_GET_WITHDRAWS
 } from '../constants/api';
 
@@ -97,7 +96,7 @@ class WithdrawList extends Component {
             }
 
             // request and get user withdraws
-            const response = await GET(API_URL + API_GET_WITHDRAWS, requestData);
+            const response = await GET(API_GET_WITHDRAWS, requestData);
 
             // return response
             return response;
