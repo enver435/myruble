@@ -17,6 +17,20 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 class ResultModal extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            loading: false
+        };
+    }
+
+    _onCloseModal = async () => {
+        this.setState({
+            loading: true
+        }, async () => {
+            await this.props.hideVisible();
+            this.setState({
+                loading: false
+            });
+        });
     }
 
     render() {
@@ -32,7 +46,7 @@ class ResultModal extends Component {
         
         return (
             <Overlay
-                onBackdropPress={this.props.hideVisible}
+                onBackdropPress={this._onCloseModal}
                 isVisible={this.props.visible}
                 windowBackgroundColor="rgba(255, 255, 255, .5)"
                 overlayBackgroundColor="#eee"
@@ -59,8 +73,9 @@ class ResultModal extends Component {
                             <Text style={styles.earnPrice}>{taskSuccess == task ? earn.toFixed(2) : 0} <Icon size={15} name="currency-rub" color="#474747"/></Text>
                         </View>
                         <Button
-                            onPress={this.props.hideVisible}
+                            onPress={this._onCloseModal}
                             title="OK"
+                            loading={this.state.loading}
                             containerStyle={{ marginTop: 20, width: '50%' }}
                         />
                     </View>

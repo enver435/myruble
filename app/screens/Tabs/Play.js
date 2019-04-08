@@ -71,14 +71,73 @@ class Play extends Component {
         this._isMounted = false;
     }
 
-    refreshGameData = async () => {
-        const levelRes = await this.props.gameActions.getLevels();
-        if (levelRes.status) {
-            await this.props.gameActions.getLevelData(this.state.user.data.level);
-        } else {
-            // show error message
-            showToast(levelRes.message);
-        }
+    startGame = () => {
+        const {
+            heart
+        } = this.state.user.data;
+        const {
+            heart_time
+        } = this.state.game.defaultData;
+
+        this.setState({
+            overlayLoading: true
+        }, async () => {
+            if (heart > 0) {
+                // update user for me
+                const updateMe = await this.updateUserByMe({
+                    heart: {
+                        decrement: true,
+                        value: 1
+                    }
+                });
+                if (updateMe.status) {
+                    // dispatch action start game
+                    await this.props.gameActions.startGame();
+
+                    // start timer
+                    this.timerInterval = setInterval(() => {
+                        // dispatch action current time
+                        this.props.gameActions.setCurrentTime();
+
+                        // check end game
+                        this.checkEndGame();
+                    }, 1000);
+                }
+            } else {
+                // set time open heart modal
+                if (!await getStorage('heartModalTime')) {
+                    // update user for me
+                    const updateMe = await this.updateUserByMe({
+                        notify_heart_time: {
+                            currentTime: true
+                        }
+                    });
+                    if (updateMe.status) {
+                        // set storage
+                        await setStorage('heartModalTime', (updateMe.data.notify_heart_time + heart_time).toString());
+                    }
+                }
+
+                // set visible heart modal
+                this.setVisibleHeartModal(true);
+            }
+
+            // set state
+            this.setState({
+                overlayLoading: false
+            });
+        });
+    }
+
+    stopGame = () => {
+        // clear timer
+        clearInterval(this.timerInterval);
+
+        // end game
+        this.endGame();
+
+        // keyboard dismiss
+        Keyboard.dismiss();
     }
 
     checkEndGame = () => {
@@ -105,12 +164,6 @@ class Play extends Component {
 
             // keyboard dismiss
             Keyboard.dismiss();
-        }
-
-        // if game status stop
-        if (!status) {
-            // clear timer
-            clearInterval(this.timerInterval);
         }
     }
 
@@ -186,9 +239,6 @@ class Play extends Component {
                 showToast(resultRes.message);
             }
 
-            // refresh game level data
-            await this.refreshGameData();
-
             // set state
             this.setState({
                 overlayLoading: false
@@ -197,75 +247,6 @@ class Play extends Component {
                 this.setVisibleResultModal(true);
             });
         });
-    }
-
-    startGame = () => {
-        const {
-            heart
-        } = this.state.user.data;
-        const {
-            heart_time
-        } = this.state.game.defaultData;
-
-        this.setState({
-            overlayLoading: true
-        }, async () => {
-            if (heart > 0) {
-                // update user for me
-                const updateMe = await this.updateUserByMe({
-                    heart: {
-                        decrement: true,
-                        value: 1
-                    }
-                });
-                if (updateMe.status) {
-                    // dispatch action start game
-                    await this.props.gameActions.startGame();
-
-                    // start timer
-                    this.timerInterval = setInterval(() => {
-                        // dispatch action current time
-                        this.props.gameActions.setCurrentTime();
-
-                        // check end game
-                        this.checkEndGame();
-                    }, 1000);
-                }
-            } else {
-                // set time open heart modal
-                if (!await getStorage('heartModalTime')) {
-                    // update user for me
-                    const updateMe = await this.updateUserByMe({
-                        notify_heart_time: {
-                            currentTime: true
-                        }
-                    });
-                    if (updateMe.status) {
-                        // set storage
-                        await setStorage('heartModalTime', (updateMe.data.notify_heart_time + heart_time).toString());
-                    }
-                }
-
-                // set visible heart modal
-                this.setVisibleHeartModal(true);
-            }
-
-            // set state
-            this.setState({
-                overlayLoading: false
-            });
-        });
-    }
-
-    stopGame = () => {
-        // clear timer
-        clearInterval(this.timerInterval);
-
-        // end game
-        this.endGame();
-
-        // keyboard dismiss
-        Keyboard.dismiss();
     }
 
     sendAnswer = (answer) => {
@@ -309,6 +290,16 @@ class Play extends Component {
                 status: false,
                 message: err.message
             });
+        }
+    }
+
+    refreshGameData = async () => {
+        const levelRes = await this.props.gameActions.getLevels();
+        if (levelRes.status) {
+            await this.props.gameActions.getLevelData(this.state.user.data.level);
+        } else {
+            // show error message
+            showToast(levelRes.message);
         }
     }
 
@@ -392,12 +383,17 @@ class Play extends Component {
                 </ScrollView>
 
                 <ResultModal
-                    hideVisible={() => { this.setVisibleResultModal(false) }}
+                    hideVisible={async () => {
+                        await this.refreshGameData();
+                        this.setVisibleResultModal(false);
+                    }}
                     visible={this.state.resultModalVisible}
                     gameState={this.state.game}/>
 
                 <HeartModal
-                    hideVisible={() => { this.setVisibleHeartModal(false) }}
+                    hideVisible={() => {
+                        this.setVisibleHeartModal(false)
+                    }}
                     heart={this.state.game.defaultData.heart}
                     updateHeart={(heart) => {
                         this.setState({
