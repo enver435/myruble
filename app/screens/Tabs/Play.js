@@ -45,6 +45,7 @@ class Play extends Component {
             refreshing: false,
             resultModalVisible: false,
             heartModalVisible: false,
+            endGameTime: Math.round(new Date().getTime()/1000),
             user: {},
             game: {}
         };
@@ -71,17 +72,23 @@ class Play extends Component {
         this._isMounted = false;
     }
 
-    startGame = () => {
+    startGame = async () => {
         const {
             heart
         } = this.state.user.data;
         const {
+            status
+        } = this.state.game.data;
+        const {
             heart_time
         } = this.state.game.defaultData;
 
-        this.setState({
-            overlayLoading: true
-        }, async () => {
+        if(!status) {
+            // set state
+            this.setState({
+                overlayLoading: true
+            });
+
             if (heart > 0) {
                 // update user for me
                 const updateMe = await this.updateUserByMe({
@@ -95,12 +102,15 @@ class Play extends Component {
                     await this.props.gameActions.startGame();
 
                     // start timer
-                    this.timerInterval = setInterval(() => {
+                    this.timerInterval = setInterval(async () => {
                         // dispatch action current time
-                        this.props.gameActions.setCurrentTime();
+                        await this.props.gameActions.setCurrentTime();
 
                         // check end game
-                        this.checkEndGame();
+                        // yeni en son oyunun vaxti indiki vaxtdan 30 saniye boyukduse onda oyunun statusunu yoxla
+                        if(Math.round(new Date().getTime()/1000) - this.state.endGameTime > 30) {
+                            await this.checkEndGame();
+                        }
                     }, 1000);
                 }
             } else {
@@ -126,21 +136,27 @@ class Play extends Component {
             this.setState({
                 overlayLoading: false
             });
-        });
+        }
     }
 
-    stopGame = () => {
-        // clear timer
-        clearInterval(this.timerInterval);
+    stopGame = async () => {
+        const {
+            status
+        } = this.state.game.data;
 
-        // end game
-        this.endGame();
+        if(status) {
+            // clear timer
+            clearInterval(this.timerInterval);
 
-        // keyboard dismiss
-        Keyboard.dismiss();
+            // end game
+            await this.endGame();
+    
+            // keyboard dismiss
+            Keyboard.dismiss();
+        }
     }
 
-    checkEndGame = () => {
+    checkEndGame = async () => {
         const {
             status,
             currentTime,
@@ -153,99 +169,100 @@ class Play extends Component {
 
         if (
             status &&
-            currentTime == time ||
-            taskSuccess == task
+            (currentTime == time || taskSuccess == task)
         ) {
             // clear timer
             clearInterval(this.timerInterval);
 
             // end game
-            this.endGame();
+            await this.endGame();
 
             // keyboard dismiss
             Keyboard.dismiss();
         }
     }
 
-    endGame = () => {
+    endGame = async () => {
+        const {
+            taskSuccess,
+            taskFail
+        } = this.state.game.data;
+        const {
+            task,
+            earn,
+            earn_xp,
+            referral_percent
+        } = this.state.game.defaultData;
+        const {
+            level,
+            ref_user_id
+        } = this.state.user.data;
+        const {
+            currentLevel,
+            maxLevel
+        } = _getLevelData(level);
+
+        // set state
         this.setState({
-            overlayLoading: true
-        }, async () => {
-            const {
-                taskSuccess,
-                taskFail
-            } = this.state.game.data;
-            const {
-                task,
-                earn,
-                earn_xp,
-                referral_percent
-            } = this.state.game.defaultData;
-            const {
-                level,
-                ref_user_id
-            } = this.state.user.data;
-            const {
-                currentLevel,
-                maxLevel
-            } = _getLevelData(level);
+            overlayLoading: true,
+            endGameTime: Math.round(new Date().getTime()/1000)
+        });
 
-            // dispatch action game results
-            const earn_referral = earn * referral_percent / 100;
-            const resultData = {
-                user_id: this.state.user.data.id,
-                task_success: taskSuccess,
-                task_fail: taskFail,
-                earn: taskSuccess == task ? earn : 0,
-                earn_referral: ref_user_id && taskSuccess == task ? earn_referral : 0,
-                status: taskSuccess == task ? 1 : 0,
-                time: {
-                    currentTime: true
-                }
-            };
+        // dispatch action game results
+        const earn_referral = earn * referral_percent / 100;
+        const resultData = {
+            user_id: this.state.user.data.id,
+            task_success: taskSuccess,
+            task_fail: taskFail,
+            earn: taskSuccess == task ? earn : 0,
+            earn_referral: ref_user_id && taskSuccess == task ? earn_referral : 0,
+            status: taskSuccess == task ? 1 : 0,
+            time: {
+                currentTime: true
+            }
+        };
 
-            // dispatch action result game
-            const resultRes = await this.props.gameActions.resultGame(resultData);
-            if (resultRes.status) {
-                // if all task completed
-                if (taskSuccess == task) {
-                    // update user for me
-                    const updateMe = await this.updateUserByMe({
-                        balance: {
-                            increment: true,
-                            value: earn
-                        },
-                        level_xp: {
-                            increment: true,
-                            value: maxLevel.level > currentLevel.level ? earn_xp : 0
-                        }
-                    });
-                    if (updateMe.status) {
-                        // update user for referral
-                        if (ref_user_id) {
-                            const updateRef = await this.updateUser(ref_user_id, {
-                                balance: {
-                                    increment: true,
-                                    value: earn_referral
-                                }
-                            });
-                            if (!updateRef.status) {
-                                showToast(updateRef.message);
+        // dispatch action result game
+        const resultRes = await this.props.gameActions.resultGame(resultData);
+        if (resultRes.status) {
+            // if all task completed
+            if (taskSuccess == task) {
+                // update user for me
+                const updateMe = await this.updateUserByMe({
+                    balance: {
+                        increment: true,
+                        value: earn
+                    },
+                    level_xp: {
+                        increment: true,
+                        value: maxLevel.level > currentLevel.level ? earn_xp : 0
+                    }
+                });
+                if (updateMe.status) {
+                    // update user for referral
+                    if (ref_user_id) {
+                        const updateRef = await this.updateUser(ref_user_id, {
+                            balance: {
+                                increment: true,
+                                value: earn_referral
                             }
+                        });
+                        if (!updateRef.status) {
+                            showToast(updateRef.message);
                         }
                     }
                 }
-            } else {
-                showToast(resultRes.message);
             }
+        } else {
+            showToast(resultRes.message);
+        }
 
-            // set state
-            this.setState({
-                overlayLoading: false
-            }, async () => {
-                // set visible result modal
-                this.setVisibleResultModal(true);
-            });
+        // set state
+        this.setState({
+            overlayLoading: false
+        }, async () => {
+            // set visible result modal
+            this.setVisibleResultModal(true);
         });
     }
 
@@ -260,9 +277,6 @@ class Play extends Component {
 
             // dispatch action next question
             this.props.gameActions.nextQuestion();
-
-            // check end game
-            this.checkEndGame();
         }
     }
 

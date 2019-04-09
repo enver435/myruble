@@ -12,14 +12,27 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 class Control extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            disabled: false
+        };
     }
 
-    onPressControl = (status) => {
+    onPressControl = async (status) => {
+        // set state
+        this.setState({
+            disabled: true
+        });
+
         if (!status) {
-            this.props.startGame()
+            await this.props.startGame();
         } else {
-            this.props.stopGame()
+            await this.props.stopGame();
         }
+
+        // set state
+        this.setState({
+            disabled: false
+        });
     }
 
     render() {
@@ -27,7 +40,7 @@ class Control extends Component {
 			<View style={styles.container}>
                 <TouchableHighlight 
                     underlayColor="transparent"
-                    onPress={() => this.onPressControl(this.props.status)}>       
+                    onPress={this.state.disabled ? null : () => this.onPressControl(this.props.status)}>       
                         <Icon name={(!this.props.status ? 'play' : 'stop') + '-circle-outline'} size={60} color="#474747" />
                 </TouchableHighlight>
 			</View>
