@@ -10,7 +10,8 @@ import {
     TextInput,
     TouchableHighlight,
     ActivityIndicator,
-    Clipboard
+    Clipboard,
+    Keyboard
 } from 'react-native';
 import { withNavigation } from 'react-navigation';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -125,26 +126,30 @@ class MyProfile extends Component {
         }
     }
 
-    _onClickSend = () => {
+    _onClickSend = async () => {
+        // keyboard dismiss
+        Keyboard.dismiss();
+
+        // set state
         this.setState({
             overlayLoading: true
-        }, async () => {
-            const response = await this._insertReferral();
-            if (response.status) {
-                // dispatch action, get user information
-                const userRes = await this.props.userActions.get();
-                if (!userRes.status) {
-                    // show error message
-                    showToast(userRes.message);
-                }
-            } else {
-                showToast(response.message);
-            }
+        });
 
-            // set state
-            this.setState({
-                overlayLoading: false
-            });
+        const response = await this._insertReferral();
+        if (response.status) {
+            // dispatch action, get user information
+            const userRes = await this.props.userActions.get();
+            if (!userRes.status) {
+                // show error message
+                showToast(userRes.message);
+            }
+        } else {
+            showToast(response.message);
+        }
+
+        // set state
+        this.setState({
+            overlayLoading: false
         });
     }
 

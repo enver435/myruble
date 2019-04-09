@@ -45,7 +45,7 @@ class Play extends Component {
             refreshing: false,
             resultModalVisible: false,
             heartModalVisible: false,
-            endGameTime: Math.round(new Date().getTime()/1000),
+            // endGameTime: Math.round(new Date().getTime()/1000),
             user: {},
             game: {}
         };
@@ -108,9 +108,10 @@ class Play extends Component {
 
                         // check end game
                         // yeni en son oyunun vaxti indiki vaxtdan 30 saniye boyukduse onda oyunun statusunu yoxla
-                        if(Math.round(new Date().getTime()/1000) - this.state.endGameTime > 30) {
-                            await this.checkEndGame();
-                        }
+                        // if(Math.round(new Date().getTime()/1000) - this.state.endGameTime > 30) {
+                        //     await this.checkEndGame();
+                        // }
+                        await this.checkEndGame();
                     }, 1000);
                 }
             } else {
@@ -148,11 +149,11 @@ class Play extends Component {
             // clear timer
             clearInterval(this.timerInterval);
 
-            // end game
-            await this.endGame();
-    
             // keyboard dismiss
             Keyboard.dismiss();
+
+            // end game
+            await this.endGame();
         }
     }
 
@@ -174,11 +175,11 @@ class Play extends Component {
             // clear timer
             clearInterval(this.timerInterval);
 
-            // end game
-            await this.endGame();
-
             // keyboard dismiss
             Keyboard.dismiss();
+
+            // end game
+            await this.endGame();
         }
     }
 
@@ -205,7 +206,7 @@ class Play extends Component {
         // set state
         this.setState({
             overlayLoading: true,
-            endGameTime: Math.round(new Date().getTime()/1000)
+            // endGameTime: Math.round(new Date().getTime()/1000)
         });
 
         // dispatch action game results
