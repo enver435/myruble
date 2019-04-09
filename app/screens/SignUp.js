@@ -44,14 +44,16 @@ class SignUp extends Component {
         this._isMounted = true;
     }
 
-    async componentWillUnmount() {
+    componentWillUnmount() {
         // set mount
         this._isMounted = false;
     }
 
     onClickSignUp = async () => {
+        // set state
         this.setState({
-            loading: true
+            loading: true,
+            disabled: true
         });
 
         // create request object data
@@ -63,17 +65,25 @@ class SignUp extends Component {
             firebase_token: await getFirebaseToken()
         };
 
+        // status variables
+        let navigateStatus = false;
+
         // request sign up
         const response = await this.props.userActions.signUp(reqData);
         if (response.status) {
+            // set navigate status
+            navigateStatus = true;
+            // navigate main screen
             this.props.navigation.navigate('Main');
         } else {
             showToast(response.message);
         }
 
-        if (this._isMounted) {
+        // set state
+        if (this._isMounted && !navigateStatus) {
             this.setState({
-                loading: false
+                loading: false,
+                disabled: false
             });
         }
     }
@@ -133,7 +143,7 @@ class SignUp extends Component {
                                 onPress={this.onClickSignUp}
                                 title="Регистрация"
                                 loading={this.state.loading}
-                                disabled={this.state.disabled}
+                                disabled={!this.state.disabled ? this.state.loading : this.state.disabled}
                             />
                         </View>
                     </View>

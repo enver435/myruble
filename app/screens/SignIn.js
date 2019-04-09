@@ -46,6 +46,7 @@ class SignIn extends Component {
     }
 
     onClickSignIn = async () => {
+        // set state
         this.setState({
             loading: true
         });
@@ -56,15 +57,22 @@ class SignIn extends Component {
             pass: this.state.pass
         };
 
+        // status variables
+        let navigateStatus = false;
+
         // request sign in
         const response = await this.props.userActions.signIn(reqData);
         if (response.status) {
+            // set navigate status
+            navigateStatus = true;
+            // navigate main screen
             this.props.navigation.navigate('Main');
         } else {
             showToast(response.message);
         }
 
-        if (this._isMounted) {
+        // set state
+        if (this._isMounted && !navigateStatus) {
             this.setState({
                 loading: false
             });
@@ -108,6 +116,7 @@ class SignIn extends Component {
                                 onPress={this.onClickSignIn}
                                 title="Вход"
                                 loading={this.state.loading}
+                                disabled={!this.state.disabled ? this.state.loading : this.state.disabled}
                             />
                         </View>
                         <View>
@@ -115,7 +124,6 @@ class SignIn extends Component {
                             <Button
                                 onPress={this.onClickSignUp}
                                 title="Регистрация"
-                                raised
                             />
                         </View>
                     </View>

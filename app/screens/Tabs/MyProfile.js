@@ -228,15 +228,11 @@ class MyProfile extends Component {
                                 returnKeyType="next"
                                 value={ref_user_id ? ref_user_id.toString().padStart(6, '0') : this.state.input}
                                 onChangeText={(ref_code) => this.setState({ ref_code })}
-                                onSubmitEditing={() => {
-                                    this._onClickSend();
-                                }}
+                                onSubmitEditing={this.state.overlayLoading ? null : () => this._onClickSend()}
                                 blurOnSubmit={false}
                             />
                             <TouchableHighlight
-                                onPress={() => {
-                                    this._onClickSend()
-                                }}
+                                onPress={this.state.overlayLoading ? null : () => this._onClickSend()}
                                 underlayColor="transparent">
                                 <Icon name="send" size={35} color="#474747" style={styles.btnSend} />
                             </TouchableHighlight>

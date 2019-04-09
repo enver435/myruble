@@ -73,85 +73,89 @@ class Payment extends Component {
         }
     }
 
-    _onClickWithdraw = () => {
+    _onClickWithdraw = async () => {
+        // set state
         this.setState({
             loading: true
-        }, async () => {
-            // get user data
-            const {
-                id,
-                balance
-            } = this.props.userState.data;
+        });
 
-            // get payment method information
-            const {
-                method,
-                commission,
-                min_withdraw
-            } = this.props.withdrawState.methodData;
-
-            // calculate commission balance
-            const commissionBalance = parseFloat((this.state.amount + (commission * this.state.amount / 100)).toFixed(2));
-
-            // insert status
-            let insertStatus = false;
-
-            if (this.state.amount > 0 && this.state.wallet_number != '') {
-                if (this.state.amount < min_withdraw) {
-                    showToast('Можно снять как минимум ' + min_withdraw.toFixed(2) + ' рублей');
-                } else if (commissionBalance > balance) {
-                    showToast('Ваш баланс не хватает');
+        const {
+            id,
+            balance
+        } = this.props.userState.data;
+        const {
+            method,
+            commission,
+            min_withdraw
+        } = this.props.withdrawState.methodData;
+    
+        // calculate commission balance
+        const commissionBalance = parseFloat((this.state.amount + (commission * this.state.amount / 100)).toFixed(2));
+    
+        // status variables
+        let insertStatus   = false,
+            navigateStatus = false;
+    
+        if (this.state.amount > 0 && this.state.wallet_number != '') {
+            if (this.state.amount < min_withdraw) {
+                showToast('Можно снять как минимум ' + min_withdraw.toFixed(2) + ' рублей');
+            } else if (commissionBalance > balance) {
+                showToast('Ваш баланс не хватает');
+            } else {
+                insertStatus = true;
+            }
+        } else {
+            showToast('Пожалуйста, заполните информацию');
+        }
+    
+        // if insert status true
+        if (insertStatus) {
+            // update user balance
+            const resUpdate = await this.props.userActions.update({
+                balance: {
+                    decrement: true,
+                    value: commissionBalance
+                }
+            });
+            if (resUpdate.status) {
+                // create object insert data
+                const insertData = {
+                    user_id: id,
+                    amount: this.state.amount,
+                    commission,
+                    payment_method: method,
+                    wallet_number: this.state.wallet_number,
+                    payment_status: 0,
+                    time: {
+                        currentTime: true
+                    }
+                };
+    
+                // request insert data
+                const resInsert = await this._insertData(insertData);
+                if (resInsert.status) {
+                    // set navigate status
+                    navigateStatus = true;
+    
+                    // show toast
+                    showToast('Ваш запрос был успешно отправлен. Это будет сделано в течение 3 дней.');
+    
+                    // navigate main screen
+                    this.props.navigation.navigate('Main');
                 } else {
-                    insertStatus = true;
+                    showToast(resInsert.message);
                 }
             } else {
-                showToast('Пожалуйста, заполните информацию');
+                showToast(resUpdate.message);
             }
-
-            // if insert status true
-            if (insertStatus) {
-                // update user balance
-                const resUpdate = await this.props.userActions.update({
-                    balance: {
-                        decrement: true,
-                        value: commissionBalance
-                    }
-                });
-                if (resUpdate.status) {
-                    // create object insert data
-                    const insertData = {
-                        user_id: id,
-                        amount: this.state.amount,
-                        commission,
-                        payment_method: method,
-                        wallet_number: this.state.wallet_number,
-                        payment_status: 0,
-                        time: {
-                            currentTime: true
-                        }
-                    };
-
-                    // request insert data
-                    const resInsert = await this._insertData(insertData);
-                    if (resInsert.status) {
-                        showToast('Ваш запрос был успешно отправлен. Это будет сделано в течение 3 дней.');
-                        // navigate main screen
-                        this.props.navigation.navigate('Main');
-                    } else {
-                        showToast(resInsert.message);
-                    }
-                } else {
-                    showToast(resUpdate.message);
-                }
-            }
-
-            // hide loading
-            if (this._isMounted) {
-                this.setState({
-                    loading: false
-                });
-            }
-        });
+        }
+    
+        // set state
+        if (this._isMounted && !navigateStatus) {
+            this.setState({
+                loading: false
+            });
+        }
     }
 
     render() {
@@ -201,6 +205,7 @@ class Payment extends Component {
                                 onPress={this._onClickWithdraw}
                                 title="OK"
                                 loading={this.state.loading}
+                                disabled={this.state.loading}
                             />
                         </View>
                     </View>

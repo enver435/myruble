@@ -76,6 +76,7 @@ class ResultModal extends Component {
                             onPress={this._onCloseModal}
                             title="OK"
                             loading={this.state.loading}
+                            disabled={this.state.loading}
                             containerStyle={{ marginTop: 20, width: '50%' }}
                         />
                     </View>
