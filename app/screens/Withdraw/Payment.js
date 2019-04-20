@@ -124,7 +124,7 @@ class Payment extends Component {
                     amount: this.state.amount,
                     commission,
                     payment_method: method,
-                    wallet_number: this.state.wallet_number,
+                    wallet_number: this.state.wallet_number.toUpperCase(),
                     payment_status: 0,
                     time: {
                         currentTime: true
