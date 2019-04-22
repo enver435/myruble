@@ -38,6 +38,7 @@ export const get = () => async dispatch => {
             if (response.status) {
                 // set phone storage user data
                 await setStorage('userData', response.data);
+                
                 // dispatch action
                 dispatch({
                     type: USER_GET,
@@ -47,7 +48,7 @@ export const get = () => async dispatch => {
             // return response
             return response;
         }
-        // set error
+        // set auth error
         throw new Error('Error: Not auth!');
     } catch (err) {
         // return response
@@ -64,6 +65,7 @@ export const signIn = (data) => async dispatch => {
         if (response.status) {
             // set phone storage user data
             await setStorage('userData', response.data);
+
             // dispatch action
             dispatch({
                 type: USER_SIGN_IN,
@@ -87,6 +89,7 @@ export const signUp = (data) => async dispatch => {
         if (response.status) {
             // set phone storage user data
             await setStorage('userData', response.data);
+
             // dispatch action
             dispatch({
                 type: USER_SIGN_UP,
@@ -127,31 +130,49 @@ export const logout = () => async dispatch => {
     }
 }
 
-export const update = (data) => async dispatch => {
+export const update = (data, req = true) => async dispatch => {
     try {
         // get phone storage user data
         const userData = await getStorage('userData');
         if (userData) {
-            // post request update user data
-            const response = await POST(API_USER_UPDATE, {
-                id: userData.id,
-                data: {
-                    ...data
+            if (req) {
+                // post request update user data
+                const response = await POST(API_USER_UPDATE, {
+                    id: userData.id,
+                    data: {
+                        ...data
+                    }
+                });
+                if (response.status) {
+                    // set phone storage user data
+                    await setStorage('userData', response.data);
+
+                    // dispatch action
+                    dispatch({
+                        type: USER_UPDATE,
+                        payload: response.data
+                    });
                 }
-            });
-            if (response.status) {
+                // return response
+                return response;
+            } else {
                 // set phone storage user data
-                await setStorage('userData', response.data);
+                await setStorage('userData', data);
+
                 // dispatch action
                 dispatch({
                     type: USER_UPDATE,
-                    payload: response.data
+                    payload: data
+                });
+                
+                // return response
+                return setResponse({
+                    status: true,
+                    data
                 });
             }
-            // return response
-            return response;
         }
-        // set error
+        // set auth error
         throw new Error('Error: Not auth!');
     } catch (err) {
         // return response

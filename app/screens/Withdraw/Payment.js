@@ -53,7 +53,7 @@ class Payment extends Component {
         this._isMounted = false;
     }
 
-    _insertData = async (data) => {
+    _withdraw = async (data) => {
         try {
             const {
                 isAuth
@@ -80,75 +80,36 @@ class Payment extends Component {
         });
 
         const {
-            id,
-            balance
+            id
         } = this.props.userState.data;
         const {
-            method,
-            commission,
-            min_withdraw
+            method
         } = this.props.withdrawState.methodData;
-    
-        // calculate commission balance
-        const commissionBalance = parseFloat((this.state.amount + (commission * this.state.amount / 100)).toFixed(2));
-    
+        
         // status variables
-        let insertStatus   = false,
-            navigateStatus = false;
+        let navigateStatus = false;
     
-        if (this.state.amount > 0 && this.state.wallet_number != '') {
-            if (this.state.amount < min_withdraw) {
-                showToast('Можно снять как минимум ' + min_withdraw.toFixed(2) + ' рублей');
-            } else if (commissionBalance > balance) {
-                showToast('Ваш баланс не хватает');
-            } else {
-                insertStatus = true;
-            }
-        } else {
-            showToast('Пожалуйста, заполните информацию');
+        // create object withdraw data
+        const withdrawData = {
+            user_id: id,
+            amount: this.state.amount,
+            method,
+            wallet_number: this.state.wallet_number.toUpperCase(),
+        };
+
+        // request withdraw data
+        const resWithdraw = await this._withdraw(withdrawData);
+
+        if (resWithdraw.status) {
+            // set navigate status
+            navigateStatus = true;
+
+            // navigate main screen
+            this.props.navigation.navigate('Main');
         }
-    
-        // if insert status true
-        if (insertStatus) {
-            // update user balance
-            const resUpdate = await this.props.userActions.update({
-                balance: {
-                    decrement: true,
-                    value: commissionBalance
-                }
-            });
-            if (resUpdate.status) {
-                // create object insert data
-                const insertData = {
-                    user_id: id,
-                    amount: this.state.amount,
-                    commission,
-                    payment_method: method,
-                    wallet_number: this.state.wallet_number.toUpperCase(),
-                    payment_status: 0,
-                    time: {
-                        currentTime: true
-                    }
-                };
-    
-                // request insert data
-                const resInsert = await this._insertData(insertData);
-                if (resInsert.status) {
-                    // set navigate status
-                    navigateStatus = true;
-    
-                    // show toast
-                    showToast('Ваш запрос был успешно отправлен. Это будет сделано в течение 3 дней.');
-    
-                    // navigate main screen
-                    this.props.navigation.navigate('Main');
-                } else {
-                    showToast(resInsert.message);
-                }
-            } else {
-                showToast(resUpdate.message);
-            }
-        }
+
+        // show toast
+        showToast(resWithdraw.message);
     
         // set state
         if (this._isMounted && !navigateStatus) {
