@@ -108,12 +108,13 @@ class Play extends Component {
                     // update user for me
                     const updateMe = await this.updateUser({
                         notify_heart_time: {
-                            currentTime: true
+                            strToTime: true,
+                            value: '+' + heart_time + ' seconds' // example: +180 seconds
                         }
                     });
                     if (updateMe.status) {
                         // set storage
-                        await setStorage('heartModalTime', (updateMe.data.notify_heart_time + heart_time).toString());
+                        await setStorage('heartModalTime', updateMe.data.notify_heart_time).toString();
                     }
                 }
 
