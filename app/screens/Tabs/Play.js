@@ -66,7 +66,8 @@ class Play extends Component {
 
     startGame = async () => {
         const {
-            heart
+            heart,
+            ban
         } = this.state.user.data;
         const {
             status
@@ -74,6 +75,11 @@ class Play extends Component {
         const {
             heart_time
         } = this.state.game.defaultData;
+
+        // if user banned
+        if(ban == 1) {
+            return showToast('Ваш аккаунт заблокирован');
+        }
 
         if(!status) {
             // set state
@@ -114,7 +120,7 @@ class Play extends Component {
                     });
                     if (updateMe.status) {
                         // set storage
-                        await setStorage('heartModalTime', updateMe.data.notify_heart_time).toString();
+                        await setStorage('heartModalTime', updateMe.data.notify_heart_time.toString());
                     }
                 }
 
