@@ -107,16 +107,18 @@ class HeartModal extends Component {
     }
 
     setTimer = async () => {
-        // clear timer
-        clearInterval(this.timerInterval);
-
         // get phone storage heart modal time
         this.modalTime = parseInt(await getStorage('heartModalTime'));
 
-        // set timer
-        this.timerInterval = setInterval(() => {
-            this.calcEndTime();
-        }, 1000);
+        if(this.state.time <= 0) {
+            // clear timer
+            clearInterval(this.timerInterval);
+            
+            // set timer
+            this.timerInterval = setInterval(() => {
+                this.calcEndTime();
+            }, 1000);
+        }
     }
 
     fmtMSS = (s) => {
