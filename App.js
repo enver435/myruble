@@ -5,8 +5,8 @@ import {
     NetInfo,
     Alert,
     Linking,
-    View,
-    BackHandler
+    BackHandler,
+    StatusBar
 } from 'react-native';
 import {
     Provider
@@ -20,7 +20,7 @@ import firebase from 'react-native-firebase';
 // import store
 import store from './app/store';
 
-// import app navigation
+// import navigator
 import AppNavigator from './app/AppNavigator';
 
 // import helpers
@@ -32,6 +32,7 @@ import {
 // import components
 import Offline from './app/components/Offline';
 import AdMobBanner from './app/components/AdMobBanner';
+import SplashScreen from './app/components/SplashScreen';
 
 // import global theme
 import Theme from './app/Theme';
@@ -44,6 +45,7 @@ class App extends Component {
         this.state = {
             isConnected: true,
             showApp: false,
+            splash: true,
             data: {}
         };
 
@@ -55,33 +57,8 @@ class App extends Component {
         // set mount
         this._isMounted = true;
 
-        // check network
-        this._checkNetwork().then(async () => {
-            if (this.state.isConnected) {
-                // fetch app data from api
-                await this._fetchData();
-                if (this.state.data.appStatus == "true") {
-                    // check app version
-                    await this._checkAppVersion();
-                } else {
-                    // show alert
-                    Alert.alert(
-                        'myRuble не работает временно.',
-                        'myRuble не работает временно. Ремонтные работы продолжаются. Пожалуйста, попробуйте позже.',
-                        [{
-                            text: 'OK',
-                            onPress: () => {
-                                // exit app
-                                BackHandler.exitApp();
-                                return true;
-                            }
-                        }, ], {
-                            cancelable: false
-                        },
-                    );
-                }
-            }
-        });
+        // app starting
+        await this._appStart();
 
         // firebaseMessagingPermission
         const hasPermission = await firebase.messaging().hasPermission();
@@ -113,6 +90,45 @@ class App extends Component {
         this.notificationListener();
     }
 
+    _appStart = async () => {
+        // check network
+        const isConnected = await NetInfo.isConnected.fetch();
+        this.setState({
+            isConnected
+        });
+
+        // if network is connected
+        if (isConnected) {
+            // fetch app data from api
+            await this._fetchData();
+
+            // if application status enable
+            if (this.state.data.appStatus == "true") {
+                // check app version
+                await this._checkAppVersion();
+
+                // splash screen display hide
+                await this._splashHide();
+            } else {
+                // show alert
+                Alert.alert(
+                    'myRuble не работает временно.',
+                    'myRuble не работает временно. Ремонтные работы продолжаются. Пожалуйста, попробуйте позже.',
+                    [{
+                        text: 'OK',
+                        onPress: () => {
+                            // exit app
+                            BackHandler.exitApp();
+                            return true;
+                        }
+                    }, ], {
+                        cancelable: false
+                    },
+                );
+            }
+        }
+    }
+
     _fetchData = async () => {
         try {
             const response = await GET();
@@ -128,23 +144,9 @@ class App extends Component {
         }
     }
 
-    _checkNetwork = async () => {
-        try {
-            const isConnected = await NetInfo.isConnected.fetch();
-            if (this._isMounted) {
-                this.setState({
-                    isConnected
-                });
-            }
-        } catch (err) {
-            showToast(err.message);
-        }
-    }
-
     _checkAppVersion = async () => {
         try {
             const appDeviceVersion = DeviceInfo.getVersion();
-
             if (this.state.data.appVersion != appDeviceVersion) {
                 // show alert
                 Alert.alert(
@@ -185,17 +187,32 @@ class App extends Component {
         }
     }
 
+    _splashHide = async () => {
+        return new Promise((resolve) =>
+            setTimeout(
+                () => {
+                    resolve('splash screen display hide')
+                    this.setState({
+                        splash: false
+                    });
+                },
+                2000
+            )
+        )
+    }
+
     render() {
         return(
             <ThemeProvider theme={Theme}>
+                <StatusBar barStyle="default" backgroundColor="#474747" animated={true} />
                 {this.state.isConnected ? (
-                    this.state.showApp ? (
+                    this.state.showApp && !this.state.splash ? (
                         <Provider store={store}>
                             <AppNavigator/>
                             <AdMobBanner/>
                         </Provider>
-                    ) : <View/>
-                ) : <Offline checkNetwork={this._checkNetwork}/>}
+                    ) : <SplashScreen/>
+                ) : <Offline checkNetwork={this._appStart}/>}
             </ThemeProvider>
         )
     }

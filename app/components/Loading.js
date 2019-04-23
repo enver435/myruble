@@ -2,14 +2,12 @@ import React from 'react';
 import {
     View,
     StyleSheet,
-    StatusBar,
     ActivityIndicator
 } from 'react-native';
 
 const Loading = () => (
     <View style={styles.container}>
         <ActivityIndicator size="large" color="#474747" />
-        <StatusBar barStyle="default" />
     </View>
 );
 
