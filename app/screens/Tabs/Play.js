@@ -10,6 +10,7 @@ import {
     RefreshControl,
     ActivityIndicator
 } from 'react-native';
+import firebase from 'react-native-firebase';
 
 // import helpers
 import {
@@ -57,6 +58,9 @@ class Play extends Component {
     componentDidMount() {
         // set mount
         this._isMounted = true;
+
+        // init interstitial ad
+        this._initAdInterstitial();
     }
 
     componentWillUnmount() {
@@ -77,11 +81,11 @@ class Play extends Component {
         } = this.state.game.defaultData;
 
         // if user banned
-        if(ban == 1) {
+        if (ban == 1) {
             return showToast('Ваш аккаунт заблокирован');
         }
 
-        if(!status) {
+        if (!status) {
             // set state
             this.setState({
                 overlayLoading: true
@@ -140,7 +144,7 @@ class Play extends Component {
             status
         } = this.state.game.data;
 
-        if(status) {
+        if (status) {
             // clear timer
             clearInterval(this.timerInterval);
 
@@ -188,7 +192,7 @@ class Play extends Component {
         this.setState({
             overlayLoading: true
         });
-        
+
         // dispatch action result game
         const resultData = {
             user_id: this.state.user.data.id,
@@ -211,6 +215,9 @@ class Play extends Component {
         }, async () => {
             // set visible result modal
             this.setVisibleResultModal(true);
+
+            // show interstitial ad
+            this._showAdInterstitial();
 
             // reset answer count
             this.answerClickCount = 0;
@@ -307,6 +314,32 @@ class Play extends Component {
         this.setState({
             heartModalVisible: visible
         });
+    }
+
+    _initAdInterstitial = () => {
+        this.advert = firebase.admob().interstitial('ca-app-pub-4602055361552926/1376568492');
+
+        const AdRequest = firebase.admob.AdRequest;
+        const request = new AdRequest();
+        request.addKeyword('result game ads');
+
+        // Load the advert with our AdRequest
+        this.advert.loadAd(request.build());
+
+        this.advert.on('onAdLoaded', () => {
+            console.log('Advert ready to show.');
+        });
+    }
+
+    _showAdInterstitial = () => {
+        // Simulate the interstitial being shown "sometime" later during the apps lifecycle
+        setTimeout(() => {
+            if (this.advert.isLoaded()) {
+                this.advert.show();
+            } else {
+                // Unable to show interstitial - not loaded yet.
+            }
+        }, 1000);
     }
 
     render() {
