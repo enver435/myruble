@@ -23,6 +23,7 @@ class Main extends Component {
             status,
             firstNumber,
             secondNumber,
+            operator,
             taskSuccess,
             currentTime
         } = this.props.gameState.data;
@@ -33,6 +34,8 @@ class Main extends Component {
         const {
             heart
         } = this.props.userState.data;
+
+        const operatorString = operator == 1 ? '+' : (operator == 2 ? '-' : (operator == 3 ? '*' : (operator == 4 ? '/' : '+')));
 
         return (
             <View style={styles.container}>
@@ -52,7 +55,7 @@ class Main extends Component {
                     </View>
                 </View>
                 <View style={styles.contentContainer}>
-                    <Text style={styles.contentText}>{status ? firstNumber + ' + ' + secondNumber : 'Tap to Play'}</Text>
+                    <Text style={styles.contentText}>{status ? `${firstNumber} ${operatorString} ${secondNumber}` : 'Tap to Play'}</Text>
                 </View>
             </View>
         )

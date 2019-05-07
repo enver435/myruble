@@ -120,13 +120,17 @@ export const showToast = (message) => {
     }
 }
 
-export const getRandomInt = (min, max) => {
+export const getRandomInt = (min, max, ignoreNums = []) => {
     min = Math.ceil(min);
     max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min)) + min;
+    const calc = Math.floor(Math.random() * (max - min + 1)) + min;
+    if (ignoreNums.length > 0 && ignoreNums.indexOf(calc) !== -1) {
+        return getRandomInt(min, max, ignoreNums);
+    }
+    return calc;
 }
 
-export const getUniqId = (len) => {
+export const getUniqId = async (len) => {
     const timestamp = +new Date;
     const ts = timestamp.toString();
     const parts = ts.split("").reverse();
@@ -175,4 +179,126 @@ export const _getLevelData = (level) => {
         currentLevel: level[0],
         maxLevel: levels[levels.length - 1]
     }
+}
+
+export const getMath = () => {
+    // get level data
+    const levelData = store.getState().game.defaultData;
+
+    /**
+     * Nums Objects
+     */
+    const nums = {
+        numOne: levelData.math_num_one == 1 ? true : false,
+        numTwo: levelData.math_num_two == 1 ? true : false,
+        numThree: levelData.math_num_three == 1 ? true : false
+    };
+
+    /**
+     * Operators Objects
+     */
+    const operators = {
+        positive: levelData.math_positive == 1 ? true : false,
+        negative: levelData.math_negative == 1 ? true : false,
+        multiplication: levelData.math_multiplication == 1 ? true : false,
+        division: levelData.math_division == 1 ? true : false
+    };
+
+    /**
+     * Get Random Number
+     * 1 => numOne
+     * 2 => numTwo,
+     * 3 => numThree
+     */
+    let randNum = false;
+    // if more than one
+    const numFilter = Object.values(nums).filter((item => {
+        return item === true
+    }))
+    if (numFilter.length > 1) {
+        let ignoreNums = [];
+        Object.entries(nums).map((val, index) => {
+            const indx = index + 1;
+            const isActive = val[1];
+            if (!isActive) {
+                ignoreNums.push(indx);
+            }
+        });
+        randNum = getRandomInt(1, 3, ignoreNums);
+    }
+
+    let min = 0;
+    let max = 0;
+    if ((nums.numOne && !randNum) || randNum == 1) {
+        min = 0;
+        max = 9;
+    } else if ((nums.numTwo && !randNum) || randNum == 2) {
+        min = 10;
+        max = 99;
+    } else if ((nums.numThree && !randNum) || randNum == 3) {
+        min = 100;
+        max = 999;
+    }
+
+    /**
+     * Get First and Second Number
+     */
+    const firstNumber = getRandomInt(min, max);
+    const secondNumber = getRandomInt(min, max);
+
+    /**
+     * Get Operator
+     * 1 => positive (+)
+     * 2 => negative (-)
+     * 3 => multiplication (*)
+     * 4 => division (/)
+     */
+    let randOperator = false;
+    // if more than one
+    const operatorFilter = Object.values(operators).filter((item => {
+        return item === true
+    }));
+    if (operatorFilter.length > 1) {
+        let ignoreNums = [];
+        Object.entries(operators).map((val, index) => {
+            const indx = index + 1;
+            const isActive = val[1];
+            if (!isActive) {
+                ignoreNums.push(indx);
+            }
+        });
+        randOperator = getRandomInt(1, 4, ignoreNums);
+    }
+
+    /**
+     * Calculate
+     */
+    let math = 0;
+    let operator = 1;
+    if ((operators.positive && !randOperator) || randOperator == 1) {
+        math = firstNumber + secondNumber;
+        operator = 1;
+    } else if ((operators.negative && !randOperator) || randOperator == 2) {
+        math = firstNumber - secondNumber;
+        operator = 2;
+    } else if ((operators.multiplication && !randOperator) || randOperator == 3) {
+        math = firstNumber * secondNumber;
+        operator = 3;
+    } else if ((operators.division && !randOperator) || randOperator == 4) {
+        math = firstNumber / secondNumber;
+        operator = 4;
+    }
+
+    /**
+     * Return Result
+     */
+    if (math >= 0 && Math.floor(math) == math) {
+        return {
+            firstNumber,
+            secondNumber,
+            operator,
+            correctAnswer: math
+        };
+    }
+    return getMath(nums, operators);
 }

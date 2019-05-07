@@ -250,7 +250,7 @@ class Play extends Component {
         return response;
     }
 
-    refreshGameData = async () => {
+    refreshGameLevelData = async () => {
         const levelRes = await this.props.gameActions.getLevels();
         if (levelRes.status) {
             await this.props.gameActions.getLevelData(this.state.user.data.level);
@@ -367,7 +367,7 @@ class Play extends Component {
 
                 <ResultModal
                     hideVisible={async () => {
-                        await this.refreshGameData();
+                        await this.refreshGameLevelData();
                         this.setVisibleResultModal(false);
                     }}
                     visible={this.state.resultModalVisible}

@@ -3,7 +3,8 @@ import {
     POST,
     GET,
     setResponse,
-    _getLevelData
+    _getLevelData,
+    getMath
 } from '../../Helpers';
 
 // import action type constants
@@ -56,16 +57,22 @@ export const getLevelData = (level) => async dispatch => {
 }
 
 export const startGame = () => async dispatch => {
+    const payload = getMath();
+
     // dispatch action
     dispatch({
-        type: GAME_START
+        type: GAME_START,
+        payload
     });
 }
 
 export const nextQuestion = () => async dispatch => {
+    const payload = getMath();
+
     // dispatch action
     dispatch({
-        type: GAME_NEXT_QUESTION
+        type: GAME_NEXT_QUESTION,
+        payload
     });
 }
 
