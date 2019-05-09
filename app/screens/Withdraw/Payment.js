@@ -160,7 +160,7 @@ class Payment extends Component {
                                 onChangeText={(amount) => this.setState({ amount: parseFloat(amount) })}
                             />
                             {this.state.amount > 0 ? (
-                                <Text>К оплате {commissionBalance.toFixed(2)} <Icon size={15} name="currency-rub" color="#474747"/>, с учетом комиссии {commission.toFixed(2)} %</Text>
+                                <Text>К оплате {commissionBalance.toFixed(2)} <Icon size={15} name="currency-rub" color="#474747"/></Text>
                             ) : null}
                             <Button
                                 onPress={this._onClickWithdraw}

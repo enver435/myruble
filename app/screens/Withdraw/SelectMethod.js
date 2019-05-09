@@ -138,7 +138,7 @@ class SelectMethod extends Component {
                                         <Image source={item.method == 1 ? require('../../assets/yandex.png') : (item.method == 2 ? require('../../assets/payeer.png') : (item.method == 3 ? require('../../assets/webmoney.png') : null))} resizeMode="contain" style={styles.itemImg}/>
                                     </View>
                                     <View style={[ styles.item, { flex: 1 } ]}>
-                                        <Text style={styles.itemText}>{item.commission.toFixed(2)}%</Text>
+                                        <Text style={styles.itemText}>5 минут</Text>
                                     </View>
                                     <View style={[ styles.item, { flex: 1 } ]}>
                                         <Text style={styles.itemText}>{item.min_withdraw.toFixed(2)} <Icon size={15} name="currency-rub" color="#474747"/></Text>
