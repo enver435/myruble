@@ -18,7 +18,7 @@ class Balance extends Component {
 		super(props);
 	}
 
-	onClickWithdraw = (e) => {
+	onClickWithdraw = () => {
 		this.props.navigation.navigate('Withdraw');
 	}
 
@@ -62,7 +62,9 @@ const styles = StyleSheet.create({
 		flex: 1
 	},
 	withdrawText: {
-		textAlign: 'center'
+		textAlign: 'center',
+		fontWeight: 'bold',
+		color: '#333'
 	}
 });
 
