@@ -112,16 +112,25 @@ class App extends Component {
             } else {
                 // show alert
                 Alert.alert(
-                    'myRuble не работает временно.',
+                    'myRuble не работает временно',
                     'myRuble не работает временно. Ремонтные работы продолжаются. Пожалуйста, попробуйте позже.',
-                    [{
-                        text: 'OK',
-                        onPress: () => {
-                            // exit app
-                            BackHandler.exitApp();
-                            return true;
-                        }
-                    }, ], {
+                    [
+                        // {
+                        //     text: 'Позже',
+                        //     onPress: () => {
+                        //         // show app
+                        //         this.setState({ showApp: true });
+                        //     }
+                        // },
+                        {
+                            text: 'OK',
+                            onPress: () => {
+                                // exit app
+                                BackHandler.exitApp();
+                                return true;
+                            }
+                        },
+                    ], {
                         cancelable: false
                     },
                 );

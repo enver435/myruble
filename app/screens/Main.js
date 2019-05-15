@@ -3,13 +3,16 @@ import React, {
 } from 'react';
 import {
     View,
-    StyleSheet
+    StyleSheet,
+    Alert
 } from 'react-native';
+import DeviceInfo from 'react-native-device-info';
 
 // import helpers
 import {
     showToast,
     getStorage,
+    setStorage,
     getFirebaseToken
 } from '../Helpers';
 
@@ -49,10 +52,18 @@ class Home extends Component {
                 if (userRes.status) {
                     const userData = await getStorage('userData');
                     const firebaseToken = await getFirebaseToken();
-                    // if new firebase token
-                    if (userData && userData.firebase_token != firebaseToken) {
+                    const macAddress = await DeviceInfo.getMACAddress();
+                    const ipAddress = await DeviceInfo.getIPAddress();
+                    const timeZone = await DeviceInfo.getTimezone();
+                    const deviceId = await DeviceInfo.getUniqueID();
+                    // update user
+                    if (userData) {
                         await this.props.userActions.update({
-                            firebase_token: firebaseToken
+                            firebase_token: firebaseToken,
+                            mac_address: macAddress,
+                            ip_address: ipAddress,
+                            timezone: timeZone,
+                            device_id: deviceId
                         });
                     }
                 } else {
@@ -83,6 +94,29 @@ class Home extends Component {
                 }
             });
         });
+
+        // muveqqeti referral hesablama kalkulatoru goster (1 hefte sonra silmek lazimdi)
+        if(!await getStorage('referralCalc') && await getStorage('userData')) {
+            await setStorage('referralCalc', 'true');
+
+            // show alert
+            Alert.alert(
+                'Прибыль pеферал калькулятор',
+                'Прибыль pеферал калькулятор. Теперь проверьте и получите свой заработок.',
+                [
+                    {
+                        text: 'Позже',
+                        onPress: () => {}
+                    },
+                    {
+                        text: 'OK',
+                        onPress: () => this.props.navigation.navigate('ReferralCalculator')
+                    },
+                ], {
+                    cancelable: true
+                },
+            );
+        }
     }
 
     componentWillUnmount() {
@@ -98,9 +132,7 @@ class Home extends Component {
             <Loading/>
         ) : (
             <View style={styles.container}>
-                <Header 
-                    userState={this.props.userState} 
-                    userActions={this.props.userActions}/>
+                <Header/>
                 <Tabs/>
             </View>
         )

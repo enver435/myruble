@@ -12,6 +12,7 @@ import {
     Button,
     CheckBox
 } from 'react-native-elements';
+import DeviceInfo from 'react-native-device-info';
 
 // import helpers
 import {
@@ -62,7 +63,11 @@ class SignUp extends Component {
             username: this.state.username.toLowerCase(),
             pass: this.state.pass,
             ref_code: this.state.ref_code,
-            firebase_token: await getFirebaseToken()
+            firebase_token: await getFirebaseToken(),
+            mac_address: await DeviceInfo.getMACAddress(),
+            ip_address: await DeviceInfo.getIPAddress(),
+            timezone: await DeviceInfo.getTimezone(),
+            device_id: await DeviceInfo.getUniqueID()
         };
 
         // status variables

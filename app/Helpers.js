@@ -144,13 +144,13 @@ export const getUniqId = async (len) => {
     return id;
 }
 
-export const timeToDate = (timestamp) => {
+export const timeToDate = (timestamp, full = true) => {
     const date = new Date(timestamp * 1000);
 
     const convert = ("0" + date.getDate()).slice(-2) + '.' +
         ("0" + (date.getMonth() + 1)).slice(-2) + '.' +
         date.getFullYear() + ' ' +
-        ("0" + date.getDate()).slice(-2) + ':' + ("0" + date.getMonth()).slice(-2);
+        (full ? ("0" + date.getHours()).slice(-2) + ':' + ("0" + date.getMinutes()).slice(-2) : '');
 
     return convert;
 }

@@ -31,3 +31,8 @@ export const API_GET_WITHDRAW_METHODS = "/withdraw/methods";
  */
 export const API_GET_REFERRALS = "/referral";
 export const API_INSERT_REFERRAL = "/referral/insert"
+
+/**
+ * PRIZE REFERRAL Routes
+ */
+export const API_ACTIVE_PRIZE = "/prize-ref/active"

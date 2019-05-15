@@ -188,7 +188,11 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         paddingLeft: 15,
         paddingRight: 15,
-        marginBottom: 20
+        marginBottom: 20,
+        borderTopColor: '#ddd',
+        borderTopWidth: 1,
+        borderBottomColor: '#ddd',
+        borderBottomWidth: 1
     },
     item: {
         alignContent: 'center',

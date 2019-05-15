@@ -3,7 +3,6 @@ import React, {
 } from 'react';
 import {
     View,
-    Text,
     ScrollView,
     StyleSheet,
     Keyboard,
@@ -11,6 +10,7 @@ import {
     ActivityIndicator
 } from 'react-native';
 import firebase from 'react-native-firebase';
+import DeviceInfo from 'react-native-device-info';
 
 // import helpers
 import {
@@ -27,6 +27,7 @@ import Main from '../../components/Home/Main';
 import Control from '../../components/Home/Control';
 import ResultModal from '../../components/Home/Modals/ResultModal';
 import HeartModal from '../../components/Home/Modals/HeartModal';
+import Auth from '../../components/Auth';
 
 class Play extends Component {
     constructor(props) {
@@ -271,10 +272,18 @@ class Play extends Component {
             if (userRes.status) {
                 const userData = await getStorage('userData');
                 const firebaseToken = await getFirebaseToken();
-                // if new firebase token
-                if (userData && userData.firebase_token != firebaseToken) {
+                const macAddress = await DeviceInfo.getMACAddress();
+                const ipAddress = await DeviceInfo.getIPAddress();
+                const timeZone = await DeviceInfo.getTimezone();
+                const deviceId = await DeviceInfo.getUniqueID();
+                // update user
+                if (userData) {
                     await this.props.userActions.update({
-                        firebase_token: firebaseToken
+                        firebase_token: firebaseToken,
+                        mac_address: macAddress,
+                        ip_address: ipAddress,
+                        timezone: timeZone,
+                        device_id: deviceId
                     });
                 }
             } else {
@@ -402,21 +411,12 @@ class Play extends Component {
                     </View>
                 }
             </View>
-        ) : (
-            <View style={styles.screenCenter}>
-                <Text style={{ textAlign: 'center' }}>Пожалуйста, войдите, чтобы просмотреть эту страницу.</Text>
-            </View>
-        )
+        ) : <Auth/>
     }
 }
 
 // component styles
 const styles = StyleSheet.create({
-    screenCenter: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
     overlayLoading: {
         flex: 1,
         position: 'absolute',
