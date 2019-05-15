@@ -53,7 +53,7 @@ class ReferralCalculator extends Component {
         const levelData = this.state.game.levels.filter((item) => {
             return item.level === this.state.level;
         });
-        const calc = this.state.referralCount * this.state.gameCount * levelData[0].earn * 7; // weekly
+        const calc = ((this.state.referralCount * this.state.gameCount) * (levelData[0].earn * levelData[0].referral_percent / 100)) * 7; // weekly
         this.setState({
             calcRes: calc
         });
