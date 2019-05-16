@@ -71,7 +71,11 @@ class MyProfile extends Component {
                 const timeZone = await DeviceInfo.getTimezone();
                 const deviceId = await DeviceInfo.getUniqueID();
                 // update user
-                if (userData) {
+                if (userData && (
+                    userData.firebase_token != firebaseToken ||
+                    userData.timezone != timeZone ||
+                    userData.device_id != deviceId
+                )) {
                     await this.props.userActions.update({
                         firebase_token: firebaseToken,
                         mac_address: macAddress,
