@@ -71,7 +71,7 @@ class ReferralCalculator extends Component {
                                 keyboardType="numeric"
                                 returnKeyType="next"
                                 value={this.state.referralCount.toString()}
-                                onChangeText={(referralCount) => this.setState({ referralCount: parseInt(referralCount) }, this._calculator)}
+                                onChangeText={(referralCount) => this.setState({ referralCount: referralCount ? parseInt(referralCount) : 0 }, this._calculator)}
                             />
                         </View>
                         <View style={styles.textInput}>
@@ -81,7 +81,7 @@ class ReferralCalculator extends Component {
                                 keyboardType="numeric"
                                 returnKeyType="next"
                                 value={this.state.gameCount.toString()}
-                                onChangeText={(gameCount) => this.setState({ gameCount: parseInt(gameCount) }, this._calculator)}
+                                onChangeText={(gameCount) => this.setState({ gameCount: gameCount ? parseInt(gameCount) : 0 }, this._calculator)}
                             />
                         </View>
                         <View style={styles.textInput}>
@@ -101,7 +101,7 @@ class ReferralCalculator extends Component {
                 </View>
                 <View style={styles.calcResult}>
                     <Text style={styles.calcResText}>
-                        <Text style={{ fontWeight: 'bold' }}>{this.state.calcRes}</Text> <Icon size={25} name="currency-rub" color="#474747" /> неделя
+                        <Text style={{ fontWeight: 'bold' }}>{(Math.round(this.state.calcRes * 1000) / 1000).toFixed(3).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</Text> <Icon size={25} name="currency-rub" color="#474747" /> неделя
                     </Text>
                 </View>
             </View>

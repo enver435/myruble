@@ -70,7 +70,7 @@ class ResultModal extends Component {
                         </View>
                         <View style={styles.block}>
                             <Text style={styles.blockTitle}>Заработанные Деньги</Text>
-                            <Text style={styles.earnPrice}>{taskSuccess == task ? earn.toFixed(2) : 0} <Icon size={15} name="currency-rub" color="#474747"/></Text>
+                            <Text style={styles.earnPrice}>{taskSuccess == task ? earn : 0} <Icon size={15} name="currency-rub" color="#474747"/></Text>
                         </View>
                         <Button
                             onPress={this._onCloseModal}
