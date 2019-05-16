@@ -101,7 +101,7 @@ class ReferralCalculator extends Component {
                 </View>
                 <View style={styles.calcResult}>
                     <Text style={styles.calcResText}>
-                        <Text style={{ fontWeight: 'bold' }}>{(Math.round(this.state.calcRes * 1000) / 1000).toFixed(3).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</Text> <Icon size={25} name="currency-rub" color="#474747" /> неделя
+                        <Text style={{ fontWeight: 'bold' }}>{(Math.round(this.state.calcRes * 100) / 100).toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</Text> <Icon size={25} name="currency-rub" color="#474747" /> неделя
                     </Text>
                 </View>
             </View>
