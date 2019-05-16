@@ -29,9 +29,9 @@ class Main extends Component {
             <View style={styles.container}>
                 <View style={styles.headerContainer}>
                     <View style={{ flex: 1 }}>
-                        <Text style={styles.balanceText}>{balance.toFixed(3)} <Icon size={30} name="currency-rub" color="#474747"/></Text>
+                        <Text style={styles.balanceText}>{(Math.round(balance * 1000) / 1000).toFixed(3).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')} <Icon size={30} name="currency-rub" color="#474747"/></Text>
                     </View>
-                    <View style={{ flex: 1 }}>
+                    <View style={{ flex: 0.5 }}>
                         <Button
                             onPress={() => { this.props.onChangeScreen(1) }}
                             title="Получить"

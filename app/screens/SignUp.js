@@ -65,7 +65,6 @@ class SignUp extends Component {
             ref_code: this.state.ref_code,
             firebase_token: await getFirebaseToken(),
             mac_address: await DeviceInfo.getMACAddress(),
-            ip_address: await DeviceInfo.getIPAddress(),
             timezone: await DeviceInfo.getTimezone(),
             device_id: await DeviceInfo.getUniqueID()
         };

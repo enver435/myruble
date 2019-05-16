@@ -68,7 +68,6 @@ class MyProfile extends Component {
                 const userData = await getStorage('userData');
                 const firebaseToken = await getFirebaseToken();
                 const macAddress = await DeviceInfo.getMACAddress();
-                const ipAddress = await DeviceInfo.getIPAddress();
                 const timeZone = await DeviceInfo.getTimezone();
                 const deviceId = await DeviceInfo.getUniqueID();
                 // update user
@@ -76,7 +75,6 @@ class MyProfile extends Component {
                     await this.props.userActions.update({
                         firebase_token: firebaseToken,
                         mac_address: macAddress,
-                        ip_address: ipAddress,
                         timezone: timeZone,
                         device_id: deviceId
                     });
@@ -136,7 +134,7 @@ class MyProfile extends Component {
                         <View style={{ flexDirection: 'column' }}>
                             <View style={styles.gridHeader}>
                                 <View style={styles.gridHeaderItem}>
-                                    <Text style={styles.gridHeaderTitle}>{total_earn_referral.toFixed(3)} <Icon size={16} name="currency-rub" color="#474747"/></Text>
+                                    <Text style={styles.gridHeaderTitle}>{(Math.round(total_earn_referral * 1000) / 1000).toFixed(3).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')} <Icon size={16} name="currency-rub" color="#474747"/></Text>
                                     <Text>pеферал</Text>
                                 </View>
                                 <View style={styles.gridHeaderItem}>

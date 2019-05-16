@@ -273,7 +273,6 @@ class Play extends Component {
                 const userData = await getStorage('userData');
                 const firebaseToken = await getFirebaseToken();
                 const macAddress = await DeviceInfo.getMACAddress();
-                const ipAddress = await DeviceInfo.getIPAddress();
                 const timeZone = await DeviceInfo.getTimezone();
                 const deviceId = await DeviceInfo.getUniqueID();
                 // update user
@@ -281,7 +280,6 @@ class Play extends Component {
                     await this.props.userActions.update({
                         firebase_token: firebaseToken,
                         mac_address: macAddress,
-                        ip_address: ipAddress,
                         timezone: timeZone,
                         device_id: deviceId
                     });
