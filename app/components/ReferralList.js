@@ -27,6 +27,11 @@ import {
 // import components
 import Loading from './Loading';
 
+// import locales
+import {
+    translate
+} from '../locales';
+
 class ReferralList extends Component {
     constructor(props) {
         super(props);
@@ -164,7 +169,7 @@ class ReferralList extends Component {
         return (
             <View style={styles.notFoundContainer}>
                 <Icon size={45} name="alert-circle-outline" color="#474747"/>
-                <Text style={styles.notFoundText}>Результат не найден</Text>
+                <Text style={styles.notFoundText}>{translate('c_referrallist_not_found')}</Text>
             </View>
         )
     }

@@ -25,6 +25,11 @@ import {
     API_INSERT_REFERRAL
 } from '../constants/api';
 
+// import locales
+import {
+    translate
+} from '../locales';
+
 class InviteReferral extends Component {
     constructor(props) {
         super(props);
@@ -38,7 +43,7 @@ class InviteReferral extends Component {
 
     static navigationOptions = () => {
         return {
-            title: 'Приглашайте pеферал'
+            title: translate('c_inviteref_title')
         };
     };
 
@@ -104,7 +109,7 @@ class InviteReferral extends Component {
 
     _copyReferralClipboard = (str) => {
         Clipboard.setString(str);
-        showToast('Cкопирован в буфер обмена');
+        showToast(translate('c_inviteref_clipboard'));
     }
 
     render() {
@@ -117,7 +122,7 @@ class InviteReferral extends Component {
             <View style={styles.container}>
                 <View style={{ paddingLeft: 15, paddingRight: 15, alignItems: 'center', marginBottom: 10 }}>
                     <View>
-                        <Text style={styles.referralText}>Ваша код для привлечения рефералов:</Text>
+                        <Text style={styles.referralText}>{translate('c_inviteref_text1')}</Text>
                         <TouchableHighlight
                             underlayColor="transparent"
                             onPress={() => this._copyReferralClipboard(referral_code)}>
@@ -143,7 +148,7 @@ class InviteReferral extends Component {
                         </TouchableHighlight>
                     </View>
                     <View>
-                        <Text style={styles.referralText}>Невозможно изменить реферальный код, если он написан.</Text>
+                        <Text style={styles.referralText}>{translate('c_inviteref_text2')}</Text>
                     </View>
                 </View>
                 <View style={styles.refUrl}>

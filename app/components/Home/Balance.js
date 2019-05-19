@@ -13,6 +13,11 @@ import {
 } from 'react-navigation';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
+// import locales
+import {
+	translate
+} from '../../locales';
+
 class Balance extends Component {
 	constructor(props) {
 		super(props);
@@ -35,7 +40,7 @@ class Balance extends Component {
 					<TouchableHighlight
 						onPress={this.onClickWithdraw}
 						underlayColor={'transparent'}>
-						<Text style={styles.withdrawText}>Получить деньги</Text>
+						<Text style={styles.withdrawText}>{translate('c_balance_withdraw')}</Text>
 					</TouchableHighlight>
 				</View>
 			</View>

@@ -13,7 +13,11 @@ import {
 import {
     Button
 } from 'react-native-elements';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+
+// import locales
+import {
+    translate
+} from '../locales';
 
 class Auth extends Component {
     constructor(props) {
@@ -26,10 +30,10 @@ class Auth extends Component {
 
     render() {
         return <View style={styles.screenCenter}>
-            <Text style={{ textAlign: 'center' }}>Пожалуйста, войдите, чтобы просмотреть эту страницу.</Text>
+            <Text style={{ textAlign: 'center' }}>{translate('c_auth_text')}</Text>
             <Button
                 onPress={this.onClickLogin}
-                title="Вход"
+                title={translate('c_auth_btn')}
             />
         </View>
     }

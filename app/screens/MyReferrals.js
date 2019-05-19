@@ -10,20 +10,25 @@ import {
 // import components
 import ReferralList from '../components/ReferralList';
 
+// import locales
+import {
+    translate
+} from '../locales';
+
 class MyReferrals extends Component {
     constructor(props) {
         super(props);
     }
 
     static navigationOptions = {
-        title: 'Мои рефералы'
+        title: translate('c_myref_title')
     }
 
     render() {
         return (
             <View style={styles.referralContainer}>
                 <View>
-                    <Text style={styles.referralText}>Мои рефералы</Text>
+                    <Text style={styles.referralText}>{translate('c_myref_title')}</Text>
                 </View>
                 <ReferralList/>
             </View>

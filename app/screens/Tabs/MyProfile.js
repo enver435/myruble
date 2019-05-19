@@ -7,11 +7,16 @@ import {
     StyleSheet,
     ScrollView,
     RefreshControl,
-    TouchableHighlight
+    TouchableHighlight,
+    Picker
 } from 'react-native';
 import { withNavigation } from 'react-navigation';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import DeviceInfo from 'react-native-device-info';
+import RNRestart from 'react-native-restart';
+
+// import store
+import store from '../../store';
 
 // import helpers
 import {
@@ -19,6 +24,12 @@ import {
     getStorage,
     getFirebaseToken
 } from '../../Helpers';
+
+// import locales
+import {
+    translate,
+    setLocale
+} from '../../locales';
 
 // import components
 import ProgressBar from '../../components/ProgressBar';
@@ -31,7 +42,8 @@ class MyProfile extends Component {
         this.state = {
             refreshing: false,
             user: {},
-            game: {}
+            game: {},
+            locales: ['en', 'ru', 'tr']
         };
     }
 
@@ -110,6 +122,11 @@ class MyProfile extends Component {
         });
     }
 
+    _changeLocale = async (locale) => {
+        await setLocale(locale);
+        RNRestart.Restart();
+    }
+
     render() {
         const {
             username,
@@ -139,7 +156,7 @@ class MyProfile extends Component {
                             <View style={styles.gridHeader}>
                                 <View style={styles.gridHeaderItem}>
                                     <Text style={styles.gridHeaderTitle}>{(Math.round(total_earn_referral * 1000) / 1000).toFixed(3).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')} <Icon size={16} name="currency-rub" color="#474747"/></Text>
-                                    <Text>pеферал</Text>
+                                    <Text>{translate('ctab_myprofile_referral')}</Text>
                                 </View>
                                 <View style={styles.gridHeaderItem}>
                                     <Icon size={80} name="account-circle-outline" color="#474747"/>
@@ -151,14 +168,14 @@ class MyProfile extends Component {
                                         onPress={() => { this.props.navigation.navigate('MyReferrals'); }}>
                                         <View style={{ alignContent: 'center', alignItems: 'center', textAlign: 'center' }}>
                                             <Text style={styles.gridHeaderTitle}>{total_referral}</Text>
-                                            <Text>pеферал</Text>
+                                            <Text>{translate('ctab_myprofile_referral')}</Text>
                                         </View>
                                     </TouchableHighlight>
                                 </View>
                             </View>
                             <View style={styles.levelContainer}>
                                 <View style={styles.levelHeader}>
-                                    <Text style={styles.levelHeaderText}>Уровень {level}</Text>
+                                    <Text style={styles.levelHeaderText}>{translate('ctab_myprofile_level')} {level}</Text>
                                     <Text style={styles.levelHeaderText}>{level_xp}/{level_end_xp}</Text>
                                 </View>
                                 <ProgressBar percent={progressBarPercent}/>
@@ -167,11 +184,36 @@ class MyProfile extends Component {
                     </View>
                     <View style={styles.menuContainer}>
                         <TouchableHighlight
+                            underlayColor="transparent">
+                            <View style={styles.menuItem}>
+                                <View style={{ flex: 0 }}>
+                                    <Icon size={20} name="earth" color="#474747" />
+                                </View>
+                                <View style={{ flex: 1 }}>
+                                    <Text style={styles.menuItemText}>{translate('ctab_myprofile_change_locale')}</Text>
+                                    <Picker
+                                        selectedValue={store.getState().app.locale}
+                                        onValueChange={this._changeLocale}
+                                        mode="dialog"
+                                        style={{
+                                            marginLeft: -8,
+                                            marginTop: -50,
+                                            backgroundColor: 'transparent',
+                                            opacity: 0
+                                        }}>
+                                        {this.state.locales.map(item => {
+                                            return <Picker.Item key={item} label={item.toUpperCase()} value={item} />
+                                        })}
+                                    </Picker>
+                                </View>
+                            </View>
+                        </TouchableHighlight>
+                        <TouchableHighlight
                             underlayColor="transparent"
                             onPress={() => this.props.navigation.navigate('InviteReferral')}>
                             <View style={styles.menuItem}>
                                 <Icon size={20} name="account-multiple-plus" color="#474747" />
-                                <Text style={styles.menuItemText}>Приглашайте pеферал</Text>
+                                <Text style={styles.menuItemText}>{translate('ctab_myprofile_invite_ref')}</Text>
                             </View>
                         </TouchableHighlight>
                         <TouchableHighlight
@@ -179,7 +221,7 @@ class MyProfile extends Component {
                             onPress={() => this.props.navigation.navigate('ReferralCalculator')}>
                             <View style={styles.menuItem}>
                                 <Icon size={20} name="currency-rub" color="#474747" />
-                                <Text style={styles.menuItemText}>Прибыль pеферал калькулятор</Text>
+                                <Text style={styles.menuItemText}>{translate('ctab_myprofile_calc_ref')}</Text>
                             </View>
                         </TouchableHighlight>
                         <TouchableHighlight
@@ -187,7 +229,7 @@ class MyProfile extends Component {
                             onPress={() => this.props.userActions.logout()}>
                             <View style={styles.menuItem}>
                                 <Icon size={20} name="power" color="#474747" />
-                                <Text style={styles.menuItemText}>Выход</Text>
+                                <Text style={styles.menuItemText}>{translate('ctab_myprofile_logout')}</Text>
                             </View>
                         </TouchableHighlight>
                     </View>

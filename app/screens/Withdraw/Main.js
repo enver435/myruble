@@ -15,6 +15,11 @@ import {
 // import components
 import WithdrawList from '../../components/WithdrawList';
 
+// import locales
+import {
+    translate
+} from '../../locales';
+
 class Main extends Component {
     constructor(props) {
         super(props);
@@ -34,14 +39,14 @@ class Main extends Component {
                     <View style={{ flex: 0.5 }}>
                         <Button
                             onPress={() => { this.props.onChangeScreen(1) }}
-                            title="Получить"
+                            title={translate('c_withdraw_main_btn')}
                             containerStyle={{ marginTop: 5 }}
                         />
                     </View>
                 </View>
                 <View style={styles.withdrawContainer}>
                     <View>
-                        <Text style={styles.withdrawText}>История платежей</Text>
+                        <Text style={styles.withdrawText}>{translate('c_withdraw_main_text')}</Text>
                     </View>
                     <WithdrawList user={true}/>
                 </View>

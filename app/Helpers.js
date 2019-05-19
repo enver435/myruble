@@ -59,6 +59,9 @@ export const POST = async (url = '', data = {}) => {
     try {
         const response = await Axios.post(url, data, {
             baseURL: __DEV__ ? API_URL_DEV : API_URL_PROD,
+            headers: {
+                locale: store.getState().app.locale
+            },
             auth: {
                 username: 'myrubleapi',
                 password: 'XcG68R`9bqzHgCmp'
@@ -78,6 +81,9 @@ export const GET = async (url = '', params = {}) => {
         const response = await Axios.get(url, {
             params,
             baseURL: __DEV__ ? API_URL_DEV : API_URL_PROD,
+            headers: {
+                locale: store.getState().app.locale
+            },
             auth: {
                 username: 'myrubleapi',
                 password: 'XcG68R`9bqzHgCmp'

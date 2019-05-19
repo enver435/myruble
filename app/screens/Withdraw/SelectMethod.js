@@ -28,6 +28,11 @@ import {
 // import components
 import Loading from '../../components/Loading';
 
+// import locales
+import {
+    translate
+} from '../../locales';
+
 class SelectMethod extends Component {
     constructor(props) {
         super(props);
@@ -116,7 +121,7 @@ class SelectMethod extends Component {
         ) : (
             <View style={styles.container}>
                 <View style={{ marginBottom: 20 }}>
-                    <Text style={styles.title}>Выберите метод оплаты</Text>
+                    <Text style={styles.title}>{translate('c_withdraw_select_method_title')}</Text>
                 </View>
                 <ScrollView
                     style={{ flex: 1, height: '100%' }}
@@ -138,7 +143,7 @@ class SelectMethod extends Component {
                                         <Image source={item.method == 1 ? require('../../assets/yandex.png') : (item.method == 2 ? require('../../assets/payeer.png') : (item.method == 3 ? require('../../assets/webmoney.png') : null))} resizeMode="contain" style={styles.itemImg}/>
                                     </View>
                                     <View style={[ styles.item, { flex: 1 } ]}>
-                                        <Text style={styles.itemText}>5 минут</Text>
+                                        <Text style={styles.itemText}>{translate('c_withdraw_minute')}</Text>
                                     </View>
                                     <View style={[ styles.item, { flex: 1 } ]}>
                                         <Text style={styles.itemText}>{item.min_withdraw.toFixed(2)} <Icon size={15} name="currency-rub" color="#474747"/></Text>
@@ -149,7 +154,7 @@ class SelectMethod extends Component {
                     ) : (
                         <View style={styles.notFoundContainer}>
                             <Icon size={45} name="alert-circle-outline" color="#474747"/>
-                            <Text style={styles.notFoundText}>Результат не найден</Text>
+                            <Text style={styles.notFoundText}>{translate('c_withdraw_not_found')}</Text>
                         </View>
                     )}
                 </ScrollView>

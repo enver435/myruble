@@ -15,6 +15,11 @@ import MyProfile from './containers/Tabs/MyProfile';
 import Play from './containers/Tabs/Play';
 import Withdraw from './containers/Tabs/Withdraw';
 
+// import locales
+import {
+	translate
+} from './locales';
+
 class Tabs extends Component {
 	constructor(props) {
 		super(props);
@@ -24,15 +29,15 @@ class Tabs extends Component {
 			index: 1,
 			routes: [{
 					key: 'myprofile',
-					title: 'Профиль'
+					title: translate('tab_myprofile')
 				},
 				{
 					key: 'play',
-					title: 'Играть'
+					title: translate('tab_play')
 				},
 				{
 					key: 'withdraw',
-					title: 'Выплаты'
+					title: translate('tab_withdraw')
 				}
 			]
 		};

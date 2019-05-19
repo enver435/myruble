@@ -19,9 +19,14 @@ import {
     showToast
 } from '../Helpers';
 
+// import locales
+import {
+    translate
+} from '../locales';
+
 class SignIn extends Component {
     static navigationOptions = {
-        title: 'Вход'
+        title: translate('c_signin_title')
     }
 
     constructor(props) {
@@ -104,26 +109,26 @@ class SignIn extends Component {
                                 ref={input => { this.inputs['pass'] = input }}
                                 style={styles.input}
                                 underlineColorAndroid="#474747"
-                                placeholder="Пароль"
+                                placeholder={translate('c_signin_pass')}
                                 autoCapitalize="none"
                                 secureTextEntry={true}
                                 onChangeText={(pass) => this.setState({ pass })}
                             />
                             <TouchableHighlight onPress={this.onClickForgot} underlayColor="transparent">
-                                <Text style={styles.forgotText}>Забыли пароль?</Text>
+                                <Text style={styles.forgotText}>{translate('c_signin_forgot')}</Text>
                             </TouchableHighlight>
                             <Button
                                 onPress={this.onClickSignIn}
-                                title="Вход"
+                                title={translate('c_signin_btn')}
                                 loading={this.state.loading}
                                 disabled={!this.state.disabled ? this.state.loading : this.state.disabled}
                             />
                         </View>
                         <View>
-                            <Text style={styles.signUpText}>У вас нет учетной записи?</Text>
+                            <Text style={styles.signUpText}>{translate('c_signin_reg_txt')}</Text>
                             <Button
                                 onPress={this.onClickSignUp}
-                                title="Регистрация"
+                                title={translate('c_signin_reg_btn')}
                             />
                         </View>
                     </View>

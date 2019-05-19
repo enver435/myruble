@@ -15,6 +15,11 @@ import {
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import firebase from 'react-native-firebase';
 
+// import locales
+import {
+    translate
+} from '../../../locales';
+
 // import helpers
 import {
     GET,
@@ -193,7 +198,7 @@ class HeartModal extends Component {
                 children={
                     <View>
                         <View style={styles.block}>
-                            <Text>Чтобы начать игру, посмотрите рекламу или подождите</Text>
+                            <Text>{translate('heart_modal_text')}</Text>
                         </View>
                         <View style={[styles.block, { justifyContent: 'center', alignItems: 'center' }]}>
                             <Icon name="favorite-border" size={45} color="#474747"/>
@@ -203,7 +208,7 @@ class HeartModal extends Component {
                             <View style={[styles.button, { paddingRight: 10 }]}>
                                 <Button
                                     onPress={this.onClickShowAds}
-                                    title="Смотреть"
+                                    title={translate('heart_modal_ads_btn')}
                                     titleStyle={{ color: '#fbbc05' }}
                                     disabled={this.state.btnShowAdDisabled}
                                 />
@@ -211,7 +216,7 @@ class HeartModal extends Component {
                             <View style={[styles.button, { paddingLeft: 10 }]}>
                                 <Button
                                     onPress={this.onClickGetHeart}
-                                    title={this.state.btnGetHeartDisabled ? this.fmtMSS(this.state.time) : 'Возьми'}
+                                    title={this.state.btnGetHeartDisabled ? this.fmtMSS(this.state.time) : translate('heart_modal_give_btn')}
                                     disabled={this.state.btnGetHeartDisabled}
                                 />
                             </View>

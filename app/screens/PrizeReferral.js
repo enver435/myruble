@@ -26,6 +26,11 @@ import {
 // import components
 import Loading from '../components/Loading';
 
+// import locales
+import {
+    translate
+} from '../locales';
+
 class PrizeReferral extends Component {
     constructor(props) {
         super(props);
@@ -40,7 +45,7 @@ class PrizeReferral extends Component {
 
     static navigationOptions = () => {
         return {
-            title: 'Реферальный приз'
+            title: translate('c_prizeref_title')
         };
     };
 
@@ -112,7 +117,7 @@ class PrizeReferral extends Component {
                 {Object.keys(this.state.prizeInfo).length == 0 ? (
                     <View style={styles.notFoundContainer}>
                         <Icon size={45} name="alert-circle-outline" color="#474747"/>
-                        <Text style={styles.notFoundText}>Приз не найден</Text>
+                        <Text style={styles.notFoundText}>{translate('c_prizeref_prize_not_found')}</Text>
                     </View>
                 ) : (
                     <ScrollView
@@ -125,7 +130,7 @@ class PrizeReferral extends Component {
                         }
                         contentContainerStyle={{flexGrow: 1}}>
                         <View style={styles.header}>
-                            <Text style={styles.headerText}><Text style={{ color: '#d10000' }}>1nd</Text> приз</Text>
+                            <Text style={styles.headerText}><Text style={{ color: '#d10000' }}>1nd</Text> {translate('c_prizeref_prize')}</Text>
                             <Text style={[styles.headerText, { fontSize: 30, color: '#474747' }]}>{this.state.prizeInfo.amount} <Icon size={30} name="currency-rub" color="#474747" /></Text>
                             <Text style={styles.headerText}>{timeToDate(this.state.prizeInfo.start_time, false)} - {timeToDate(this.state.prizeInfo.end_time, false)}</Text>
                         </View>
@@ -154,7 +159,7 @@ class PrizeReferral extends Component {
                                 ) : (
                                     <View style={styles.notFoundContainer}>
                                         <Icon size={45} name="alert-circle-outline" color="#474747"/>
-                                        <Text style={styles.notFoundText}>Результат не найден</Text>
+                                        <Text style={styles.notFoundText}>{translate('c_prizeref_not_found')}</Text>
                                     </View>
                                 )}
                             </ScrollView>

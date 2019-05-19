@@ -12,6 +12,11 @@ import {
 } from 'react-navigation';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
+// import locales
+import {
+    translate
+} from '../locales';
+
 class Header extends Component {
     constructor(props) {
         super(props);
@@ -27,7 +32,7 @@ class Header extends Component {
                     <TouchableHighlight onPress={() => this.props.navigation.navigate('PrizeReferral')} underlayColor="transparent">
                         <View style={styles.headerRight}>
                             <Icon name="bomb" size={20} color="#d10000" style={{ marginRight: 3 }} />
-                            <Text style={styles.headerRightText}>Приз</Text>
+                            <Text style={styles.headerRightText}>{translate('c_header_prize')}</Text>
                         </View>
                     </TouchableHighlight>
                 </View>

@@ -37,6 +37,18 @@ import SplashScreen from './app/components/SplashScreen';
 // import global theme
 import Theme from './app/Theme';
 
+// import locale
+import {
+    getLocale,
+    setLocale,
+    translate
+} from './app/locales';
+
+// import constants api
+import {
+    SET_LOCALE
+} from './app/constants/actions/app';
+
 class App extends Component {
     constructor(props) {
         super(props);
@@ -56,6 +68,18 @@ class App extends Component {
     async componentDidMount() {
         // set mount
         this._isMounted = true;
+
+        // app start set locale
+        let currentLocale = await getLocale();
+        if(!currentLocale) {
+            currentLocale = await setLocale('en');
+        }
+        if(currentLocale != store.getState().app.locale) {
+            store.dispatch({
+                type: SET_LOCALE,
+                payload: currentLocale
+            });
+        }
 
         // app starting
         await this._appStart();
@@ -112,8 +136,8 @@ class App extends Component {
             } else {
                 // show alert
                 Alert.alert(
-                    'myRuble не работает временно',
-                    'myRuble не работает временно. Ремонтные работы продолжаются. Пожалуйста, попробуйте позже.',
+                    translate('alert_app_offline_title'),
+                    translate('alert_app_offline_text'),
                     [
                         // {
                         //     text: 'Позже',
@@ -159,8 +183,10 @@ class App extends Component {
             if (this.state.data.appVersion != appDeviceVersion) {
                 // show alert
                 Alert.alert(
-                    'Новая версия: ' + this.state.data.appVersion,
-                    'Если вы не обновите приложение, оно может работать неправильно. Хотите обновить?',
+                    translate('alert_app_new_version_title', {
+                        version: this.state.data.appVersion
+                    }),
+                    translate('alert_app_new_version_text'),
                     [
                         // {
                         //         text: 'Позже',
@@ -170,7 +196,7 @@ class App extends Component {
                         //         }
                         //     },
                         {
-                            text: 'Обновить',
+                            text: translate('alert_app_new_version_btn'),
                             onPress: () => {
                                 // configration play market URL
                                 Linking.canOpenURL(this.appUrl).then(supported => {

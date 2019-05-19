@@ -28,6 +28,11 @@ import {
 // import components
 import Loading from './Loading';
 
+// import locales
+import {
+    translate
+} from '../locales';
+
 class WithdrawList extends Component {
     constructor(props) {
         super(props);
@@ -177,7 +182,7 @@ class WithdrawList extends Component {
         return (
             <View style={styles.notFoundContainer}>
                 <Icon size={45} name="alert-circle-outline" color="#474747"/>
-                <Text style={styles.notFoundText}>Результат не найден</Text>
+                <Text style={styles.notFoundText}>{translate('c_withdrawlist_not_found')}</Text>
             </View>
         )
     }
@@ -206,9 +211,9 @@ class WithdrawList extends Component {
                         </View>
                         <View style={[ styles.item, { flex: 1 } ]}>
                             <Text style={styles.itemText}>{
-                                item.payment_status == 0 ? 'в ожидании' :
-                                (item.payment_status == 1 ? 'оплаченный' :
-                                (item.payment_status == 2 ? 'не оплачено' : 'Unknown'))
+                                item.payment_status == 0 ? translate('c_withdrawlist_p_0') :
+                                (item.payment_status == 1 ? translate('c_withdrawlist_p_1') :
+                                (item.payment_status == 2 ? translate('c_withdrawlist_p_2') : 'Unknown'))
                             }</Text>
                         </View>
                         <View style={[ styles.item, { flex: 0.5 } ]}>

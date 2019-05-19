@@ -11,6 +11,11 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
+// import locales
+import {
+    translate
+} from '../locales';
+
 class ReferralCalculator extends Component {
     constructor(props) {
         super(props);
@@ -26,7 +31,7 @@ class ReferralCalculator extends Component {
 
     static navigationOptions = () => {
         return {
-            title: 'Прибыль pеферал калькулятор'
+            title: translate('c_refcalc_title')
         };
     };
 
@@ -65,7 +70,7 @@ class ReferralCalculator extends Component {
                 <View style={styles.calcContainer}>
                     <ScrollView>
                         <View style={styles.textInput}>
-                            <Text>Pеферал</Text>
+                            <Text>{translate('c_refcalc_ref')}</Text>
                             <TextInput
                                 underlineColorAndroid="#474747"
                                 keyboardType="numeric"
@@ -75,7 +80,7 @@ class ReferralCalculator extends Component {
                             />
                         </View>
                         <View style={styles.textInput}>
-                            <Text>Игра</Text>
+                            <Text>{translate('c_refcalc_game')}</Text>
                             <TextInput
                                 underlineColorAndroid="#474747"
                                 keyboardType="numeric"
@@ -85,7 +90,7 @@ class ReferralCalculator extends Component {
                             />
                         </View>
                         <View style={styles.textInput}>
-                            <Text>Уровень</Text>
+                            <Text>{translate('c_refcalc_level')}</Text>
                             <Picker
                                 selectedValue={this.state.level}
                                 onValueChange={(itemValue, itemIndex) =>
@@ -93,7 +98,7 @@ class ReferralCalculator extends Component {
                                 }
                                 mode="dropdown">
                                 {this.state.game.levels.map(item => {
-                                    return <Picker.Item key={item.level} label={`${item.level} Уровень`} value={item.level} />
+                                    return <Picker.Item key={item.level} label={`${item.level} ${translate('c_refcalc_level')}`} value={item.level} />
                                 })}
                             </Picker>
                         </View>
@@ -101,7 +106,7 @@ class ReferralCalculator extends Component {
                 </View>
                 <View style={styles.calcResult}>
                     <Text style={styles.calcResText}>
-                        <Text style={{ fontWeight: 'bold' }}>{(Math.round(this.state.calcRes * 100) / 100).toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</Text> <Icon size={25} name="currency-rub" color="#474747" /> неделя
+                        <Text style={{ fontWeight: 'bold' }}>{(Math.round(this.state.calcRes * 100) / 100).toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}</Text> <Icon size={25} name="currency-rub" color="#474747" /> {translate('c_refcalc_week')}
                     </Text>
                 </View>
             </View>

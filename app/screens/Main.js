@@ -23,6 +23,11 @@ import Loading from '../components/Loading';
 // import containers
 import Tabs from '../Tabs';
 
+// import locales
+import {
+    translate
+} from '../locales';
+
 class Home extends Component {
     constructor(props) {
         super(props);
@@ -103,11 +108,11 @@ class Home extends Component {
 
             // show alert
             Alert.alert(
-                'Прибыль pеферал калькулятор',
-                'Прибыль pеферал калькулятор. Теперь проверьте и получите свой заработок.',
+                translate('alert_ref_calc_title'),
+                translate('alert_ref_calc_text'),
                 [
                     {
-                        text: 'Позже',
+                        text: translate('alert_ref_calc_btn'),
                         onPress: () => {}
                     },
                     {

@@ -20,9 +20,14 @@ import {
     showToast
 } from '../Helpers';
 
+// import locales
+import {
+    translate
+} from '../locales';
+
 class SignUp extends Component {
     static navigationOptions = {
-        title: 'Регистрация'
+        title: translate('c_signup_title')
     }
 
     constructor(props) {
@@ -113,7 +118,7 @@ class SignUp extends Component {
                                 ref={input => { this.inputs['username'] = input }}
                                 style={styles.input}
                                 underlineColorAndroid="#474747"
-                                placeholder="Имя пользователя"
+                                placeholder={translate('c_signup_username')}
                                 autoCapitalize="none"
                                 returnKeyType="next"
                                 onChangeText={(username) => this.setState({ username })}
@@ -123,7 +128,7 @@ class SignUp extends Component {
                                 ref={input => { this.inputs['pass'] = input }}
                                 style={styles.input}
                                 underlineColorAndroid="#474747"
-                                placeholder="Пароль"
+                                placeholder={translate('c_signup_pass')}
                                 autoCapitalize="none"
                                 returnKeyType="next"
                                 secureTextEntry={true}
@@ -134,18 +139,18 @@ class SignUp extends Component {
                                 ref={input => { this.inputs['ref_code'] = input }}
                                 style={styles.input}
                                 underlineColorAndroid="#474747"
-                                placeholder="Реферальный код (необязательный)"
+                                placeholder={translate('c_signup_refcode')}
                                 autoCapitalize="none"
                                 onChangeText={(ref_code) => this.setState({ ref_code })}
                             />
                             <CheckBox
-                                title='Продолжая вы принимаете Условия Обслуживания и Политика Конфиденциальности'
+                                title={translate('c_signup_rules')}
                                 checked={this.state.checked}
                                 onPress={() => this.setState({ checked: !this.state.checked, disabled: !this.state.disabled })}
                             />
                             <Button
                                 onPress={this.onClickSignUp}
-                                title="Регистрация"
+                                title={translate('c_signup_btn')}
                                 loading={this.state.loading}
                                 disabled={!this.state.disabled ? this.state.loading : this.state.disabled}
                             />

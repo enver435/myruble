@@ -29,6 +29,11 @@ import ResultModal from '../../components/Home/Modals/ResultModal';
 import HeartModal from '../../components/Home/Modals/HeartModal';
 import Auth from '../../components/Auth';
 
+// import locales
+import {
+    translate
+} from '../../locales';
+
 class Play extends Component {
     constructor(props) {
         super(props);
@@ -83,7 +88,7 @@ class Play extends Component {
 
         // if user banned
         if (ban == 1) {
-            return showToast('Ваш аккаунт заблокирован');
+            return showToast(translate('ctab_play_banned'));
         }
 
         if (!status) {

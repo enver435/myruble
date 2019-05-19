@@ -10,6 +10,11 @@ import {
 // import components
 import WithdrawList from '../../components/WithdrawList';
 
+// import locales
+import {
+    translate
+} from '../../locales';
+
 class Withdraw extends Component {
     constructor(props) {
         super(props);
@@ -19,7 +24,7 @@ class Withdraw extends Component {
         return (
             <View style={styles.withdrawContainer}>
                 <View>
-                    <Text style={styles.withdrawText}>История всех платежей</Text>
+                    <Text style={styles.withdrawText}>{translate('ctab_withdraw_title')}</Text>
                 </View>
                 <WithdrawList/>
             </View>

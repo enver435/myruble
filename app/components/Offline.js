@@ -9,6 +9,11 @@ import {
     Button
 } from 'react-native-elements';
 
+// import locales
+import {
+    translate
+} from '../locales';
+
 const Offline = ({
     checkNetwork
 }) => (
@@ -16,7 +21,7 @@ const Offline = ({
         <Icon name="access-point-network-off" size={55} color="#474747"></Icon>
         <Button
             onPress={checkNetwork}
-            title="Повторное Подключение"
+            title={translate('c_offline_btn')}
         />
     </View>
 );

@@ -14,6 +14,11 @@ import {
 } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
+// import locales
+import {
+    translate
+} from '../../../locales';
+
 class ResultModal extends Component {
     constructor(props) {
         super(props);
@@ -54,22 +59,22 @@ class ResultModal extends Component {
                 height="auto"
                 children={
                     <View style={styles.container}>
-                        <Text style={styles.resultsText}>Результаты</Text>
+                        <Text style={styles.resultsText}>{translate('result_modal_title')}</Text>
                         <View style={styles.resultsBorderBottom}></View>
                         <View style={styles.block}>
-                            <Text style={styles.blockTitle}>Правильные Ответы</Text>
+                            <Text style={styles.blockTitle}>{translate('result_modal_success')}</Text>
                             <Text style={styles.taskSuccessCount}>{taskSuccess}</Text>
                         </View>
                         <View style={styles.block}>
-                            <Text style={styles.blockTitle}>Неправильные Ответы</Text>
+                            <Text style={styles.blockTitle}>{translate('result_modal_unsuccess')}</Text>
                             <Text style={styles.taskFailCount}>{taskFail}</Text>
                         </View>
                         <View style={styles.block}>
-                            <Text style={styles.blockTitle}>Заработанные XP</Text>
+                            <Text style={styles.blockTitle}>{translate('result_modal_xp')}</Text>
                             <Text style={styles.earnPrice}>{taskSuccess == task ? earn_xp : 0}</Text>
                         </View>
                         <View style={styles.block}>
-                            <Text style={styles.blockTitle}>Заработанные Деньги</Text>
+                            <Text style={styles.blockTitle}>{translate('result_modal_earn')}</Text>
                             <Text style={styles.earnPrice}>{taskSuccess == task ? earn : 0} <Icon size={15} name="currency-rub" color="#474747"/></Text>
                         </View>
                         <Button

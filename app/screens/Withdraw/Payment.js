@@ -30,6 +30,7 @@ import {
 import {
     API_INSERT_WITHDRAW
 } from '../../constants/api';
+import { translate } from '../../locales';
 
 class Payment extends Component {
     constructor(props) {
@@ -145,7 +146,9 @@ class Payment extends Component {
                                 style={styles.input}
                                 underlineColorAndroid="#474747"
                                 returnKeyType="next"
-                                placeholder={'Кошелек (пример: ' + (method == 1 ? '410011111111111' : (method == 2 ? 'P12345678' : (method == 3 ? 'R123456789111' : null))) + ')'}
+                                placeholder={translate('c_withdraw_input_wallet', {
+                                    wallet: (method == 1 ? '410011111111111' : (method == 2 ? 'P12345678' : (method == 3 ? 'R123456789111' : '')))
+                                })}
                                 autoCapitalize="none"
                                 onChangeText={(wallet_number) => this.setState({ wallet_number })}
                                 onSubmitEditing={() => { this.inputs['amount'].focus(); }}
@@ -155,12 +158,16 @@ class Payment extends Component {
                                 style={styles.input}
                                 keyboardType="decimal-pad"
                                 underlineColorAndroid="#474747"
-                                placeholder="Сумма"
+                                placeholder={translate('c_withdraw_input_amount')}
                                 autoCapitalize="none"
                                 onChangeText={(amount) => this.setState({ amount: parseFloat(amount) })}
                             />
                             {this.state.amount > 0 ? (
-                                <Text>К оплате {commissionBalance.toFixed(2)} <Icon size={15} name="currency-rub" color="#474747"/></Text>
+                                <Text>
+                                    {translate('c_withdraw_total_amount', {
+                                        amount: commissionBalance.toFixed(2)
+                                    })} <Icon size={15} name="currency-rub" color="#474747"/>
+                                </Text>
                             ) : null}
                             <Button
                                 onPress={this._onClickWithdraw}

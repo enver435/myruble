@@ -10,6 +10,11 @@ import Main from './Main';
 import Payment from './Payment';
 import SelectMethod from './SelectMethod';
 
+// import locales
+import {
+    translate
+} from '../../locales';
+
 class Withdraw extends Component {
     constructor(props) {
         super(props);
@@ -24,7 +29,7 @@ class Withdraw extends Component {
         navigation
     }) => {
         return {
-            title: navigation.getParam('title', 'Получить деньги'),
+            title: navigation.getParam('title', translate('c_withdraw_main_title')),
         };
     };
 
@@ -48,11 +53,11 @@ class Withdraw extends Component {
     _onChangeScreen = (screenIndex) => {
         if (screenIndex == 0) {
             this.props.navigation.setParams({
-                title: 'Получить деньги'
+                title: translate('c_withdraw_main_title')
             });
         } else if (screenIndex == 1) {
             this.props.navigation.setParams({
-                title: 'Способ оплаты'
+                title: translate('c_withdraw_payment_title')
             });
         } else if (screenIndex == 2) {
             this.props.navigation.setParams({
