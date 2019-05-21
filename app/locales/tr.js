@@ -1,114 +1,112 @@
 export default {
     // Tabs
-    tab_myprofile: 'Profile',
-    tab_play: 'Play',
-    tab_withdraw: 'Withdraw',
+    tab_myprofile: 'Profilim',
+    tab_play: 'Oyun',
+    tab_withdraw: 'Ödemeler',
 
     // Alert Messages
-    alert_app_offline_title: 'myRuble не работает временно',
-    alert_app_offline_text: 'myRuble не работает временно. Ремонтные работы продолжаются. Пожалуйста, попробуйте позже.',
-    alert_app_new_version_title: 'Новая версия: {version}',
-    alert_app_new_version_text: 'Если вы не обновите приложение, оно может работать неправильно. Хотите обновить?',
-    alert_app_new_version_btn: 'Обновить',
-    alert_ref_calc_title: 'Прибыль pеферал калькулятор',
-    alert_ref_calc_text: 'Прибыль pеферал калькулятор. Теперь проверьте и получите свой заработок.',
-    alert_ref_calc_btn: 'Позже',
+    alert_app_offline_title: 'myRuble geçici olarak çalışmıyor',
+    alert_app_offline_text: 'myRuble geçici olarak çalışmıyor. Tamir işleri devam etmektedir. Lütfen daha sonra tekrar deneyin.',
+    alert_app_new_version_title: 'Yeni sürüm: {version}',
+    alert_app_new_version_text: 'Uygulamayı güncellemezseniz, düzgün çalışmayabilir. Güncellemek ister misiniz?',
+    alert_app_new_version_btn: 'Güncelle',
+    alert_ref_calc_btn: 'Daha sonra',
 
     // HeartModal component
-    heart_modal_text: 'Чтобы начать игру, посмотрите рекламу или подождите',
-    heart_modal_ads_btn: 'Смотреть',
-    heart_modal_give_btn: 'Возьми',
+    heart_modal_text: 'Oyuna başlamak için reklam izleyin veya bekleyin',
+    heart_modal_ads_btn: 'Reklam izle',
+    heart_modal_give_btn: 'Kalp al',
 
     // ResultModal component
-    result_modal_title: 'Результаты',
-    result_modal_success: 'Правильные Ответы',
-    result_modal_unsuccess: 'Неправильные Ответы',
-    result_modal_xp: 'Заработанные XP',
-    result_modal_earn: 'Заработанные Деньги',
+    result_modal_title: 'Sonuç',
+    result_modal_success: 'Doğru Cevaplar',
+    result_modal_unsuccess: 'Yanlış Cevaplar',
+    result_modal_xp: 'Kazanılan XP',
+    result_modal_earn: 'Kazanılan Para',
 
     // Balance component
-    c_balance_withdraw: 'Получить деньги',
+    c_balance_withdraw: 'Para çek',
 
     // Auth component
-    c_auth_text: 'Пожалуйста, войдите, чтобы просмотреть эту страницу.',
-    c_auth_btn: 'Вход',
+    c_auth_text: 'Bu sayfayı görüntülemek için lütfen giriş yapınız.',
+    c_auth_btn: 'Giriş yap',
 
     // Header component
-    c_header_prize: 'Приз',
+    c_header_prize: 'Ödül',
 
     // Offline component
-    c_offline_btn: 'Повторное Подключение',
+    c_offline_btn: 'Tekrar Bağlan',
 
     // ReferralList component
-    c_referrallist_not_found: 'Результат не найден',
+    c_referrallist_not_found: 'Sonuç bulunamadı',
 
     // WithdrawList component
-    c_withdrawlist_not_found: 'Результат не найден',
-    c_withdrawlist_p_0: 'в ожидании',
-    c_withdrawlist_p_1: 'оплаченный',
-    c_withdrawlist_p_2: 'не оплачено',
+    c_withdrawlist_not_found: 'Sonuç bulunamadı',
+    c_withdrawlist_p_0: 'bekliyor',
+    c_withdrawlist_p_1: 'ödendi',
+    c_withdrawlist_p_2: 'ödenmedi',
 
     // Tabs => MyProfile component
-    ctab_myprofile_referral: 'pеферал',
-    ctab_myprofile_level: 'Уровень',
-    ctab_myprofile_change_locale: 'Изменить язык',
-    ctab_myprofile_invite_ref: 'Приглашайте pеферал',
-    ctab_myprofile_calc_ref: 'Прибыль pеферал калькулятор',
-    ctab_myprofile_logout: 'Выход',
+    ctab_myprofile_referral: 'ortak',
+    ctab_myprofile_level: 'Seviye',
+    ctab_myprofile_change_locale: 'Dili değiştir',
+    ctab_myprofile_invite_ref: 'Ortak davet et',
+    ctab_myprofile_calc_ref: 'Ortaklık kazanç hesaplayıcısı',
+    ctab_myprofile_logout: 'Çıkış yap',
 
     // Tabs => Play component
-    ctab_play_banned: 'Ваш аккаунт заблокирован',
+    ctab_play_banned: 'Hesabınız askıya alındı',
 
     // Tabs => Withdraw component
-    ctab_withdraw_title: 'История всех платежей',
+    ctab_withdraw_title: 'Tüm ödemelerin geçmişi',
 
     // Withdraw component
-    c_withdraw_main_title: 'Получить деньги',
-    c_withdraw_payment_title: 'Способ оплаты',
-    c_withdraw_main_btn: 'Получить',
-    c_withdraw_main_text: 'История платежей',
-    c_withdraw_input_wallet: 'Кошелек (пример: {wallet})',
-    c_withdraw_input_amount: 'Сумма',
-    c_withdraw_total_amount: 'К оплате {amount}',
-    c_withdraw_select_method_title: 'Выберите метод оплаты',
-    c_withdraw_minute: '5 минут',
-    c_withdraw_not_found: 'Результат не найден',
+    c_withdraw_main_title: 'Para çek',
+    c_withdraw_payment_title: 'Ödeme yöntemi',
+    c_withdraw_main_btn: 'Para çek',
+    c_withdraw_main_text: 'Ödeme geçmişi',
+    c_withdraw_input_wallet: 'Cüzdan (örnek: {wallet})',
+    c_withdraw_input_amount: 'Tutar',
+    c_withdraw_total_amount: 'Toplam {amount}',
+    c_withdraw_select_method_title: 'Ödeme yöntemini seçin',
+    c_withdraw_minute: '5 dakika',
+    c_withdraw_not_found: 'Sonuç bulunamadı',
 
     // InviteReferral component
-    c_inviteref_title: 'Приглашайте pеферал',
-    c_inviteref_clipboard: 'Cкопирован в буфер обмена',
-    c_inviteref_text1: 'Ваша код для привлечения рефералов:',
-    c_inviteref_text2: 'Невозможно изменить реферальный код, если он написан.',
+    c_inviteref_title: 'Ortak davet et',
+    c_inviteref_clipboard: 'Panoya kopyalandı',
+    c_inviteref_text1: 'Sizin davetiye kodunuz:',
+    c_inviteref_text2: 'Davet kodu yazıldıysa değiştirmek mümkün değildir.',
 
     // MyReferrals component
-    c_myref_title: 'Мои рефералы',
+    c_myref_title: 'Benim ortaklarım',
 
     // PrizeReferral component
-    c_prizeref_title: 'Реферальный приз',
-    c_prizeref_prize_not_found: 'Приз не найден',
-    c_prizeref_not_found: 'Результат не найден',
-    c_prizeref_prize: 'приз',
+    c_prizeref_title: 'Ortaklık ödülü',
+    c_prizeref_prize_not_found: 'Ödül bulunamadı',
+    c_prizeref_not_found: 'Sonuç bulunamadı',
+    c_prizeref_prize: 'ödül',
 
     // ReferralCalculator component
-    c_refcalc_title: 'Прибыль pеферал калькулятор',
-    c_refcalc_ref: 'Pеферал',
-    c_refcalc_game: 'Игра',
-    c_refcalc_level: 'Уровень',
-    c_refcalc_week: 'неделя',
+    c_refcalc_title: 'Ortaklık kazanç hesaplayıcısı',
+    c_refcalc_ref: 'Ortak',
+    c_refcalc_game: 'Oyun',
+    c_refcalc_level: 'Seviye',
+    c_refcalc_week: 'haftalık',
 
     // SignIn component
-    c_signin_title: 'Вход',
-    c_signin_pass: 'Пароль',
-    c_signin_forgot: 'Забыли пароль?',
-    c_signin_btn: 'Вход',
-    c_signin_reg_txt: 'У вас нет учетной записи?',
-    c_signin_reg_btn: 'Регистрация',
+    c_signin_title: 'Giriş yap',
+    c_signin_pass: 'Şifre',
+    c_signin_forgot: 'Şifrenizi unuttunuz mu?',
+    c_signin_btn: 'Giriş yap',
+    c_signin_reg_txt: 'Hesabınız yok mu?',
+    c_signin_reg_btn: 'Kaydol',
 
     // SignUp component
-    c_signup_title: 'Регистрация',
-    c_signup_username: 'Имя пользователя',
-    c_signup_pass: 'Пароль',
-    c_signup_refcode: 'Реферальный код (необязательный)',
-    c_signup_rules: 'Продолжая вы принимаете Условия Обслуживания и Политика Конфиденциальности',
-    c_signup_btn: 'Регистрация'
+    c_signup_title: 'Kaydol',
+    c_signup_username: 'Kullanıcı adı',
+    c_signup_pass: 'Şifre',
+    c_signup_refcode: 'Davetiye kodu (isteğe bağlı)',
+    c_signup_rules: 'Hizmet Şartlarını ve Gizlilik Politikasını kabul ediyorum',
+    c_signup_btn: 'Kaydol'
 };

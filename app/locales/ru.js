@@ -10,8 +10,6 @@ export default {
     alert_app_new_version_title: 'Новая версия: {version}',
     alert_app_new_version_text: 'Если вы не обновите приложение, оно может работать неправильно. Хотите обновить?',
     alert_app_new_version_btn: 'Обновить',
-    alert_ref_calc_title: 'Прибыль pеферал калькулятор',
-    alert_ref_calc_text: 'Прибыль pеферал калькулятор. Теперь проверьте и получите свой заработок.',
     alert_ref_calc_btn: 'Позже',
 
     // HeartModal component
