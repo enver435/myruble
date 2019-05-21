@@ -23,11 +23,6 @@ import Loading from '../components/Loading';
 // import containers
 import Tabs from '../Tabs';
 
-// import locales
-import {
-    translate
-} from '../locales';
-
 class Home extends Component {
     constructor(props) {
         super(props);
