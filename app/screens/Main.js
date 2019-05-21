@@ -101,29 +101,6 @@ class Home extends Component {
                 }
             });
         });
-
-        // muveqqeti referral hesablama kalkulatoru goster (1 hefte sonra silmek lazimdi)
-        if(!await getStorage('referralCalc') && await getStorage('userData')) {
-            await setStorage('referralCalc', 'true');
-
-            // show alert
-            Alert.alert(
-                translate('alert_ref_calc_title'),
-                translate('alert_ref_calc_text'),
-                [
-                    {
-                        text: translate('alert_ref_calc_btn'),
-                        onPress: () => {}
-                    },
-                    {
-                        text: 'OK',
-                        onPress: () => this.props.navigation.navigate('ReferralCalculator')
-                    },
-                ], {
-                    cancelable: true
-                },
-            );
-        }
     }
 
     componentWillUnmount() {
