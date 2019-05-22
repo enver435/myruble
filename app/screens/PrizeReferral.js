@@ -38,7 +38,7 @@ class PrizeReferral extends Component {
         this.state = {
             refreshing: false,
             loading: true,
-            priceInfo: {},
+            prizeInfo: {},
             prizeRefs: []
         };
     }
@@ -63,7 +63,7 @@ class PrizeReferral extends Component {
         // set state
         if(this._isMounted) {
             this.setState({
-                prizeInfo: response.status ? response.data.prizeInfo : this.state.prizeInfo,
+                prizeInfo: response.status ? response.data.prizeInfo : {},
                 prizeRefs: response.status ? response.data.prizeRefs : [],
                 loading: false
             });
@@ -103,7 +103,7 @@ class PrizeReferral extends Component {
             // set state
             if(this._isMounted) {
                 this.setState({
-                    prizeInfo: response.status ? response.data.prizeInfo : this.state.prizeInfo,
+                    prizeInfo: response.status ? response.data.prizeInfo : {},
                     prizeRefs: response.status ? response.data.prizeRefs : [],
                     refreshing: false
                 });
