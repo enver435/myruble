@@ -10,7 +10,6 @@ export default {
     alert_app_new_version_title: 'Yeni sürüm: {version}',
     alert_app_new_version_text: 'Uygulamayı güncellemezseniz, düzgün çalışmayabilir. Güncellemek ister misiniz?',
     alert_app_new_version_btn: 'Güncelle',
-    alert_ref_calc_btn: 'Daha sonra',
 
     // HeartModal component
     heart_modal_text: 'Oyuna başlamak için reklam izleyin veya bekleyin',
@@ -100,13 +99,13 @@ export default {
     c_signin_forgot: 'Şifrenizi unuttunuz mu?',
     c_signin_btn: 'Giriş yap',
     c_signin_reg_txt: 'Hesabınız yok mu?',
-    c_signin_reg_btn: 'Kaydol',
+    c_signin_reg_btn: 'Kayıt ol',
 
     // SignUp component
-    c_signup_title: 'Kaydol',
+    c_signup_title: 'Kayıt ol',
     c_signup_username: 'Kullanıcı adı',
     c_signup_pass: 'Şifre',
     c_signup_refcode: 'Davetiye kodu (isteğe bağlı)',
     c_signup_rules: 'Hizmet Şartlarını ve Gizlilik Politikasını kabul ediyorum',
-    c_signup_btn: 'Kaydol'
+    c_signup_btn: 'Kayıt ol'
 };

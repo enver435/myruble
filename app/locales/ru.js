@@ -10,7 +10,6 @@ export default {
     alert_app_new_version_title: 'Новая версия: {version}',
     alert_app_new_version_text: 'Если вы не обновите приложение, оно может работать неправильно. Хотите обновить?',
     alert_app_new_version_btn: 'Обновить',
-    alert_ref_calc_btn: 'Позже',
 
     // HeartModal component
     heart_modal_text: 'Чтобы начать игру, посмотрите рекламу или подождите',
