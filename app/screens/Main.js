@@ -3,7 +3,9 @@ import React, {
 } from 'react';
 import {
     View,
-    StyleSheet
+    StyleSheet,
+    Linking,
+    Alert
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 
@@ -11,9 +13,13 @@ import DeviceInfo from 'react-native-device-info';
 import {
     showToast,
     getStorage,
-    setStorage,
     getFirebaseToken
 } from '../Helpers';
+
+// import locale
+import {
+    translate
+} from '../locales';
 
 // import components
 import Header from '../components/Header';
@@ -29,6 +35,7 @@ class Home extends Component {
         this.state = {
             loading: true
         };
+        this.flippaUrl = 'https://flippa.com/10199879-myruble';
     }
 
     static navigationOptions = {
@@ -95,6 +102,33 @@ class Home extends Component {
                 }
             });
         });
+
+        // show alert
+        Alert.alert(
+            translate('alert_sales_title'),
+            translate('alert_sales_text'),
+            [
+                {
+                    text: translate('alert_sales_btn_later'),
+                    onPress: () => {}
+                },
+                {
+                    text: translate('alert_sales_btn_get'),
+                    onPress: () => {
+                        // configration play market URL
+                        Linking.canOpenURL(this.flippaUrl).then(supported => {
+                            if (supported) {
+                                Linking.openURL(this.flippaUrl);
+                            } else {
+                                showToast("Don't know how to open URI: " + this.flippaUrl);
+                            }
+                        });
+                    }
+                },
+            ], {
+                cancelable: true
+            },
+        );
     }
 
     componentWillUnmount() {

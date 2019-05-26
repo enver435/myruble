@@ -10,6 +10,10 @@ export default {
     alert_app_new_version_title: 'Новая версия: {version}',
     alert_app_new_version_text: 'Если вы не обновите приложение, оно может работать неправильно. Хотите обновить?',
     alert_app_new_version_btn: 'Обновить',
+    alert_sales_title: 'myRuble продан',
+    alert_sales_text: 'Мы переходим к новому проекту, поэтому myRuble продан. Чем больше вы тратите, тем больше денег вы знаете.',
+    alert_sales_btn_later: 'Не интересует',
+    alert_sales_btn_get: 'Я хочу купить',
 
     // HeartModal component
     heart_modal_text: 'Чтобы начать игру, посмотрите рекламу или подождите',

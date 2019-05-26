@@ -10,6 +10,10 @@ export default {
     alert_app_new_version_title: 'Yeni sürüm: {version}',
     alert_app_new_version_text: 'Uygulamayı güncellemezseniz, düzgün çalışmayabilir. Güncellemek ister misiniz?',
     alert_app_new_version_btn: 'Güncelle',
+    alert_sales_title: 'myRuble satılıyor',
+    alert_sales_text: 'Yeni projeye geçiyoruz o yüzden myRuble satılıyor. Ne kadar harcarsanız o kadarda para kazana bilirsiniz',
+    alert_sales_btn_later: 'İlgilenmiyorum',
+    alert_sales_btn_get: 'Almak istiyorum',
 
     // HeartModal component
     heart_modal_text: 'Oyuna başlamak için reklam izleyin veya bekleyin',

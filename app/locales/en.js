@@ -10,6 +10,10 @@ export default {
     alert_app_new_version_title: 'New version: {version}',
     alert_app_new_version_text: 'In case you do not update the application, might not work properly. Do you want to update it?',
     alert_app_new_version_btn: 'Update',
+    alert_sales_title: 'myRuble is sold',
+    alert_sales_text: 'We are moving to the new project so myRuble is sold. The more you spend, the more money you know.',
+    alert_sales_btn_later: 'Not interested',
+    alert_sales_btn_get: 'I want to buy',
 
     // HeartModal component
     heart_modal_text: 'To play the game, watch the advertisement and wait',

@@ -72,8 +72,14 @@ class App extends Component {
         // app start set locale
         let currentLocale = await getLocale();
         if(!currentLocale) {
-            currentLocale = await setLocale('en');
+            const deviceLocale = await DeviceInfo.getDeviceLocale().split('-')[0];
+            if(deviceLocale != 'en' && deviceLocale != 'ru' && deviceLocale != 'tr') {
+                currentLocale = await setLocale('en');
+            } else {
+                currentLocale = await setLocale(deviceLocale);
+            }
         }
+
         if(currentLocale != store.getState().app.locale) {
             store.dispatch({
                 type: SET_LOCALE,
