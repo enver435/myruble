@@ -13,7 +13,8 @@ import DeviceInfo from 'react-native-device-info';
 import {
     showToast,
     getStorage,
-    getFirebaseToken
+    getFirebaseToken,
+    setStorage
 } from '../Helpers';
 
 // import locale
@@ -35,7 +36,7 @@ class Home extends Component {
         this.state = {
             loading: true
         };
-        this.flippaUrl = 'https://flippa.com/10199879-myruble';
+        this.appUrl = 'https://play.google.com/store/apps/details?id=com.myruble';
     }
 
     static navigationOptions = {
@@ -103,32 +104,37 @@ class Home extends Component {
             });
         });
 
-        // show alert
-        Alert.alert(
-            translate('alert_sales_title'),
-            translate('alert_sales_text'),
-            [
-                {
-                    text: translate('alert_sales_btn_later'),
-                    onPress: () => {}
+        // rate app alert
+        if(!await getStorage('rate_app')) {
+            await setStorage('rate_app', 'true');
+
+            // show alert
+            Alert.alert(
+                translate('alert_rate_title'),
+                translate('alert_rate_text'),
+                [
+                    {
+                        text: translate('alert_rate_btn_later'),
+                        onPress: () => {}
+                    },
+                    {
+                        text: translate('alert_rate_btn_get'),
+                        onPress: () => {
+                            // configration play market URL
+                            Linking.canOpenURL(this.appUrl).then(supported => {
+                                if (supported) {
+                                    Linking.openURL(this.appUrl);
+                                } else {
+                                    showToast("Don't know how to open URI: " + this.appUrl);
+                                }
+                            });
+                        }
+                    },
+                ], {
+                    cancelable: false
                 },
-                {
-                    text: translate('alert_sales_btn_get'),
-                    onPress: () => {
-                        // configration play market URL
-                        Linking.canOpenURL(this.flippaUrl).then(supported => {
-                            if (supported) {
-                                Linking.openURL(this.flippaUrl);
-                            } else {
-                                showToast("Don't know how to open URI: " + this.flippaUrl);
-                            }
-                        });
-                    }
-                },
-            ], {
-                cancelable: true
-            },
-        );
+            );
+        }
     }
 
     componentWillUnmount() {

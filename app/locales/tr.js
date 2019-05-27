@@ -10,10 +10,10 @@ export default {
     alert_app_new_version_title: 'Yeni sürüm: {version}',
     alert_app_new_version_text: 'Uygulamayı güncellemezseniz, düzgün çalışmayabilir. Güncellemek ister misiniz?',
     alert_app_new_version_btn: 'Güncelle',
-    alert_sales_title: 'myRuble satılıyor',
-    alert_sales_text: 'Yeni projeye geçiyoruz o yüzden myRuble satılıyor. Ne kadar harcarsanız o kadarda para kazana bilirsiniz',
-    alert_sales_btn_later: 'İlgilenmiyorum',
-    alert_sales_btn_get: 'Almak istiyorum',
+    alert_rate_title: 'Uygulamayı değerlendirin',
+    alert_rate_text: 'Bu uygulamayı kullanmaktan hoşlanıyorsanız, değerlendirmek için bir dakikanızı ayırır mısınız? Desteğin için teşekkürler!',
+    alert_rate_btn_later: 'Daha sonra',
+    alert_rate_btn_get: 'Değerlendir',
 
     // HeartModal component
     heart_modal_text: 'Oyuna başlamak için reklam izleyin veya bekleyin',
