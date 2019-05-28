@@ -15,6 +15,9 @@ export default {
     alert_rate_btn_later: 'Позже',
     alert_rate_btn_get: 'Оценивать',
 
+    // Home => Main component
+    home_main_play: 'Нажмите чтобы играть',
+
     // HeartModal component
     heart_modal_text: 'Чтобы начать игру, посмотрите рекламу или подождите',
     heart_modal_ads_btn: 'Смотреть',

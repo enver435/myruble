@@ -15,6 +15,9 @@ export default {
     alert_rate_btn_later: 'Later',
     alert_rate_btn_get: 'Rate',
 
+    // Home => Main component
+    home_main_play: 'Tap to Play',
+
     // HeartModal component
     heart_modal_text: 'To play the game, watch the advertisement and wait',
     heart_modal_ads_btn: 'To watch',

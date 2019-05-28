@@ -9,6 +9,11 @@ import {
 import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
+// import locales
+import {
+    translate
+} from '../../locales';
+
 class Main extends Component {
     constructor(props) {
         super(props);
@@ -55,7 +60,7 @@ class Main extends Component {
                     </View>
                 </View>
                 <View style={styles.contentContainer}>
-                    <Text style={styles.contentText}>{status ? `${firstNumber} ${operatorString} ${secondNumber}` : 'Tap to Play'}</Text>
+                    <Text style={styles.contentText}>{status ? `${firstNumber} ${operatorString} ${secondNumber}` : translate('home_main_play')}</Text>
                 </View>
             </View>
         )

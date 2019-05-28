@@ -15,6 +15,9 @@ export default {
     alert_rate_btn_later: 'Daha sonra',
     alert_rate_btn_get: 'Değerlendir',
 
+    // Home => Main component
+    home_main_play: 'Oynamak için Dokunun',
+
     // HeartModal component
     heart_modal_text: 'Oyuna başlamak için reklam izleyin veya bekleyin',
     heart_modal_ads_btn: 'Reklam izle',
