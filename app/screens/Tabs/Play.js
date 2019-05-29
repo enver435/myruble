@@ -372,7 +372,8 @@ class Play extends Component {
                         userState={this.state.user}/>
                     <Main
                         userState={this.state.user}
-                        gameState={this.state.game}/>
+                        gameState={this.state.game}
+                        startGame={this.startGame}/>
                     <Enter
                         sendAnswer={this.sendAnswer}/>
                     <Control

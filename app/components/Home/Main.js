@@ -4,7 +4,8 @@ import React, {
 import {
     View,
     Text,
-    StyleSheet
+    StyleSheet,
+    TouchableHighlight
 } from 'react-native';
 import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -60,7 +61,11 @@ class Main extends Component {
                     </View>
                 </View>
                 <View style={styles.contentContainer}>
-                    <Text style={styles.contentText}>{status ? `${firstNumber} ${operatorString} ${secondNumber}` : translate('home_main_play')}</Text>
+                    <TouchableHighlight 
+                        underlayColor="transparent"
+                        onPress={status ? null : async () => { await this.props.startGame()}}>       
+                            <Text style={status ? styles.contentText : [styles.contentText, { fontSize: 27 }]}>{status ? `${firstNumber} ${operatorString} ${secondNumber}` : translate('home_main_play')}</Text>
+                    </TouchableHighlight>
                 </View>
             </View>
         )
