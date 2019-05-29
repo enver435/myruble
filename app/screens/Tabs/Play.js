@@ -31,7 +31,7 @@ import Auth from '../../components/Auth';
 
 // import locales
 import {
-    translate
+    translate, getLocale
 } from '../../locales';
 
 class Play extends Component {
@@ -276,6 +276,7 @@ class Play extends Component {
             const userRes = await this.props.userActions.get();
             if (userRes.status) {
                 const userData = await getStorage('userData');
+                const currentLocale = await getLocale();
                 const firebaseToken = await getFirebaseToken();
                 const macAddress = await DeviceInfo.getMACAddress();
                 const timeZone = await DeviceInfo.getTimezone();
@@ -284,13 +285,15 @@ class Play extends Component {
                 if (userData && (
                     userData.firebase_token != firebaseToken ||
                     userData.timezone != timeZone ||
-                    userData.device_id != deviceId
+                    userData.device_id != deviceId ||
+                    userData.locale != currentLocale
                 )) {
                     await this.props.userActions.update({
                         firebase_token: firebaseToken,
                         mac_address: macAddress,
                         timezone: timeZone,
-                        device_id: deviceId
+                        device_id: deviceId,
+                        locale: currentLocale
                     });
                 }
             } else {
