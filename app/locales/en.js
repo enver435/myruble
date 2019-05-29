@@ -51,6 +51,9 @@ export default {
     c_withdrawlist_p_0: 'waiting',
     c_withdrawlist_p_1: 'paid',
     c_withdrawlist_p_2: 'not paid',
+    c_withdrawlist_pmname_1: 'Yandex Money',
+    c_withdrawlist_pmname_2: 'Payeer',
+    c_withdrawlist_pmname_3: 'Webmoney',
 
     // Tabs => MyProfile component
     ctab_myprofile_referral: 'referral',

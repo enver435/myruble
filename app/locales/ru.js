@@ -51,6 +51,9 @@ export default {
     c_withdrawlist_p_0: 'в ожидании',
     c_withdrawlist_p_1: 'оплаченный',
     c_withdrawlist_p_2: 'не оплачено',
+    c_withdrawlist_pmname_1: 'Яндекс.деньги',
+    c_withdrawlist_pmname_2: 'Payeer',
+    c_withdrawlist_pmname_3: 'Webmoney',
 
     // Tabs => MyProfile component
     ctab_myprofile_referral: 'pеферал',

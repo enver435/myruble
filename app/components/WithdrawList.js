@@ -203,9 +203,9 @@ class WithdrawList extends Component {
                         </View>
                         <View style={[ styles.item, { flex: 1 } ]}>
                             <Text style={styles.itemText}>{
-                                item.payment_method == 1 ? 'Яндекс.деньги' :
-                                (item.payment_method == 2 ? 'Payeer' :
-                                (item.payment_method == 3 ? 'Webmoney' : 'Unknown'))
+                                item.payment_method == 1 ? translate('c_withdrawlist_pmname_1') :
+                                (item.payment_method == 2 ? translate('c_withdrawlist_pmname_2') :
+                                (item.payment_method == 3 ? translate('c_withdrawlist_pmname_3') : 'Unknown'))
                             }</Text>
                             <Text style={styles.itemText}>{this.props.user ? item.wallet_number : strMasked(item.wallet_number, 4)}</Text>
                         </View>

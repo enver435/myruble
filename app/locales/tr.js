@@ -51,6 +51,9 @@ export default {
     c_withdrawlist_p_0: 'bekliyor',
     c_withdrawlist_p_1: 'ödendi',
     c_withdrawlist_p_2: 'ödenmedi',
+    c_withdrawlist_pmname_1: 'Yandex Cüzdan',
+    c_withdrawlist_pmname_2: 'Payeer',
+    c_withdrawlist_pmname_3: 'Webmoney',
 
     // Tabs => MyProfile component
     ctab_myprofile_referral: 'ortak',
