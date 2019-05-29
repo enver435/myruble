@@ -333,7 +333,7 @@ class Play extends Component {
     }
 
     _initAdInterstitial = () => {
-        this.advert = firebase.admob().interstitial('ca-app-pub-4602055361552926/1376568492');
+        this.advert = firebase.admob().interstitial('ca-app-pub-5408014443454525/9865354023');
 
         const AdRequest = firebase.admob.AdRequest;
         const request = new AdRequest();
