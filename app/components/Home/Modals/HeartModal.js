@@ -150,7 +150,7 @@ class HeartModal extends Component {
 
     initAdMob = () => {
         // Init admob rewarded
-        this.advert = firebase.admob().rewarded('ca-app-pub-5408014443454525/7919338229');
+        this.advert = firebase.admob().rewarded('ca-app-pub-5408014443454525/9865354023');
         const AdRequest = firebase.admob.AdRequest;
         const request = new AdRequest();
 
