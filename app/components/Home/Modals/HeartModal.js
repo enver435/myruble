@@ -159,7 +159,7 @@ class HeartModal extends Component {
 
         // onAdLoaded
         this.advert.on('onAdLoaded', () => {
-            if (this._isMounted) {
+            if (this._isMounted && this.advert.isLoaded()) {
                 this.setState({
                     btnShowAdDisabled: false
                 });
@@ -171,11 +171,17 @@ class HeartModal extends Component {
             // update heart
             this.props.updateHeart(this.props.heart);
 
-            // hide modal
-            this.props.hideVisible();
-
             // open time modal remove from storage
             await removeStorage('heartModalTime');
+        });
+        
+        // onAdClosed
+        this.advert.on('onAdClosed', () => {
+            // hide modal
+            this.props.hideVisible();
+            this.setState({
+                btnShowAdDisabled: true
+            });
         });
     }
 

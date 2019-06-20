@@ -8,7 +8,6 @@ import {
     StyleSheet
 } from 'react-native';
 import PropTypes from 'prop-types';
-import Icon from 'react-native-vector-icons/MaterialIcons';
 
 class Enter extends Component {
     constructor(props) {
@@ -45,13 +44,6 @@ class Enter extends Component {
                     }}
                     blurOnSubmit={false}
                 />
-                <TouchableHighlight
-                    onPress={() => {
-                        this.onClickSend()
-                    }}
-                    underlayColor="transparent">
-                    <Icon name="send" size={35} color="#474747" style={styles.btnSend} />
-                </TouchableHighlight>
             </View>
         )
     }
