@@ -15,7 +15,7 @@ class AdMobBanner extends Component {
 
         return (
             <Banner
-                unitId="ca-app-pub-5408014443454525/9643483437"
+                unitId="ca-app-pub-3588906949370951/1687224912"
                 size={"SMART_BANNER"}
                 request={request.build()}
                 onAdLoaded={() => {

@@ -1,40 +1,40 @@
 {
   "project_info": {
-    "project_number": "129886056683",
-    "firebase_url": "https://myruble-adf72.firebaseio.com",
-    "project_id": "myruble-adf72",
-    "storage_bucket": "myruble-adf72.appspot.com"
+    "project_number": "686933164323",
+    "firebase_url": "https://myruble5.firebaseio.com",
+    "project_id": "myruble5",
+    "storage_bucket": "myruble5.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:129886056683:android:ef53e6a9a50a69f5",
+        "mobilesdk_app_id": "1:686933164323:android:ef53e6a9a50a69f5",
         "android_client_info": {
           "package_name": "com.myruble"
         }
       },
       "oauth_client": [
         {
-          "client_id": "129886056683-0ccd7adkjifasj7hifethj1m9362c6md.apps.googleusercontent.com",
+          "client_id": "686933164323-snk4p6k3p8rtk229gtq3jcc050u9gav2.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyARLz49IwxHpAxYZFOhsrlImWZ7P4B7Zw4"
+          "current_key": "AIzaSyBn_qq0TzW32Y00fb2vf0YGSL9Y-hA5G20"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "129886056683-0ccd7adkjifasj7hifethj1m9362c6md.apps.googleusercontent.com",
+              "client_id": "686933164323-snk4p6k3p8rtk229gtq3jcc050u9gav2.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
         }
       },
-      "admob_app_id": "ca-app-pub-5408014443454525~4965871827"
+      "admob_app_id": "ca-app-pub-3588906949370951~6392756685"
     }
   ],
   "configuration_version": "1"
